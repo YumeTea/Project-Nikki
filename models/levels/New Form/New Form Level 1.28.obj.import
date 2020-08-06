@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/New Form Level 1.28.obj-f3eb66dc892ac9f1ce4c64802a374d5f.mesh"
+
+[deps]
+
+files=[ "res://.import/New Form Level 1.28.obj-f3eb66dc892ac9f1ce4c64802a374d5f.mesh" ]
+
+source_file="res://models/levels/New Form/New Form Level 1.28.obj"
+dest_files=[ "res://.import/New Form Level 1.28.obj-f3eb66dc892ac9f1ce4c64802a374d5f.mesh", "res://.import/New Form Level 1.28.obj-f3eb66dc892ac9f1ce4c64802a374d5f.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

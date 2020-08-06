@@ -1,0 +1,17 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Stair Test 1.003.obj-82b2462f75f4059a7321da6d6a77df54.mesh"
+
+[deps]
+
+files=[ "res://.import/Stair Test 1.003.obj-82b2462f75f4059a7321da6d6a77df54.mesh" ]
+
+source_file="res://models/objects/black expanse objects/Stair Test 1.003.obj"
+dest_files=[ "res://.import/Stair Test 1.003.obj-82b2462f75f4059a7321da6d6a77df54.mesh", "res://.import/Stair Test 1.003.obj-82b2462f75f4059a7321da6d6a77df54.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )

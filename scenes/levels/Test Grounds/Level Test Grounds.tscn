@@ -1,0 +1,92 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://scenes/levels/Test Grounds/Level Test Grounds.gd" type="Script" id=1]
+[ext_resource path="res://scenes/objects/Void Plane.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/objects/Test Objects/Target_Tests/KinematicBody Target.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/objects/Loading Zone.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/level geometry/Test Grounds/Test Grounds.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/UI/fade transition.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/objects/Test Objects/Target_Tests/Concave Collision Test.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/Player/Player 3rd Person (State Machine).tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/camera/free cam/Free_Cam.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/characters/Test Enemy/Test Enemy.tscn" type="PackedScene" id=10]
+
+[node name="Level Test Grounds" type="Spatial" groups=[
+"world",
+]]
+script = ExtResource( 1 )
+
+[node name="Layer1" type="CanvasLayer" parent="."]
+
+[node name="FadeTransition" parent="Layer1" groups=[
+"layer1",
+] instance=ExtResource( 6 )]
+
+[node name="Test Grounds" parent="." instance=ExtResource( 5 )]
+collision_layer = 1
+collision_mask = 6
+
+[node name="Free_Cam" parent="." groups=[
+"actors",
+] instance=ExtResource( 9 )]
+
+[node name="Player" parent="." groups=[
+"actors",
+"targettable",
+] instance=ExtResource( 8 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 38.674 )
+
+[node name="Target" parent="." groups=[
+"actors",
+"targettable",
+] instance=ExtResource( 3 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 2.99984, 0, 1, 0, -4.37114e-08, 30.9472, 30.9181, 138.04 )
+collision_layer = 4
+collision_mask = 3
+
+[node name="Target2" parent="." groups=[
+"actors",
+"targettable",
+] instance=ExtResource( 3 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 2.99984, 0, 1, 0, -4.37114e-08, -68.8097, 52.2887, 145.645 )
+collision_layer = 4
+collision_mask = 3
+
+[node name="Target3" parent="." groups=[
+"actors",
+"targettable",
+] instance=ExtResource( 3 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 2.99984, 0, 1, 0, -4.37114e-08, 30.8988, 31.0031, 187.161 )
+collision_layer = 4
+collision_mask = 3
+
+[node name="Target4" parent="." groups=[
+"actors",
+"targettable",
+] instance=ExtResource( 3 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 2.99984, 0, 1, 0, -4.37114e-08, 7.55477, 3.95799, 64.8186 )
+collision_layer = 4
+collision_mask = 3
+
+[node name="Enemy" parent="." groups=[
+"actors",
+"targettable",
+] instance=ExtResource( 10 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -19.6464, 4, 92.8922 )
+
+[node name="Concave Collision Test" parent="." instance=ExtResource( 7 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 29.719, 27.9794, 134.642 )
+collision_layer = 4
+
+[node name="Loading Zone" parent="." instance=ExtResource( 4 )]
+transform = Transform( 10.7953, 0, 0, 0, 6.04998, 0, 0, 0, 10.7953, -0.527477, -7.68141, -48.5563 )
+
+[node name="Void Plane" parent="." instance=ExtResource( 2 )]
+transform = Transform( 639.179, 0, 0, 0, 2.5, 0, 0, 0, 1065.3, -8.30218, -448.195, 0 )
+visible = false
+
+[node name="Void Plane2" parent="." instance=ExtResource( 2 )]
+transform = Transform( -1.75083e-07, -6.67573, 5.55672e-20, 0.701626, -5.11151e-08, -2.22679e-13, -5.42269e-14, 0, 6.3598, -75.2455, 0.0494452, -14.2952 )
+[connection signal="body_entered" from="Loading Zone" to="." method="_on_Loading_Zone_body_entered"]
+[connection signal="body_entered" from="Void Plane" to="." method="_on_Void_Plane_body_entered"]
+[connection signal="body_entered" from="Void Plane2" to="." method="_on_Void_Plane2_body_entered"]

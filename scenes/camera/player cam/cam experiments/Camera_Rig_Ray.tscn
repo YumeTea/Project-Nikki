@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/camera/player cam/cam experiments/Camera Cont Ray.gd" type="Script" id=2]
+
+
+
+
+
+[node name="Camera_Focus" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0619923, 0 )
+script = ExtResource( 2 )
+
+[node name="Pivot" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+
+[node name="camera_raycast" type="RayCast" parent="Pivot"]
+enabled = true
+cast_to = Vector3( 0, 0, -8.5 )
+
+[node name="Camera" type="Camera" parent="Pivot"]
+transform = Transform( -1, 0, 3.25841e-07, 0, 1, 0, -3.25841e-07, 0, -1, 0, 0, -8.5 )
+size = 4.99
+far = 8192.0
+
+[node name="Camera_default_loc" type="Spatial" parent="Pivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.5 )

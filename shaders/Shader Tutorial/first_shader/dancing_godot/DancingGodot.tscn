@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://shaders/Shader Tutorial/first_shader/dancing_godot/dancing_godot_material.tres" type="Material" id=1]
+[ext_resource path="res://shaders/Shader Tutorial/first_shader/dancing_godot/gobot.png" type="Texture" id=2]
+[ext_resource path="res://shaders/Shader Tutorial/first_shader/dancing_godot/dancinggodot.gd" type="Script" id=3]
+
+[node name="DancingGodot" type="TextureRect"]
+material = ExtResource( 1 )
+margin_left = 473.0
+margin_top = 224.772
+margin_right = 601.0
+margin_bottom = 352.772
+texture = ExtResource( 2 )
+expand = true
+script = ExtResource( 3 )

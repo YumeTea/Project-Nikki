@@ -1,0 +1,17 @@
+[gd_resource type="SpatialMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://resources/hdris/loc00180_2_0Space_Sky_preview.jpg" type="Texture" id=1]
+
+[resource]
+flags_transparent = true
+flags_do_not_receive_shadows = true
+flags_disable_ambient_light = true
+params_diffuse_mode = 4
+params_specular_mode = 3
+albedo_color = Color( 1, 1, 1, 0.486275 )
+albedo_texture = ExtResource( 1 )
+emission_enabled = true
+emission = Color( 0.137255, 0.0352941, 0.313726, 1 )
+emission_energy = 8.0
+emission_operator = 0
+emission_on_uv2 = false

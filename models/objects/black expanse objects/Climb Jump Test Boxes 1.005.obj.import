@@ -1,0 +1,17 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Climb Jump Test Boxes 1.005.obj-dbaaae57e35293c00b5fe2a63e230b71.mesh"
+
+[deps]
+
+files=[ "res://.import/Climb Jump Test Boxes 1.005.obj-dbaaae57e35293c00b5fe2a63e230b71.mesh" ]
+
+source_file="res://models/objects/black expanse objects/Climb Jump Test Boxes 1.005.obj"
+dest_files=[ "res://.import/Climb Jump Test Boxes 1.005.obj-dbaaae57e35293c00b5fe2a63e230b71.mesh", "res://.import/Climb Jump Test Boxes 1.005.obj-dbaaae57e35293c00b5fe2a63e230b71.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )

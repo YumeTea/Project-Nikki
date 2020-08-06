@@ -1,0 +1,17 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Octagonal Ring 1.002.obj-6be6845b30556acf9620a8e9e12b1ab1.mesh"
+
+[deps]
+
+files=[ "res://.import/Octagonal Ring 1.002.obj-6be6845b30556acf9620a8e9e12b1ab1.mesh" ]
+
+source_file="res://models/objects/black expanse objects/Octagonal Ring 1.002.obj"
+dest_files=[ "res://.import/Octagonal Ring 1.002.obj-6be6845b30556acf9620a8e9e12b1ab1.mesh", "res://.import/Octagonal Ring 1.002.obj-6be6845b30556acf9620a8e9e12b1ab1.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )

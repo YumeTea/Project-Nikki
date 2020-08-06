@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scenes/objects/Test Objects/3D Sprites/Target Reticle/target_reticle.gd" type="Script" id=1]
+
+[sub_resource type="SpatialMaterial" id=1]
+flags_transparent = true
+flags_unshaded = true
+flags_no_depth_test = true
+flags_disable_ambient_light = true
+params_specular_mode = 4
+params_depth_draw_mode = 2
+params_billboard_mode = 1
+params_billboard_keep_scale = true
+
+[sub_resource type="StreamTexture" id=3]
+flags = 16
+load_path = "res://.import/Reticle Reg.png-a477e431d78f3ec959600460d3245722.stex"
+
+[sub_resource type="StreamTexture" id=4]
+flags = 16
+load_path = "res://.import/Reticle Locked.png-2eabdcdc255b33870f305d9b8424ff4d.stex"
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ SubResource( 3 ), SubResource( 4 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[node name="Reticle" type="AnimatedSprite3D"]
+material_override = SubResource( 1 )
+cast_shadow = 0
+transparent = false
+double_sided = false
+frames = SubResource( 2 )
+script = ExtResource( 1 )

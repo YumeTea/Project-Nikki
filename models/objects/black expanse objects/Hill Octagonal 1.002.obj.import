@@ -1,0 +1,17 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Hill Octagonal 1.002.obj-b09b03a74718c9721bd7dc2d73c6eedb.mesh"
+
+[deps]
+
+files=[ "res://.import/Hill Octagonal 1.002.obj-b09b03a74718c9721bd7dc2d73c6eedb.mesh" ]
+
+source_file="res://models/objects/black expanse objects/Hill Octagonal 1.002.obj"
+dest_files=[ "res://.import/Hill Octagonal 1.002.obj-b09b03a74718c9721bd7dc2d73c6eedb.mesh", "res://.import/Hill Octagonal 1.002.obj-b09b03a74718c9721bd7dc2d73c6eedb.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )

@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Black Expanse 1.002.obj-7c82ff7792fc3b6718c65b6bcd71e721.mesh"
+
+[deps]
+
+files=[ "res://.import/Black Expanse 1.002.obj-7c82ff7792fc3b6718c65b6bcd71e721.mesh" ]
+
+source_file="res://models/levels/Black Expanse/Black Expanse 1.002.obj"
+dest_files=[ "res://.import/Black Expanse 1.002.obj-7c82ff7792fc3b6718c65b6bcd71e721.mesh", "res://.import/Black Expanse 1.002.obj-7c82ff7792fc3b6718c65b6bcd71e721.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

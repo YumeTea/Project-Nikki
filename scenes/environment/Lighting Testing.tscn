@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/environment/Skybox/Skybox Environment.tscn" type="PackedScene" id=1]
+[ext_resource path="res://default_environment.tres" type="Environment" id=2]
+
+[sub_resource type="PlaneMesh" id=2]
+
+[sub_resource type="CubeMesh" id=3]
+
+[node name="Spatial" type="Spatial"]
+
+[node name="WorldEnvironment" parent="." instance=ExtResource( 1 )]
+environment = ExtResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="WorldEnvironment"]
+transform = Transform( 0.557155, 0.480289, -0.677422, -0.152792, 0.861134, 0.484874, 0.816231, -0.166645, 0.55317, -5.23037, 5.64995, 7.05505 )
+shadow_enabled = true
+directional_shadow_normal_bias = 0.15
+directional_shadow_bias_split_scale = 1.0
+directional_shadow_max_distance = 256.0
+
+[node name="Floor" type="MeshInstance" parent="."]
+transform = Transform( 10, 0, 0, 0, 1, 0, 0, 0, 10, 0, 0, 0 )
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="Cube" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
+mesh = SubResource( 3 )
+material/0 = null

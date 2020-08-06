@@ -1,0 +1,75 @@
+[gd_scene load_steps=8 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type spatial;
+render_mode specular_toon;
+uniform sampler2D noise;
+uniform sampler2D normalmap;
+uniform float height_scale = 0.8;
+
+varying vec2 vertex_position;
+
+float wave(vec2 position){
+  position += texture(noise, position / 10.0).x * 2.0 - 1.0;
+  vec2 wv = 1.0 - abs(sin(position));
+  return pow(1.0 - pow(wv.x * wv.y, 0.65), 4.0);
+}
+
+float height(vec2 position, float time) {
+	//float h = wave(position);
+	vec2 offset = 0.01 * cos(position + time);
+	return texture(noise, (position / 10.0) - offset).x; //scaling factor based on mesh size	
+}
+
+//Vertex function runs per vertex/sets properties such as VERTEX (position) and NORMAL
+void vertex() {
+	vec2 pos = VERTEX.xz;
+	float k = height(pos, TIME);
+	VERTEX.y = k;
+	NORMAL = normalize(vec3(k - height(pos + vec2(0.1, 0.0), TIME), 0.1, k - height(pos + vec2(0.0, 0.1), TIME)));
+	float h = texture(noise, VERTEX.xz / 2.0 ).x; //divide by the size of the PlaneMesh
+	VERTEX.y += h * height_scale;
+	vertex_position = VERTEX.xz / 2.0;
+}
+
+//Fragment shader runs per pixel/sets ALBEDO color
+void fragment() {
+	float fresnel = sqrt(1.0 - dot(NORMAL, VIEW));
+	RIM = 0.2; //increases effect of light at glancing angles
+	METALLIC = 0.0;
+	ROUGHNESS = 0.02 * (1.0 - fresnel);
+	ALBEDO = vec3(0.01, 0.3, 0.9) + (0.1 * fresnel);
+	NORMALMAP = texture(normalmap, vertex_position).xyz;
+}"
+
+[sub_resource type="OpenSimplexNoise" id=2]
+
+[sub_resource type="NoiseTexture" id=3]
+seamless = true
+noise = SubResource( 2 )
+
+[sub_resource type="OpenSimplexNoise" id=4]
+
+[sub_resource type="NoiseTexture" id=5]
+seamless = true
+as_normalmap = true
+noise = SubResource( 4 )
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 1 )
+shader_param/height_scale = 0.3
+shader_param/noise = SubResource( 3 )
+shader_param/normalmap = SubResource( 5 )
+
+[sub_resource type="PlaneMesh" id=7]
+material = SubResource( 6 )
+subdivide_width = 32
+subdivide_depth = 32
+
+[node name="Spatial" type="Spatial"]
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14038, 0 )
+mesh = SubResource( 7 )
+skeleton = NodePath("")
+material/0 = null

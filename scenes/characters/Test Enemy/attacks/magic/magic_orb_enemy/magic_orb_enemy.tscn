@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scenes/characters/Test Enemy/attacks/magic/magic_orb_enemy/vshader_enemy_orb_pulse.tres" type="Shader" id=1]
+[ext_resource path="res://scenes/characters/Test Enemy/attacks/magic/magic_orb_enemy/magic_orb_enemy.gd" type="Script" id=2]
+
+[sub_resource type="SphereShape" id=1]
+radius = 0.5
+
+[sub_resource type="SphereMesh" id=2]
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = ExtResource( 1 )
+shader_param/time = null
+shader_param/time2 = null
+
+[node name="magic_orb" type="KinematicBody"]
+input_ray_pickable = false
+collision_layer = 0
+collision_mask = 7
+script = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 3 )
+
+[node name="glow" type="OmniLight" parent="CollisionShape"]
+shadow_enabled = true
+omni_attenuation = 0.000622343
+omni_shadow_mode = 0
+
+[node name="Timer" type="Timer" parent="."]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
