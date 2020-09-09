@@ -35,21 +35,15 @@ const collider_offset_max = 1.1 #max distance to move ground collider up or down
 const collider_offset_default = 0.285 #default y translation of ground collider(local)
 const collider_offset_change_limit = 0.1 #max amount collider can move each frame
 
+#Animation Blending Variables
+var move_blend_position
+
 #Initialized Values Storage
 var initialized_values = {}
 
 #World Interaction Variables
 var fall_height
 var land_height
-
-#Player Flags
-var strafe_locked = false
-var can_void = true
-var is_walking = false
-var is_falling = false
-var centering_view = false
-var centered = false
-var rotate_to_focus
 
 ###Movement Variables
 #Centering Variables
@@ -81,6 +75,15 @@ var snap_vector = snap_vector_default #Used for Move_and_slide_with_snap
 #Centering Variables
 var turn_angle = Vector2()
 var focus_angle_lim = Vector2(deg2rad(74), deg2rad(82))
+
+#Player Flags
+var strafe_locked = false
+var can_void = true
+var is_walking = false
+var is_falling = false
+var centering_view = false
+var centered = false
+var rotate_to_focus
 
 #Walking Flags
 var quick_turn = true

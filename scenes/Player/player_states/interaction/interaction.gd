@@ -34,9 +34,9 @@ var camera_angle_global = Vector2()
 ##Walk constants
 const speed_default = 18
 var speed_bow_walk = 7
-const turn_radius = 4 			#in degrees
-var quick_turn_radius = 12 	#in degrees
-const uturn_radius = 2 			#in degrees
+const turn_radius = 5 #in degrees
+var quick_turn_radius = 12 #in degrees
+const uturn_radius = 2 	#in degrees
 const ACCEL = 4
 const DEACCEL = 10
 

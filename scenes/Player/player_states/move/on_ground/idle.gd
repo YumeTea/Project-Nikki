@@ -26,8 +26,10 @@ func enter():
 
 #Cleans up state, reinitializes values like timers
 func exit():
+	#Clear active tweens
+	remove_active_tween("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position")
+	
 	disconnect_player_signals()
-#	owner.get_node("AnimationPlayer").stop()
 
 
 #Creates output based on the input event passed in
@@ -188,12 +190,15 @@ func center_to_focus():
 
 
 func blend_idle_anim():
-	#Idle Blending
-	var move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position")
+	###Idle Blending
+	#Set move_blend_position in case coming from walk
+#	owner.get_node("AnimationTree").set("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position", move_blend_position)
+	
+	move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position")
 	
 	#Bow Idle Blend
 	if state_action == "Bow":
-		if !active_tweens.has("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position"):
+		if move_blend_position != idle_bow_blend and !active_tweens.has("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position"):
 			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position", move_blend_position, idle_bow_blend, 0.25, Tween.TRANS_LINEAR)
 			owner.get_node("Tween").start()
 			add_active_tween("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position")

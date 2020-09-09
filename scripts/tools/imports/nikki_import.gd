@@ -7,16 +7,16 @@ var body_mesh_name = "Body Simplified"
 var skeleton
 var rig_path = "Rig/"
 var head_materials = [
-	preload("res://models/characters/Nikki/materials/Skin.material"),
-	preload("res://models/characters/Nikki/materials/Eyes.material"),
 	preload("res://models/characters/Nikki/materials/Hair.material"),
+	preload("res://models/characters/Nikki/materials/Eyes.material"),
+	preload("res://models/characters/Nikki/materials/Skin.material"),
 ]
 var body_materials = [
+	preload("res://models/characters/Nikki/materials/Shirt.material"),
 	preload("res://models/characters/Nikki/materials/Skin.material"),
 	preload("res://models/characters/Nikki/materials/Eyes.material"),
-	preload("res://models/characters/Nikki/materials/Shirt.material"),
-	preload("res://models/characters/Nikki/materials/Shorts.material"),
 	preload("res://models/characters/Nikki/materials/Striped_Socks.material"),
+	preload("res://models/characters/Nikki/materials/Shorts.material"),
 ]
 
 func post_import(scene):

@@ -29,6 +29,10 @@ func enter():
 #Cleans up state, reinitializes values like timers
 func exit():
 	is_walking = false
+	
+	#Clear active tweens
+	remove_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
+	
 	disconnect_player_signals()
 
 
@@ -59,8 +63,10 @@ func walk_third_person(delta):
 	if !centering_view and !strafe_locked:
 		walk_free(delta)
 	elif centering_view:
+		print("walk_locked")
 		walk_locked_third_person(delta)
 	elif strafe_locked:
+		print("walk strafe")
 		walk_strafe(delta)
 	
 	if Input.is_action_pressed("debug_input"):
@@ -294,13 +300,16 @@ func blend_move_anim():
 	var time_scale
 	var bow_walk_time_scale
 	
-	#Walk/Run Blending
-	var move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
+	###Walk/Run Blending
+	#Set move blend position in case coming from idle
+#	owner.get_node("AnimationTree").set("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position", move_blend_position)
+	
+	move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
 	
 	#Bow Walk Blend
 	if state_action == "Bow":
 		#Check move position and if move position is already being tweened
-		if move_blend_position >= 0.0 and !active_tweens.has("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"):
+		if move_blend_position != -1.0 and !active_tweens.has("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"):
 			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position", move_blend_position, -1.0, 0.25, Tween.TRANS_LINEAR)
 			owner.get_node("Tween").start()
 			add_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")

@@ -42,7 +42,7 @@ func update(delta):
 	.update(delta)
 	if owner.is_on_floor() and has_jumped:
 		emit_signal("finished", "previous")
-	elif !owner.is_on_floor() and velocity.y < 0:
+	elif !owner.is_on_floor() and velocity.y < 0 and has_jumped:
 		emit_signal("finished", "fall")
 
 
@@ -52,7 +52,7 @@ func on_animation_finished(_anim_name):
 
 func jump():
 	print("called jump function")
-	if owner.is_on_floor() and !is_falling:
+	if !has_jumped:
 		velocity.y = jump_strength
 		has_jumped = true
 
