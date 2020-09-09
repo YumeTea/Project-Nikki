@@ -9,15 +9,15 @@ func _ready():
 	contacts_reported = 100
 
 
-func start(start_loc_init, direction_init, target_node):
+func start(start_loc_init, direction_init):
 	transform = start_loc_init
 	set_linear_velocity(direction_init * speed)
 	set_gravity_scale(3)
 
 
-func _process(delta):
+func _process(_delta):
 	print()
 
 
-func _on_Projectile_body_entered(body):
+func _on_Projectile_body_entered(_body):
 	queue_free()

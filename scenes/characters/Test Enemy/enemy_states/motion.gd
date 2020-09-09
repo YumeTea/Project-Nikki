@@ -11,8 +11,8 @@ const gravity = -9.8
 const weight = 5
 
 #Input Variables
-var move_direction = Vector2(0,0)
-var look_direction = Vector2(0,0)
+var left_joystick_axis = Vector2(0,0)
+var right_joystick_axis = Vector2(0,0)
 var joystick_deadzone = 0.1
 var joystick_sensitivity = 1.5 #####CONSIDER SETTING THIS A DIFFERENT, GLOBAL WAY
 
@@ -32,6 +32,8 @@ var snap_vector = snap_vector_default #Used for Move_and_slide_with_snap
 #Centering Variables
 var turn_angle
 
+#Walking Flags
+var quick_turn = true
 
 #Creates output based on the input event passed in
 func handle_input(event):
@@ -39,12 +41,15 @@ func handle_input(event):
 
 
 func handle_ai_input(input):
-	get_move_direction(move_direction)
-	get_look_direction(look_direction)
+	get_move_direction(input)
+	get_look_direction(input)
 	if is_ai_action_pressed("center_view", input):
 		movement_locked = true
-	else:
+		if is_ai_action_just_pressed("center_view", input):
+			reset_recenter()
+	else: #checks all input to see if pressed, not just event
 		movement_locked = false
+		centered = false
 	.handle_ai_input(input)
 
 
@@ -60,20 +65,19 @@ func update(delta):
 	.update(delta)
 
 
-func _on_animation_finished(anim_name):
+func _on_animation_finished(_anim_name):
 	return
 
 
-func get_movement_direction():
-	direction = Vector3() #Resets direction of enemy to default
+func get_input_direction():
+	direction = Vector3() #Resets direction of player to default
 	
-	###Head Direction
+	###Camera Direction
 	var aim = head.get_global_transform().basis.get_euler()
-	facing_angle = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	
 	###Directional Input
-	direction.z -= move_direction.y
-	direction.x -= move_direction.x
+	direction.z -= left_joystick_axis.y
+	direction.x -= left_joystick_axis.x
 	
 	direction = direction.rotated(Vector3(0,1,0), (aim.y + PI))
 	
@@ -83,75 +87,83 @@ func get_movement_direction():
 	return direction
 
 
-func get_move_direction(direction):
-	input["left_stick"] = direction
-	
-	return move_direction
+func get_move_direction(input):
+	if input["input_current"]["left_stick"] != null:
+		left_joystick_axis = input["input_current"]["left_stick"]
 
 
-func get_look_direction(direction):
-	input["right_stick"] = direction
-	
-	return look_direction
+func get_look_direction(input):
+	if input["input_current"]["right_stick"] != null:
+		right_joystick_axis = input["input_current"]["right_stick"]
 
 
 func walk_free(delta):
-	direction = get_movement_direction() #Also sets facing angle
+	direction = get_input_direction()
+	facing_angle = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	
 	direction_angle = calculate_global_y_rotation(direction)
 	
-	var turn_angle = direction_angle - facing_angle
+	
+	turn_angle = direction_angle - facing_angle
+	###Turn angle bounding
+	#Turning left at degrees > 180
+	if (turn_angle > deg2rad(180)):
+		turn_angle = turn_angle - deg2rad(360)
+	#Turning right at degrees < -180
+	if (turn_angle < deg2rad(-180)):
+		turn_angle = turn_angle + deg2rad(360)
 	
 	###Turn radius limiting
-	if is_walking == true:
-		#Turning left at degrees > 180
-		if (turn_angle > deg2rad(180)):
-			turn_angle = turn_angle - deg2rad(360)
-		#Turning right at degrees < -180
-		if (turn_angle < deg2rad(-180)):
-			turn_angle = turn_angle + deg2rad(360)
+	if is_walking:
 		#Turn radius control left
-		if (turn_angle < (-deg2rad(turn_radius)) and turn_angle > deg2rad(-180 + uturn_radius)):
+		if turn_angle < (-deg2rad(turn_radius)):
 			turn_angle = (-deg2rad(turn_radius))
-		elif turn_angle < deg2rad(-180 + uturn_radius): #for near 180 turn
-			turn_angle = -deg2rad(quick_turn_radius)
 		#Turn radius control right
-		if (turn_angle > (deg2rad(turn_radius)) and turn_angle < deg2rad(180 - uturn_radius)):
+		if turn_angle > (deg2rad(turn_radius)):
 			turn_angle = (deg2rad(turn_radius))
-		elif turn_angle > deg2rad(180 - uturn_radius): #for near 180 turn
-			turn_angle = deg2rad(quick_turn_radius)
 		#Change input direction to match facing direction
 		if (direction.x != 0 or direction.z != 0):
 			direction_angle = facing_angle + turn_angle
 			direction.z = cos(direction_angle)
 			direction.x = sin(direction_angle)
 	
+	###Quick turn radius limiting
+	if quick_turn:
+		#Quick turn radius control left
+		if turn_angle < (-deg2rad(quick_turn_radius)):
+			turn_angle = (-deg2rad(quick_turn_radius))
+		#Quick turn radius control right
+		if turn_angle > (deg2rad(quick_turn_radius)):
+			turn_angle = (deg2rad(quick_turn_radius))
+		if direction_angle == facing_angle + turn_angle:
+			is_walking = true
+			quick_turn = false
+	
 	calculate_movement_velocity(delta)
 	
 	###Player Rotation
 	if direction:
-		owner.get_node("Rig").rotate_y(direction_angle - facing_angle)
-		#Send signal for facing direction change
-		emit_signal("facing_direction_changed", get_node_direction(owner.get_node("Rig")))
-		is_walking = true #is_walking set true after first pass to allow instant turn from stop
+		owner.get_node("Rig").rotate_y(turn_angle)
 	else:
 		is_walking = false
+		quick_turn = true
 
 
 func walk_locked(delta):
-	direction = get_movement_direction()
+	direction = get_input_direction()
+	facing_angle = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	
 	direction_angle = calculate_global_y_rotation(direction) #angle between current direction and input direction
 	
 	calculate_movement_velocity(delta)
 	
+	if centering_time_left <= 0:
+		centered = true
+		
+		
 	if focus_target_pos != null:
 		var target_position = focus_target_pos.get_global_transform().origin
 		var target_angle = calculate_global_y_rotation(owner.get_global_transform().origin.direction_to(target_position))
-		
-		#Checks if centered based on camera rig signal
-		if centering_time_left <= 0:
-			centered = true
 		
 		if !centered:
 			turn_angle = target_angle - facing_angle
@@ -162,22 +174,26 @@ func walk_locked(delta):
 			if (turn_angle < deg2rad(-180)):
 				turn_angle = turn_angle + deg2rad(360)
 			turn_angle = turn_angle/centering_time_left
-			direction_angle = facing_angle + turn_angle
 		else:
-			direction_angle = target_angle
+			turn_angle = target_angle - facing_angle
 	else:
-		direction_angle = facing_angle
+		turn_angle = 0
+		
+	emit_signal("center_view", turn_angle)
 	
-	###Enemy Rotation
-	owner.get_node("Rig").rotate_y(direction_angle - facing_angle)
-	
-	#Send signal for facing direction change
-	emit_signal("facing_direction_changed", get_node_direction(owner.get_node("Rig")))
+	###Player Rotation
+	owner.get_node("Rig").rotate_y(turn_angle)
 	
 	if direction:
 		is_walking = true
 	else:
 		is_walking = false
+		
+		
+	###Decrement Timer
+	if centering_time_left > 0:
+		centering_time_left -= 1
+
 
 func calculate_movement_velocity(delta):
 	###Velocity Calculation
@@ -207,6 +223,11 @@ func calculate_movement_velocity(delta):
 		velocity.z = 0
 
 
+func reset_recenter():
+	centered = false
+	centering_time_left = centering_time
+
+
 func calculate_global_y_rotation(direction):
 	var test_direction = Vector2(0,1)
 	var direction_to = Vector2(direction.x, direction.z)
@@ -214,9 +235,9 @@ func calculate_global_y_rotation(direction):
 	return y_rotation #Output is PI > y > -PI
 
 
-func get_node_direction(node):
+func get_node_direction(head_node):
 	var direction = Vector3(0,0,1)
-	var rotate_by = node.get_global_transform().basis.get_euler()
+	var rotate_by = head_node.get_global_transform().basis.get_euler()
 	direction = direction.rotated(Vector3(1,0,0), rotate_by.x)
 	direction = direction.rotated(Vector3(0,1,0), rotate_by.y)
 	direction = direction.rotated(Vector3(0,0,1), rotate_by.z)

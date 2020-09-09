@@ -15,3 +15,5 @@ dest_files=[ "res://.import/Octagonal Ring 1.001.obj-f74759d9bf5b7ad31416e99ed74
 
 generate_tangents=true
 scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

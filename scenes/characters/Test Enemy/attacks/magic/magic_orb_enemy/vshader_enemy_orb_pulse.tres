@@ -70,34 +70,27 @@ uniform float time2;
 
 void vertex() {
 // Input:4
-	vec3 n_out4p0;
-	n_out4p0 = VERTEX;
+	vec3 n_out4p0 = VERTEX;
 
 // ScalarUniform:11
-	float n_out11p0;
-	n_out11p0 = time;
+	float n_out11p0 = time;
 
 // ScalarFunc:7
-	float n_out7p0;
-	n_out7p0 = cos(n_out11p0);
+	float n_out7p0 = cos(n_out11p0);
 
 // ScalarFunc:8
-	float n_out8p0;
-	n_out8p0 = abs(n_out7p0);
+	float n_out8p0 = abs(n_out7p0);
 
 // ScalarOp:9
 	float n_in9p1 = 0.50000;
-	float n_out9p0;
-	n_out9p0 = n_out8p0 + n_in9p1;
+	float n_out9p0 = n_out8p0 + n_in9p1;
 
 // ScalarOp:10
 	float n_in10p1 = 3.00000;
-	float n_out10p0;
-	n_out10p0 = n_out9p0 / n_in10p1;
+	float n_out10p0 = n_out9p0 / n_in10p1;
 
 // VectorOp:5
-	vec3 n_out5p0;
-	n_out5p0 = n_out4p0 * vec3(n_out10p0);
+	vec3 n_out5p0 = n_out4p0 * vec3(n_out10p0);
 
 // Output:0
 	VERTEX = n_out5p0;
@@ -106,60 +99,53 @@ void vertex() {
 
 void fragment() {
 // Color:8
-	vec3 n_out8p0;
-	float n_out8p1;
-	n_out8p0 = vec3(0.708942,0.722656,0.283806);
-	n_out8p1 = 1.000000;
+	vec3 n_out8p0 = vec3(0.708942, 0.722656, 0.283806);
+	float n_out8p1 = 1.000000;
 
 // ScalarUniform:11
-	float n_out11p0;
-	n_out11p0 = time2;
+	float n_out11p0 = time2;
 
 // ScalarFunc:4
-	float n_out4p0;
-	n_out4p0 = cos(n_out11p0);
+	float n_out4p0 = cos(n_out11p0);
 
 // ScalarFunc:6
-	float n_out6p0;
-	n_out6p0 = abs(n_out4p0);
+	float n_out6p0 = abs(n_out4p0);
 
 // ScalarOp:7
 	float n_in7p1 = 0.50000;
-	float n_out7p0;
-	n_out7p0 = n_out6p0 + n_in7p1;
+	float n_out7p0 = n_out6p0 + n_in7p1;
 
 // ScalarOp:5
 	float n_in5p1 = 3.00000;
-	float n_out5p0;
-	n_out5p0 = n_out7p0 / n_in5p1;
+	float n_out5p0 = n_out7p0 / n_in5p1;
 
 // ColorOp:10
 	vec3 n_out10p0;
 	{
-		float base=n_out8p0.x;
-		float blend=vec3(n_out5p0).x;
+		float base = n_out8p0.x;
+		float blend = vec3(n_out5p0).x;
 		if (base < 0.5) {
-			n_out10p0.x = (base * (2.0*blend));
+			n_out10p0.x = (base * (2.0 * blend));
 		} else {
-			n_out10p0.x = (1.0 - (1.0-base) * (1.0-2.0*(blend-0.5)));
+			n_out10p0.x = (1.0 - (1.0 - base) * (1.0 - 2.0 * (blend - 0.5)));
 		}
 	}
 	{
-		float base=n_out8p0.y;
-		float blend=vec3(n_out5p0).y;
+		float base = n_out8p0.y;
+		float blend = vec3(n_out5p0).y;
 		if (base < 0.5) {
-			n_out10p0.y = (base * (2.0*blend));
+			n_out10p0.y = (base * (2.0 * blend));
 		} else {
-			n_out10p0.y = (1.0 - (1.0-base) * (1.0-2.0*(blend-0.5)));
+			n_out10p0.y = (1.0 - (1.0 - base) * (1.0 - 2.0 * (blend - 0.5)));
 		}
 	}
 	{
-		float base=n_out8p0.z;
-		float blend=vec3(n_out5p0).z;
+		float base = n_out8p0.z;
+		float blend = vec3(n_out5p0).z;
 		if (base < 0.5) {
-			n_out10p0.z = (base * (2.0*blend));
+			n_out10p0.z = (base * (2.0 * blend));
 		} else {
-			n_out10p0.z = (1.0 - (1.0-base) * (1.0-2.0*(blend-0.5)));
+			n_out10p0.z = (1.0 - (1.0 - base) * (1.0 - 2.0 * (blend - 0.5)));
 		}
 	}
 

@@ -14,8 +14,8 @@ func _ready():
 	emit_signal("max_health_changed", max_health)
 
 
-func take_damage(amount):
-	health -= amount
+func take_damage(value):
+	health -= value
 	health = max(0, health) #keeps health from being negative
 	emit_signal("health_changed", health)
 	if health == 0:

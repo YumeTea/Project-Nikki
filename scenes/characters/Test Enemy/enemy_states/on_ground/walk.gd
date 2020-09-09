@@ -8,6 +8,7 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
+	is_falling = false
 	centered = false
 	centering_time_left = centering_time
 	connect_enemy_signals()
@@ -37,12 +38,12 @@ func update(delta):
 		walk_free(delta)
 	else:
 		walk_locked(delta)
-	if velocity == Vector3(0,0,0) and move_direction == Vector2(0,0):
+	if velocity == Vector3(0,0,0) and left_joystick_axis == Vector2(0,0):
 		emit_signal("finished", "idle")
 	.update(delta)
 
 
-func _on_animation_finished(anim_name):
+func _on_animation_finished(_anim_name):
 	return
 
 

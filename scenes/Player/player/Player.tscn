@@ -1,0 +1,739 @@
+[gd_scene load_steps=130 format=2]
+
+[ext_resource path="res://scenes/Player/player_states/move/on_ground/idle.gd" type="Script" id=1]
+[ext_resource path="res://scenes/Player/player/player_controller.gd" type="Script" id=2]
+[ext_resource path="res://scenes/Player/player_states/state_machine_move.gd" type="Script" id=3]
+[ext_resource path="res://scenes/UI/debug UI/debug value display.tscn" type="PackedScene" id=4]
+[ext_resource path="res://models/characters/Nikki/model/Nikki Character Model Test.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/camera/player cam/Camera_Rig.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/UI/in_game/UI_In_Game.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/Player/player_states/move/in_air/jump.gd" type="Script" id=8]
+[ext_resource path="res://scenes/Player/player_states/move/on_ground/walk.gd" type="Script" id=9]
+[ext_resource path="res://scenes/Player/player/animationtree.gd" type="Script" id=10]
+[ext_resource path="res://scenes/Player/player_states/move/in_air/fall.gd" type="Script" id=11]
+[ext_resource path="res://models/characters/Nikki/model/anim/Bow_Hold.anim" type="Animation" id=12]
+[ext_resource path="res://models/characters/Nikki/model/anim/Bow_Stance.anim" type="Animation" id=13]
+[ext_resource path="res://scenes/Player/attributes/health.gd" type="Script" id=14]
+[ext_resource path="res://scenes/Player/player_states/other/death.gd" type="Script" id=15]
+[ext_resource path="res://scenes/Player/player_states/other/void.gd" type="Script" id=16]
+[ext_resource path="res://scenes/Player/player_states/action/bow.gd" type="Script" id=17]
+[ext_resource path="res://scenes/Player/attacks/magic/projectiles/magic_orb/cast_glow.material" type="Material" id=18]
+[ext_resource path="res://scenes/Player/attacks/magic/projectiles/magic_orb/Casting_Magic_Orb.anim" type="Animation" id=19]
+[ext_resource path="res://models/characters/Nikki/model/anim/Bow_Walk.anim" type="Animation" id=20]
+[ext_resource path="res://models/characters/Nikki/model/anim/Fall.anim" type="Animation" id=21]
+[ext_resource path="res://scenes/Player/animation/AnimationStateMachineAction.tres" type="AnimationNodeStateMachinePlayback" id=22]
+[ext_resource path="res://scenes/Player/player_states/state_machine_action.gd" type="Script" id=23]
+[ext_resource path="res://scenes/Player/player_states/action/none.gd" type="Script" id=24]
+[ext_resource path="res://scenes/Player/player_states/action/cast.gd" type="Script" id=25]
+[ext_resource path="res://models/characters/Nikki/model/anim/Idle.anim" type="Animation" id=26]
+[ext_resource path="res://models/characters/Nikki/model/anim/None.anim" type="Animation" id=27]
+[ext_resource path="res://models/characters/Nikki/model/anim/Run.anim" type="Animation" id=28]
+[ext_resource path="res://models/characters/Nikki/model/anim/Walk.anim" type="Animation" id=29]
+[ext_resource path="res://models/objects/items_player/bows/Keeper_Bow/Keeper_Bow.tscn" type="PackedScene" id=30]
+[ext_resource path="res://scenes/Player/attacks/arrows/water_arrow/water_arrow.tscn" type="PackedScene" id=31]
+[ext_resource path="res://scripts/tools/ik_magnet.gd" type="Script" id=32]
+[ext_resource path="res://scenes/Player/player/foot_ik/foot_ik_magnet.gd" type="Script" id=33]
+[ext_resource path="res://models/characters/Nikki/model/anim/Draw_Arrow.anim" type="Animation" id=34]
+[ext_resource path="res://shaders/cel_shading/outline_shader_clip.shader" type="Shader" id=35]
+[ext_resource path="res://models/characters/Nikki/textures/Eye Palette.png" type="Texture" id=36]
+[ext_resource path="res://shaders/cel_shading/eye_shader.shader" type="Shader" id=37]
+[ext_resource path="res://shaders/cel_shading/cel_shader.shader" type="Shader" id=38]
+[ext_resource path="res://models/characters/Nikki/textures/Skin Texture.png" type="Texture" id=39]
+[ext_resource path="res://models/characters/Nikki/textures/Hair Texture.png" type="Texture" id=40]
+[ext_resource path="res://models/characters/Nikki/textures/Shirt Texture.png" type="Texture" id=41]
+[ext_resource path="res://models/characters/Nikki/textures/Sock Texture.png" type="Texture" id=42]
+[ext_resource path="res://models/characters/Nikki/textures/Shorts Texture.png" type="Texture" id=43]
+[ext_resource path="res://models/characters/Nikki/materials/cel_shader_gradient.tres" type="Gradient" id=44]
+
+[sub_resource type="Animation" id=90]
+resource_name = "Jump"
+length = 0.5
+step = 0.0166667
+tracks/0/type = "method"
+tracks/0/path = NodePath("State_Machine_Move/Jump")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.05 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "jump"
+} ]
+}
+
+[sub_resource type="AnimationNodeAnimation" id=1]
+animation = "Casting_Magic_Orb"
+
+[sub_resource type="AnimationNodeAnimation" id=2]
+animation = "Draw_Arrow"
+
+[sub_resource type="AnimationNodeStateMachine" id=3]
+states/Casting_Magic_Orb/node = SubResource( 1 )
+states/Casting_Magic_Orb/position = Vector2( 549, 293 )
+states/Draw_Arrow/node = SubResource( 2 )
+states/Draw_Arrow/position = Vector2( 549, 195 )
+graph_offset = Vector2( -180.592, 141.12 )
+
+[sub_resource type="AnimationNodeAnimation" id=4]
+animation = "Bow_Hold"
+
+[sub_resource type="AnimationNodeStateMachine" id=5]
+states/Bow_Hold/node = SubResource( 4 )
+states/Bow_Hold/position = Vector2( 388, 191 )
+
+[sub_resource type="AnimationNodeAnimation" id=7]
+animation = "None"
+
+[sub_resource type="AnimationNodeAnimation" id=8]
+animation = "Fall"
+
+[sub_resource type="AnimationNodeAnimation" id=9]
+animation = "Idle"
+
+[sub_resource type="AnimationNodeAnimation" id=10]
+animation = "Bow_Stance"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id=11]
+blend_point_0/node = SubResource( 9 )
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource( 10 )
+blend_point_1/pos = -1.0
+
+[sub_resource type="AnimationNodeBlendTree" id=12]
+graph_offset = Vector2( -407, 42.5 )
+nodes/BlendSpace1D/node = SubResource( 11 )
+nodes/BlendSpace1D/position = Vector2( 40, 140 )
+node_connections = [ "output", 0, "BlendSpace1D" ]
+
+[sub_resource type="AnimationNodeAnimation" id=91]
+animation = "Jump"
+
+[sub_resource type="AnimationNodeAnimation" id=13]
+animation = "Walk"
+
+[sub_resource type="AnimationNodeAnimation" id=14]
+animation = "Run"
+
+[sub_resource type="AnimationNodeAnimation" id=15]
+animation = "Bow_Walk"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id=16]
+blend_point_0/node = SubResource( 13 )
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource( 14 )
+blend_point_1/pos = 1.0
+blend_point_2/node = SubResource( 15 )
+blend_point_2/pos = -1.0
+
+[sub_resource type="AnimationNodeTimeScale" id=17]
+
+[sub_resource type="AnimationNodeBlendTree" id=18]
+graph_offset = Vector2( 12, 92.5 )
+nodes/BlendSpace1D/node = SubResource( 16 )
+nodes/BlendSpace1D/position = Vector2( 360, 160 )
+nodes/TimeScale/node = SubResource( 17 )
+nodes/TimeScale/position = Vector2( 560, 160 )
+nodes/output/position = Vector2( 740, 160 )
+node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=19]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=23]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=24]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=25]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=26]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=29]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=30]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=92]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=93]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=94]
+
+[sub_resource type="AnimationNodeStateMachine" id=31]
+states/(LAND)/node = SubResource( 7 )
+states/(LAND)/position = Vector2( 457, 173 )
+states/Fall/node = SubResource( 8 )
+states/Fall/position = Vector2( 457, 270 )
+states/Idle/node = SubResource( 12 )
+states/Idle/position = Vector2( -40.221, 79 )
+states/Jump/node = SubResource( 91 )
+states/Jump/position = Vector2( 457, 430 )
+states/Walk/node = SubResource( 18 )
+states/Walk/position = Vector2( 989.779, 79 )
+transitions = [ "Fall", "(LAND)", SubResource( 19 ), "Walk", "Fall", SubResource( 23 ), "(LAND)", "Walk", SubResource( 24 ), "Walk", "Idle", SubResource( 25 ), "Idle", "Walk", SubResource( 26 ), "(LAND)", "Idle", SubResource( 29 ), "Idle", "Fall", SubResource( 30 ), "Jump", "Fall", SubResource( 92 ), "Idle", "Jump", SubResource( 93 ), "Walk", "Jump", SubResource( 94 ) ]
+graph_offset = Vector2( -208.221, 43.3679 )
+
+[sub_resource type="AnimationNodeAnimation" id=32]
+animation = "None"
+
+[sub_resource type="AnimationNodeAnimation" id=33]
+animation = "Fall"
+
+[sub_resource type="AnimationNodeAnimation" id=34]
+animation = "Idle"
+
+[sub_resource type="AnimationNodeAnimation" id=95]
+animation = "Jump"
+
+[sub_resource type="AnimationNodeAnimation" id=36]
+animation = "Walk"
+
+[sub_resource type="AnimationNodeAnimation" id=37]
+animation = "Run"
+
+[sub_resource type="AnimationNodeAnimation" id=38]
+animation = "Bow_Walk"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id=39]
+blend_point_0/node = SubResource( 36 )
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource( 37 )
+blend_point_1/pos = 1.0
+blend_point_2/node = SubResource( 38 )
+blend_point_2/pos = -1.0
+
+[sub_resource type="AnimationNodeTimeScale" id=40]
+
+[sub_resource type="AnimationNodeBlendTree" id=41]
+graph_offset = Vector2( -321, 64 )
+nodes/BlendSpace1D/node = SubResource( 39 )
+nodes/BlendSpace1D/position = Vector2( -80, 140 )
+nodes/TimeScale/node = SubResource( 40 )
+nodes/TimeScale/position = Vector2( 100, 140 )
+nodes/output/position = Vector2( 280, 140 )
+node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=44]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=45]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=48]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=51]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=52]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=53]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=54]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=96]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=97]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=98]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachine" id=55]
+states/(LAND)/node = SubResource( 32 )
+states/(LAND)/position = Vector2( 40, 191.139 )
+states/Fall/node = SubResource( 33 )
+states/Fall/position = Vector2( 40, 276.139 )
+states/Idle/node = SubResource( 34 )
+states/Idle/position = Vector2( -310, 112 )
+states/Jump/node = SubResource( 95 )
+states/Jump/position = Vector2( 40, 369.139 )
+states/Walk/node = SubResource( 41 )
+states/Walk/position = Vector2( 397, 112 )
+transitions = [ "Idle", "Walk", SubResource( 44 ), "Walk", "Idle", SubResource( 45 ), "Idle", "Fall", SubResource( 48 ), "Walk", "Fall", SubResource( 51 ), "Fall", "(LAND)", SubResource( 52 ), "(LAND)", "Idle", SubResource( 53 ), "(LAND)", "Walk", SubResource( 54 ), "Idle", "Jump", SubResource( 96 ), "Walk", "Jump", SubResource( 97 ), "Jump", "Fall", SubResource( 98 ) ]
+graph_offset = Vector2( -531.696, 53.4187 )
+
+[sub_resource type="AnimationNodeTimeScale" id=56]
+
+[sub_resource type="AnimationNodeBlend2" id=57]
+
+[sub_resource type="AnimationNodeBlend2" id=58]
+filter_enabled = true
+filters = [ "Rig/Skeleton:bicep_l", "Rig/Skeleton:elbow_l", "Rig/Skeleton:forearm_l", "Rig/Skeleton:hand_index_1_l", "Rig/Skeleton:hand_index_2_l", "Rig/Skeleton:hand_index_3_l", "Rig/Skeleton:hand_index_controller_l", "Rig/Skeleton:hand_l", "Rig/Skeleton:hand_middle_1_l", "Rig/Skeleton:hand_middle_2_l", "Rig/Skeleton:hand_middle_3_l", "Rig/Skeleton:hand_middle_controller_l", "Rig/Skeleton:hand_pinky_1_l", "Rig/Skeleton:hand_pinky_2_l", "Rig/Skeleton:hand_pinky_3_l", "Rig/Skeleton:hand_pinky_controller_l", "Rig/Skeleton:hand_ring_1_l", "Rig/Skeleton:hand_ring_2_l", "Rig/Skeleton:hand_ring_3_l", "Rig/Skeleton:hand_ring_controller_l", "Rig/Skeleton:hand_thumb_1_l", "Rig/Skeleton:hand_thumb_2_l", "Rig/Skeleton:hand_thumb_3_l", "Rig/Skeleton:hand_thumb_controller_l" ]
+
+[sub_resource type="AnimationNodeBlend2" id=59]
+filter_enabled = true
+filters = [ "AnimationTree", "Camera_Rig/Pivot/arrow_position:rotation_degrees", "Camera_Rig/Pivot/arrow_position:translation", "Rig/Projectile_Position/cast_glow:scale", "Rig/Projectile_Position/cast_glow:translation", "Rig/Projectile_Position/cast_glow:visible", "Rig/Projectile_Position:translation", "Rig/Skeleton", "Rig/Skeleton/Arm_IK/Hand_L_Controller/Hand_L_Position:translation", "Rig/Skeleton/Arm_IK/Hand_R_Controller/Hand_R_Position:translation", "Rig/Skeleton/Arm_IK/Projectile_Position:rotation_degrees", "Rig/Skeleton/Arm_IK/Projectile_Position:translation", "Rig/Skeleton/Arrow_Hand/Arrow_Position:translation", "Rig/Skeleton/Bicep_L_Position:rotation_degrees", "Rig/Skeleton/Bicep_L_Position:translation", "Rig/Skeleton/Bow_IK/Arrow_Hand/Arrow_Position:translation", "Rig/Skeleton/Bow_IK/Arrow_Hand/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Hand_L_Controller/Hand_L_Position:translation", "Rig/Skeleton/Bow_IK/Hand_L_Position:translation", "Rig/Skeleton/Bow_IK/Hand_R_Controller/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Projectile_Position:rotation_degrees", "Rig/Skeleton/Bow_IK/Projectile_Position:translation", "Rig/Skeleton/IK_System/SkeletonIK_Arrow", "Rig/Skeleton/IK_System/SkeletonIK_Arrow:interpolation", "Rig/Skeleton/IK_System/SkeletonIK_Bow", "Rig/Skeleton/IK_System/SkeletonIK_Bow:interpolation", "Rig/Skeleton/SkeletonIK", "Rig/Skeleton/SkeletonIK:interpolation", "Rig/Skeleton/SkeletonIK_Arm_L", "Rig/Skeleton/SkeletonIK_Arm_L:interpolation", "Rig/Skeleton/SkeletonIK_Arm_R", "Rig/Skeleton/SkeletonIK_Arm_R:interpolation", "Rig/Skeleton/SkeletonIK_Arrow", "Rig/Skeleton/SkeletonIK_Arrow:interpolation", "Rig/Skeleton/SkeletonIK_Bicep_L", "Rig/Skeleton/SkeletonIK_Bicep_L:interpolation", "Rig/Skeleton/SkeletonIK_Bow", "Rig/Skeleton/SkeletonIK_Bow:interpolation", "Rig/Skeleton/SkeletonIK_Bow:root_bone", "Rig/Skeleton:bicep_l", "Rig/Skeleton:bicep_r", "Rig/Skeleton:chest", "Rig/Skeleton:elbow_l", "Rig/Skeleton:elbow_r", "Rig/Skeleton:forearm_l", "Rig/Skeleton:forearm_r", "Rig/Skeleton:hand_index_1_l", "Rig/Skeleton:hand_index_1_r", "Rig/Skeleton:hand_index_2_l", "Rig/Skeleton:hand_index_2_r", "Rig/Skeleton:hand_index_3_l", "Rig/Skeleton:hand_index_3_r", "Rig/Skeleton:hand_index_controller_l", "Rig/Skeleton:hand_index_controller_r", "Rig/Skeleton:hand_l", "Rig/Skeleton:hand_middle_1_l", "Rig/Skeleton:hand_middle_1_r", "Rig/Skeleton:hand_middle_2_l", "Rig/Skeleton:hand_middle_2_r", "Rig/Skeleton:hand_middle_3_l", "Rig/Skeleton:hand_middle_3_r", "Rig/Skeleton:hand_middle_controller_l", "Rig/Skeleton:hand_middle_controller_r", "Rig/Skeleton:hand_pinky_1_l", "Rig/Skeleton:hand_pinky_1_r", "Rig/Skeleton:hand_pinky_2_l", "Rig/Skeleton:hand_pinky_2_r", "Rig/Skeleton:hand_pinky_3_l", "Rig/Skeleton:hand_pinky_3_r", "Rig/Skeleton:hand_pinky_controller_l", "Rig/Skeleton:hand_pinky_controller_r", "Rig/Skeleton:hand_r", "Rig/Skeleton:hand_ring_1_l", "Rig/Skeleton:hand_ring_1_r", "Rig/Skeleton:hand_ring_2_l", "Rig/Skeleton:hand_ring_2_r", "Rig/Skeleton:hand_ring_3_l", "Rig/Skeleton:hand_ring_3_r", "Rig/Skeleton:hand_ring_controller_l", "Rig/Skeleton:hand_ring_controller_r", "Rig/Skeleton:hand_thumb_1_l", "Rig/Skeleton:hand_thumb_1_r", "Rig/Skeleton:hand_thumb_2_l", "Rig/Skeleton:hand_thumb_2_r", "Rig/Skeleton:hand_thumb_3_l", "Rig/Skeleton:hand_thumb_3_r", "Rig/Skeleton:hand_thumb_controller_l", "Rig/Skeleton:hand_thumb_controller_r", "Rig/Skeleton:head", "Rig/Skeleton:neck", "Rig/Skeleton:shoulder_blade_l", "Rig/Skeleton:shoulder_blade_r", "Rig/Skeleton:shoulder_l", "Rig/Skeleton:shoulder_r", "Rig/Skeleton:spine", "Rig/projectile_position/cast_glow:scale", "Rig/projectile_position/cast_glow:translation", "Rig/projectile_position/cast_glow:visible", "Rig/projectile_position:translation", "State_Machine_Action/Bow" ]
+
+[sub_resource type="AnimationNodeBlendTree" id=60]
+graph_offset = Vector2( -855.361, -19.5 )
+nodes/StateMachineAction/node = SubResource( 3 )
+nodes/StateMachineAction/position = Vector2( -560, 280 )
+nodes/StateMachineLeftHand/node = SubResource( 5 )
+nodes/StateMachineLeftHand/position = Vector2( -840, 280 )
+nodes/StateMachineLowerBody/node = SubResource( 31 )
+nodes/StateMachineLowerBody/position = Vector2( -840, -40 )
+nodes/StateMachineUpperBody/node = SubResource( 55 )
+nodes/StateMachineUpperBody/position = Vector2( -840, 120 )
+nodes/TimeScaleAction/node = SubResource( 56 )
+nodes/TimeScaleAction/position = Vector2( -340, 280 )
+nodes/UpperBodyxAction/node = SubResource( 57 )
+nodes/UpperBodyxAction/position = Vector2( -120, 180 )
+nodes/UpperBodyxLeftHand/node = SubResource( 58 )
+nodes/UpperBodyxLeftHand/position = Vector2( -580, 100 )
+nodes/UpperBodyxLowerBody/node = SubResource( 59 )
+nodes/UpperBodyxLowerBody/position = Vector2( 160, 100 )
+nodes/output/position = Vector2( 400, 100 )
+node_connections = [ "output", 0, "UpperBodyxLowerBody", "TimeScaleAction", 0, "StateMachineAction", "UpperBodyxAction", 0, "UpperBodyxLeftHand", "UpperBodyxAction", 1, "TimeScaleAction", "UpperBodyxLeftHand", 0, "StateMachineUpperBody", "UpperBodyxLeftHand", 1, "StateMachineLeftHand", "UpperBodyxLowerBody", 0, "StateMachineLowerBody", "UpperBodyxLowerBody", 1, "UpperBodyxAction" ]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=61]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=62]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=63]
+resource_local_to_scene = false
+
+[sub_resource type="ShaderMaterial" id=64]
+shader = ExtResource( 35 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=65]
+gradient = ExtResource( 44 )
+
+[sub_resource type="ShaderMaterial" id=66]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 64 )
+shader = ExtResource( 38 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 39 )
+shader_param/light_ramp = SubResource( 65 )
+
+[sub_resource type="ShaderMaterial" id=67]
+shader = ExtResource( 35 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="Gradient" id=68]
+offsets = PoolRealArray( 0, 0.00497512 )
+
+[sub_resource type="GradientTexture" id=69]
+gradient = SubResource( 68 )
+
+[sub_resource type="ShaderMaterial" id=70]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 67 )
+shader = ExtResource( 37 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/eye_light_default = Vector3( 0, 0, 0 )
+shader_param/texturemap = ExtResource( 36 )
+shader_param/light_ramp = SubResource( 69 )
+
+[sub_resource type="ShaderMaterial" id=71]
+shader = ExtResource( 35 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=72]
+gradient = ExtResource( 44 )
+
+[sub_resource type="ShaderMaterial" id=73]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 71 )
+shader = ExtResource( 38 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 41 )
+shader_param/light_ramp = SubResource( 72 )
+
+[sub_resource type="ShaderMaterial" id=74]
+shader = ExtResource( 35 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=75]
+gradient = ExtResource( 44 )
+
+[sub_resource type="ShaderMaterial" id=76]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 74 )
+shader = ExtResource( 38 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 43 )
+shader_param/light_ramp = SubResource( 75 )
+
+[sub_resource type="ShaderMaterial" id=77]
+shader = ExtResource( 35 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="Gradient" id=78]
+offsets = PoolRealArray( 0.597015, 0.60199 )
+
+[sub_resource type="GradientTexture" id=79]
+gradient = SubResource( 78 )
+
+[sub_resource type="ShaderMaterial" id=80]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 77 )
+shader = ExtResource( 38 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 42 )
+shader_param/light_ramp = SubResource( 79 )
+
+[sub_resource type="ShaderMaterial" id=81]
+shader = ExtResource( 35 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=82]
+gradient = ExtResource( 44 )
+
+[sub_resource type="ShaderMaterial" id=83]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 81 )
+shader = ExtResource( 37 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/eye_light_default = Vector3( 0.2, 0.2, 0.2 )
+shader_param/texturemap = ExtResource( 36 )
+shader_param/light_ramp = SubResource( 82 )
+
+[sub_resource type="ShaderMaterial" id=84]
+shader = ExtResource( 35 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=85]
+gradient = ExtResource( 44 )
+
+[sub_resource type="ShaderMaterial" id=86]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 84 )
+shader = ExtResource( 38 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 40 )
+shader_param/light_ramp = SubResource( 85 )
+
+[sub_resource type="SphereMesh" id=87]
+
+[sub_resource type="CapsuleShape" id=88]
+radius = 0.5
+height = 5.35
+
+[sub_resource type="SphereShape" id=89]
+
+[node name="Nikki" type="KinematicBody" groups=[
+"actor",
+"targettable",
+"vulnerable",
+]]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.89, 0 )
+collision_layer = 2
+collision_mask = 5
+script = ExtResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Bow_Hold = ExtResource( 12 )
+anims/Bow_Stance = ExtResource( 13 )
+anims/Bow_Walk = ExtResource( 20 )
+anims/Casting_Magic_Orb = ExtResource( 19 )
+anims/Draw_Arrow = ExtResource( 34 )
+anims/Fall = ExtResource( 21 )
+anims/Idle = ExtResource( 26 )
+anims/Jump = SubResource( 90 )
+anims/None = ExtResource( 27 )
+anims/Run = ExtResource( 28 )
+anims/Walk = ExtResource( 29 )
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource( 60 )
+anim_player = NodePath("../AnimationPlayer")
+active = true
+parameters/StateMachineAction/playback = SubResource( 61 )
+parameters/StateMachineLeftHand/playback = SubResource( 62 )
+parameters/StateMachineLowerBody/playback = SubResource( 63 )
+parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position = 0.0
+parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position = 0.0
+parameters/StateMachineLowerBody/Walk/TimeScale/scale = 1.0
+parameters/StateMachineUpperBody/playback = ExtResource( 22 )
+parameters/StateMachineUpperBody/Walk/BlendSpace1D/blend_position = 0.0
+parameters/StateMachineUpperBody/Walk/TimeScale/scale = 1.0
+parameters/TimeScaleAction/scale = 1.0
+parameters/UpperBodyxAction/blend_amount = 0.0
+parameters/UpperBodyxLeftHand/blend_amount = 0.0
+parameters/UpperBodyxLowerBody/blend_amount = 1.0
+script = ExtResource( 10 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Attributes" type="Node" parent="."]
+
+[node name="Health" type="Node" parent="Attributes"]
+script = ExtResource( 14 )
+
+[node name="State_Machine_Move" type="Node" parent="."]
+script = ExtResource( 3 )
+START_STATE = NodePath("../State_Machine_Move/Idle")
+
+[node name="Idle" type="Node" parent="State_Machine_Move"]
+script = ExtResource( 1 )
+
+[node name="Walk" type="Node" parent="State_Machine_Move"]
+script = ExtResource( 9 )
+
+[node name="Fall" type="Node" parent="State_Machine_Move"]
+script = ExtResource( 11 )
+
+[node name="Jump" type="Node" parent="State_Machine_Move"]
+script = ExtResource( 8 )
+
+[node name="Death" type="Node" parent="State_Machine_Move"]
+script = ExtResource( 15 )
+
+[node name="Void" type="Node" parent="State_Machine_Move"]
+script = ExtResource( 16 )
+
+[node name="State_Machine_Action" type="Node" parent="."]
+script = ExtResource( 23 )
+START_STATE = NodePath("None")
+
+[node name="None" type="Node" parent="State_Machine_Action"]
+script = ExtResource( 24 )
+
+[node name="Bow" type="Node" parent="State_Machine_Action"]
+script = ExtResource( 17 )
+
+[node name="Cast" type="Node" parent="State_Machine_Action"]
+script = ExtResource( 25 )
+
+[node name="Death" type="Node" parent="State_Machine_Action"]
+script = ExtResource( 15 )
+
+[node name="Void" type="Node" parent="State_Machine_Action"]
+script = ExtResource( 16 )
+
+[node name="Projectile Elements" type="Node" parent="."]
+
+[node name="Camera_Rig" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
+
+[node name="Rig" parent="." instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 0 )
+
+[node name="Skeleton" parent="Rig" index="0"]
+bones/0/bound_children = [ NodePath("Foot_Floor_L") ]
+bones/47/bound_children = [ NodePath("Hand_L") ]
+bones/71/bound_children = [ NodePath("Hand_R") ]
+bones/94/bound_children = [ NodePath("Foot_Floor_R") ]
+
+[node name="Body Simplified" parent="Rig/Skeleton" index="0"]
+material/0 = SubResource( 66 )
+material/1 = SubResource( 70 )
+material/2 = SubResource( 73 )
+material/3 = SubResource( 76 )
+material/4 = SubResource( 80 )
+
+[node name="Head" parent="Rig/Skeleton" index="1"]
+material/0 = SubResource( 66 )
+material/1 = SubResource( 83 )
+material/2 = SubResource( 86 )
+
+[node name="Bow_IK" type="Spatial" parent="Rig/Skeleton" index="2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.8, 0.3 )
+
+[node name="Hand_L_Controller" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
+
+[node name="Hand_L_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_L_Controller"]
+transform = Transform( -0.448772, -0.0851308, 0.889582, 0.891873, 0.0199792, 0.45184, -0.0562385, 0.996167, 0.0669606, 0.162883, -0.553506, 2.62704 )
+
+[node name="Hand_R_Controller" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
+
+[node name="Hand_R_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_R_Controller"]
+transform = Transform( -0.024817, 0.00931351, -0.999648, -0.996517, 0.0794076, 0.025479, 0.0796171, 0.996798, 0.00731041, -0.17, -0.404, -0.094 )
+
+[node name="Raycast_Lineup" type="RayCast" parent="Rig/Skeleton/Bow_IK"]
+cast_to = Vector3( 0, 0, 10 )
+
+[node name="Projectile_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
+transform = Transform( 1, 0, 0, 0, 0.999848, 0.0174524, 0, -0.0174524, 0.999848, 0, 0, 2.65897 )
+
+[node name="arrow lineup" type="Position3D" parent="Rig/Skeleton/Bow_IK/Projectile_Position"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0573506, 0.287355 )
+
+[node name="Foot_IK" type="Spatial" parent="Rig/Skeleton" index="3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0 )
+
+[node name="Foot_L_Cont" type="Position3D" parent="Rig/Skeleton/Foot_IK"]
+
+[node name="Foot_L_Pos" type="Position3D" parent="Rig/Skeleton/Foot_IK/Foot_L_Cont"]
+transform = Transform( -1, 3.22423e-07, -2.22677e-09, -1.67372e-07, -0.516727, 0.85615, 2.79227e-07, 0.85615, 0.516727, 0.000319988, 0.205547, -0.245259 )
+
+[node name="Foot_L_Magnet" type="Position3D" parent="Rig/Skeleton/Foot_IK/Foot_L_Cont"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 1.3, 1.2 )
+visible = false
+script = ExtResource( 33 )
+
+[node name="Foot_R_Cont" type="Position3D" parent="Rig/Skeleton/Foot_IK"]
+
+[node name="Foot_R_Pos" type="Position3D" parent="Rig/Skeleton/Foot_IK/Foot_R_Cont"]
+transform = Transform( -1, -3.25841e-07, 0, 1.68371e-07, -0.516728, 0.85615, -2.78969e-07, 0.85615, 0.516728, 0, 0.206, -0.245 )
+
+[node name="Foot_R_Magnet" type="Position3D" parent="Rig/Skeleton/Foot_IK/Foot_R_Cont"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.3, 1.2 )
+visible = false
+script = ExtResource( 33 )
+
+[node name="Hand_L" type="BoneAttachment" parent="Rig/Skeleton" index="4"]
+transform = Transform( -0.170831, 0.0379624, 0.984568, 0.35049, -0.931559, 0.0967316, 0.920856, 0.361605, 0.145833, 0.7976, 2.90256, 0.24827 )
+bone_name = "hand_l"
+
+[node name="Bow_Position" type="Position3D" parent="Rig/Skeleton/Hand_L"]
+transform = Transform( 0.999998, -2.6077e-08, 2.7474e-08, 3.72529e-08, 0.999998, -1.49012e-07, 1.14553e-07, 0, 0.999998, 0.310419, 0.22278, -0.106312 )
+
+[node name="Keeper_Bow" parent="Rig/Skeleton/Hand_L/Bow_Position" instance=ExtResource( 30 )]
+
+[node name="Hand_R" type="BoneAttachment" parent="Rig/Skeleton" index="5"]
+transform = Transform( -0.0424704, 0.0500063, -0.997845, -0.42436, -0.905082, -0.0272953, -0.904497, 0.422287, 0.0596599, -0.787871, 2.8343, -0.116332 )
+bone_name = "hand_r"
+
+[node name="Arrow_Position" type="Position3D" parent="Rig/Skeleton/Hand_R"]
+transform = Transform( 0.0951196, -0.99513, -0.0258377, -0.0173634, -0.02761, 0.999467, -0.995316, -0.0946203, -0.0199051, -0.0216441, 0.289794, -0.0852602 )
+
+[node name="Arrow" parent="Rig/Skeleton/Hand_R/Arrow_Position" instance=ExtResource( 31 )]
+visible = false
+
+[node name="Foot_Floor_L" type="BoneAttachment" parent="Rig/Skeleton" index="6"]
+transform = Transform( -0.999349, -0.0360769, -1.09446e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.0834053, 0.219677, -0.359468 )
+bone_name = "foot_floor_ik_l"
+
+[node name="Foot_L_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_L"]
+transform = Transform( -0.999349, 0.0182652, -0.0311115, -0.0360769, -0.506218, 0.861651, -1.09449e-05, 0.862214, 0.506547, 0.0126798, -0.342692, 1.06789 )
+enabled = true
+cast_to = Vector3( 0, -1.34, 0 )
+
+[node name="Foot_Floor_R" type="BoneAttachment" parent="Rig/Skeleton" index="7"]
+transform = Transform( -0.999349, 0.0360769, 1.09446e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.192529, 0.636303, -0.119863 )
+bone_name = "foot_floor_ik_r"
+
+[node name="Foot_R_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_R"]
+transform = Transform( -0.99935, -0.0182649, 0.0311115, 0.0360768, -0.506217, 0.861651, 1.11618e-05, 0.862213, 0.506547, -0.0126798, -0.342692, 1.06789 )
+enabled = true
+cast_to = Vector3( 0, -1.34, 0 )
+
+[node name="SkeletonIK_Bow" type="SkeletonIK" parent="Rig/Skeleton" index="8"]
+process_priority = 1
+root_bone = "bicep_l"
+tip_bone = "hand_l"
+use_magnet = true
+magnet = Vector3( 2, 5.5, -1 )
+target_node = NodePath("../Bow_IK/Hand_L_Controller/Hand_L_Position")
+
+[node name="Magnet" type="Position3D" parent="Rig/Skeleton/SkeletonIK_Bow"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 5.5, -1 )
+visible = false
+script = ExtResource( 32 )
+
+[node name="SkeletonIK_Arrow" type="SkeletonIK" parent="Rig/Skeleton" index="9"]
+process_priority = 1
+root_bone = "bicep_r"
+tip_bone = "hand_r"
+use_magnet = true
+magnet = Vector3( -3, 7, -2 )
+target_node = NodePath("../Bow_IK/Hand_R_Controller/Hand_R_Position")
+
+[node name="Magnet" type="Position3D" parent="Rig/Skeleton/SkeletonIK_Arrow"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 7, -2 )
+visible = false
+script = ExtResource( 32 )
+
+[node name="SkeletonIK_Foot_L" type="SkeletonIK" parent="Rig/Skeleton" index="10"]
+process_priority = 1
+root_bone = "femur_l"
+tip_bone = "talus_l"
+use_magnet = true
+magnet = Vector3( 0.3, 1.3, 1.2 )
+target_node = NodePath("../Foot_IK/Foot_L_Cont/Foot_L_Pos")
+
+[node name="SkeletonIK_Foot_R" type="SkeletonIK" parent="Rig/Skeleton" index="11"]
+process_priority = 1
+root_bone = "femur_r"
+tip_bone = "talus_r"
+use_magnet = true
+magnet = Vector3( -0.3, 1.3, 1.2 )
+target_node = NodePath("../Foot_IK/Foot_R_Cont/Foot_R_Pos")
+
+[node name="Projectile_Position" type="Position3D" parent="Rig"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.17052, 3.11751, -0.15291 )
+
+[node name="cast_glow" type="MeshInstance" parent="Rig/Projectile_Position"]
+transform = Transform( 0.001, 0, 0, 0, 0.001, 0, 0, 0, 0.001, 0, 0, 0 )
+mesh = SubResource( 87 )
+material/0 = ExtResource( 18 )
+
+[node name="Raycast_Floor" type="RayCast" parent="Rig"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
+enabled = true
+cast_to = Vector3( 0, -4.18, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.285, -0.042 )
+shape = SubResource( 88 )
+
+[node name="UI_Layer" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="UI_In_Game" parent="UI_Layer" instance=ExtResource( 7 )]
+
+[node name="Debug Value Display" parent="UI_Layer" instance=ExtResource( 4 )]
+
+[node name="Targetting_Area" type="Area" parent="."]
+transform = Transform( 176, 0, 0, 0, 176, 0, 0, 0, 176, 0, 2, 0 )
+collision_layer = 2
+collision_mask = 5
+
+[node name="CollisionShape" type="CollisionShape" parent="Targetting_Area"]
+shape = SubResource( 89 )
+
+[node name="target_pos" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
+[connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
+[connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
+[connection signal="is_falling" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_is_falling"]
+[connection signal="position_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_position_changed"]
+[connection signal="targets_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_targets_changed"]
+[connection signal="velocity_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_velocity_changed"]
+[connection signal="animation_started" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_started"]
+[connection signal="health_changed" from="Attributes/Health" to="UI_Layer/UI_In_Game" method="_on_Health_health_changed"]
+[connection signal="max_health_changed" from="Attributes/Health" to="UI_Layer/UI_In_Game" method="_on_Health_max_health_changed"]
+[connection signal="move_state_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_changed"]
+[connection signal="move_state_stack_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_stack_changed"]
+[connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]
+[connection signal="action_state_changed" from="State_Machine_Action" to="State_Machine_Move" method="_on_State_Machine_Action_action_state_changed"]
+[connection signal="action_state_stack_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_stack_changed"]
+[connection signal="break_target" from="Camera_Rig" to="." method="_on_Camera_Rig_break_target"]
+[connection signal="camera_direction_changed" from="Camera_Rig" to="." method="_on_Camera_Rig_camera_direction_changed"]
+[connection signal="camera_moved" from="Camera_Rig" to="." method="_on_Camera_Rig_camera_moved"]
+[connection signal="body_entered" from="Targetting_Area" to="." method="_on_Targetting_Area_body_entered"]
+[connection signal="body_exited" from="Targetting_Area" to="." method="_on_Targetting_Area_body_exited"]
+
+[editable path="Rig"]

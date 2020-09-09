@@ -10,7 +10,7 @@ func handle_input(event):
 
 
 func handle_ai_input(input):
-	if is_ai_action_pressed("cast", input):
+	if is_ai_action_just_pressed("cast", input):
 		emit_signal("finished", "ground_cast")
 	.handle_ai_input(input)
 

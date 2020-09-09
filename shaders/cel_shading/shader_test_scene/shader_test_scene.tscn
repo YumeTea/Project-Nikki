@@ -1,0 +1,271 @@
+[gd_scene load_steps=49 format=2]
+
+[ext_resource path="res://shaders/cel_shading/outline_shader_clip.shader" type="Shader" id=1]
+[ext_resource path="res://shaders/cel_shading/cel_shader.shader" type="Shader" id=3]
+[ext_resource path="res://shaders/cel_shading/shader_test_scene/sphere_material.material" type="Material" id=4]
+[ext_resource path="res://resources/textures/Tiled_Floor.png" type="Texture" id=5]
+[ext_resource path="res://models/characters/Nikki/textures/Sock Texture.png" type="Texture" id=6]
+[ext_resource path="res://models/characters/Nikki/textures/Shorts Texture.png" type="Texture" id=7]
+[ext_resource path="res://models/characters/Nikki/textures/Eye Palette.png" type="Texture" id=8]
+[ext_resource path="res://models/characters/Nikki/textures/Hair Texture.png" type="Texture" id=9]
+[ext_resource path="res://models/characters/Nikki/textures/Shirt Texture.png" type="Texture" id=10]
+[ext_resource path="res://models/characters/Nikki/textures/Skin Texture.png" type="Texture" id=11]
+[ext_resource path="res://scenes/Player/player/Player.tscn" type="PackedScene" id=12]
+[ext_resource path="res://shaders/cel_shading/eye_shader.shader" type="Shader" id=13]
+[ext_resource path="res://scenes/objects/interactive/Torch_Lamp.tscn" type="PackedScene" id=14]
+[ext_resource path="res://models/characters/Nikki/materials/cel_shader_gradient.tres" type="Gradient" id=15]
+
+[sub_resource type="BoxShape" id=1]
+
+[sub_resource type="CubeMesh" id=2]
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = ExtResource( 1 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=4]
+gradient = ExtResource( 15 )
+
+[sub_resource type="ShaderMaterial" id=5]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 3 )
+shader = ExtResource( 3 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 5 )
+shader_param/light_ramp = SubResource( 4 )
+
+[sub_resource type="SphereMesh" id=6]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=7]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=8]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=9]
+
+[sub_resource type="ShaderMaterial" id=10]
+shader = ExtResource( 1 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=11]
+gradient = ExtResource( 15 )
+
+[sub_resource type="ShaderMaterial" id=12]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 10 )
+shader = ExtResource( 3 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 11 )
+shader_param/light_ramp = SubResource( 11 )
+
+[sub_resource type="ShaderMaterial" id=13]
+shader = ExtResource( 1 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="Gradient" id=14]
+offsets = PoolRealArray( 0, 0.00497512 )
+
+[sub_resource type="GradientTexture" id=15]
+gradient = SubResource( 14 )
+
+[sub_resource type="ShaderMaterial" id=16]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 13 )
+shader = ExtResource( 13 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/eye_light_default = Vector3( 0, 0, 0 )
+shader_param/texturemap = ExtResource( 8 )
+shader_param/light_ramp = SubResource( 15 )
+
+[sub_resource type="ShaderMaterial" id=17]
+shader = ExtResource( 1 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=18]
+gradient = ExtResource( 15 )
+
+[sub_resource type="ShaderMaterial" id=19]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 17 )
+shader = ExtResource( 3 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 10 )
+shader_param/light_ramp = SubResource( 18 )
+
+[sub_resource type="ShaderMaterial" id=20]
+shader = ExtResource( 1 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="Gradient" id=21]
+offsets = PoolRealArray( 0.597015, 0.60199 )
+
+[sub_resource type="GradientTexture" id=22]
+gradient = SubResource( 21 )
+
+[sub_resource type="ShaderMaterial" id=23]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 20 )
+shader = ExtResource( 3 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 7 )
+shader_param/light_ramp = SubResource( 22 )
+
+[sub_resource type="ShaderMaterial" id=24]
+shader = ExtResource( 1 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="Gradient" id=25]
+offsets = PoolRealArray( 0.597015, 0.60199 )
+
+[sub_resource type="GradientTexture" id=26]
+gradient = SubResource( 25 )
+
+[sub_resource type="ShaderMaterial" id=27]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 24 )
+shader = ExtResource( 3 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 6 )
+shader_param/light_ramp = SubResource( 26 )
+
+[sub_resource type="ShaderMaterial" id=28]
+shader = ExtResource( 1 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=29]
+gradient = ExtResource( 15 )
+
+[sub_resource type="ShaderMaterial" id=30]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 28 )
+shader = ExtResource( 13 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/eye_light_default = Vector3( 0.2, 0.2, 0.2 )
+shader_param/texturemap = ExtResource( 8 )
+shader_param/light_ramp = SubResource( 29 )
+
+[sub_resource type="ShaderMaterial" id=31]
+shader = ExtResource( 1 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="Gradient" id=32]
+offsets = PoolRealArray( 0.597015, 0.60199 )
+
+[sub_resource type="GradientTexture" id=33]
+gradient = SubResource( 32 )
+
+[sub_resource type="ShaderMaterial" id=34]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 31 )
+shader = ExtResource( 3 )
+shader_param/albedo = Color( 1, 1, 1, 0 )
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 9 )
+shader_param/light_ramp = SubResource( 33 )
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Scene Objects" type="Node" parent="."]
+
+[node name="Ground" type="StaticBody" parent="Scene Objects"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Scene Objects/Ground"]
+transform = Transform( 50, 0, 0, 0, 1, 0, 0, 0, 50, 0, -1, 0 )
+shape = SubResource( 1 )
+
+[node name="Ground" type="MeshInstance" parent="Scene Objects/Ground/CollisionShape"]
+mesh = SubResource( 2 )
+material/0 = SubResource( 5 )
+
+[node name="Sphere" type="MeshInstance" parent="Scene Objects"]
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 5.35287, 1.42903, -4.44786 )
+mesh = SubResource( 6 )
+material/0 = ExtResource( 4 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.972853, -0.056269, 0.22448, 0, 0.969991, 0.243141, -0.231425, -0.23654, 0.943658, 5.81258, 5.00241, 2.56128 )
+current = true
+
+[node name="LightTransform" type="RemoteTransform" parent="Camera"]
+remote_path = NodePath("../../ToonLightDataView/Viewport/Camera")
+
+[node name="SpecularTransform" type="RemoteTransform" parent="Camera"]
+remote_path = NodePath("../../ToonSpecularDataView/Viewport/Camera")
+
+[node name="Light_Setup" type="Spatial" parent="."]
+transform = Transform( 0.998877, 0, 0.0473854, 0, 1, 0, -0.0473854, 0, 0.998877, 0, 7, 0 )
+
+[node name="Key_Light" type="DirectionalLight" parent="Light_Setup"]
+transform = Transform( 0.0931523, -0.540813, 0.835969, 0, 0.83962, 0.543175, -0.995652, -0.050598, 0.0782125, 0, 0, 0 )
+light_color = Color( 0.509804, 0.505882, 0.505882, 1 )
+light_energy = 0.2
+shadow_enabled = true
+shadow_bias = -0.13
+
+[node name="OmniLight" type="OmniLight" parent="Light_Setup"]
+transform = Transform( 0.0931519, -0.540813, 0.835969, 0, 0.83962, 0.543175, -0.995652, -0.0505977, 0.0782121, 24.3064, -1.50032, -2.60665 )
+light_color = Color( 0.376471, 0.0705882, 0.988235, 1 )
+light_energy = 0.2
+
+[node name="Nikki" parent="." instance=ExtResource( 12 )]
+transform = Transform( 0.766269, 0, 0.64252, 0, 1, 0, -0.64252, 0, 0.766269, 11.1724, 2.89, 4.29135 )
+
+[node name="AnimationTree" parent="Nikki" index="1"]
+parameters/StateMachineAction/playback = SubResource( 7 )
+parameters/StateMachineLeftHand/playback = SubResource( 8 )
+parameters/StateMachineUpperBody/playback = SubResource( 9 )
+
+[node name="Skeleton" parent="Nikki/Rig" index="0"]
+bones/0/bound_children = [ NodePath("Foot_Floor_L") ]
+bones/47/bound_children = [ NodePath("Hand_L") ]
+bones/71/bound_children = [ NodePath("Hand_R") ]
+bones/94/bound_children = [ NodePath("Foot_Floor_R") ]
+
+[node name="Body Simplified" parent="Nikki/Rig/Skeleton" index="0"]
+transform = Transform( 1, 0, 2.98023e-08, 0, 1, 0, -2.98023e-08, 0, 1, 0, 0, 0 )
+material/0 = SubResource( 12 )
+material/1 = SubResource( 16 )
+material/2 = SubResource( 19 )
+material/3 = SubResource( 23 )
+material/4 = SubResource( 27 )
+
+[node name="Head" parent="Nikki/Rig/Skeleton" index="1"]
+material/0 = SubResource( 12 )
+material/1 = SubResource( 30 )
+material/2 = SubResource( 34 )
+
+[node name="arrow lineup" parent="Nikki/Rig/Skeleton/Bow_IK/Projectile_Position" index="0"]
+transform = Transform( 1, -9.31323e-10, 0, 0, 1, 0, 2.98023e-08, -1.86265e-09, 1, -2.38419e-07, -0.0573502, 0.287355 )
+
+[node name="Torch" parent="." instance=ExtResource( 14 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.247773, 3.27871, 29.0553 )
+
+[editable path="Nikki"]
+
+[editable path="Nikki/Rig"]

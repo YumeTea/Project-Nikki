@@ -1,5 +1,7 @@
 extends Node
 
+signal current_level_changed(current_level)
+
 var current_level
 var fade_layer
 
@@ -53,9 +55,10 @@ func connect_signals():
 		if current_level:
 			current_level.connect("scene_reloaded", self, "_on_scene_reloaded")
 			current_level.connect("player_voided", self, "_on_player_voided")
-			for node in get_tree().get_nodes_in_group("actors"):
+			for node in get_tree().get_nodes_in_group("actor"):
 				if node.name == "Player":
 					node.get_node("Attributes").get_node("Health").connect("health_depleted", self, "_on_player_death")
+			emit_signal("current_level_changed", current_level)
 			scene_reloaded = false
 
 

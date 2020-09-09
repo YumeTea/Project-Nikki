@@ -1,19 +1,15 @@
-extends "res://scenes/Player/player_states/motion.gd"
-
-
-#Initialization storage
-var enter_velocity = Vector3()
-var is_cast_jump
+extends "res://scenes/Player/player_states/move/motion.gd"
 
 
 func initialize(init_values_dic):
 	for value in init_values_dic:
-		self[value] = init_values_dic[value]
+		if value == "velocity":
+			self[value] = init_values_dic[value]
 
 
 #Initializes state, changes animation, etc
 func enter():
-	velocity = enter_velocity
+	return
 
 
 #Cleans up state, reinitializes values like timers
@@ -22,7 +18,7 @@ func exit():
 
 
 #Creates output based on the input event passed in
-func handle_input(event):
+func handle_input(_event):
 	return
 
 
@@ -32,6 +28,6 @@ func update(delta):
 	.update(delta)
 
 
-func _on_animation_finished(anim_name):
+func on_animation_finished(_anim_name):
 	return
 

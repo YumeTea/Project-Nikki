@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://scenes/characters/Character Scene/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://models/characters/Test Enemy/Test Enemy Model.tscn" type="PackedScene" id=2]
@@ -13,30 +13,68 @@
 [ext_resource path="res://scenes/characters/Test Enemy/enemy_states/other/void.gd" type="Script" id=11]
 [ext_resource path="res://scenes/characters/Test Enemy/enemy_states/enemy_state_machine.gd" type="Script" id=12]
 [ext_resource path="res://scenes/characters/Test Enemy/resources/animation resources/cast_glow.tres" type="Material" id=13]
+[ext_resource path="res://scenes/characters/Test Enemy/animation/Casting.anim" type="Animation" id=14]
+[ext_resource path="res://scenes/characters/Test Enemy/animation/cast_glow.material" type="Material" id=15]
+[ext_resource path="res://models/characters/Test Enemy/black_pill_enemy.material" type="Material" id=16]
 
 [sub_resource type="Animation" id=1]
-resource_name = "Casting"
-length = 1.8
+resource_name = "Damaged"
+length = 2.2
 tracks/0/type = "value"
-tracks/0/path = NodePath("Rig/cast_position/cast_glow:scale")
+tracks/0/path = NodePath("Rig/Body:material/0")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray(  ),
+"transitions": PoolRealArray(  ),
+"update": 0,
+"values": [  ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Rig/Body:material/0:albedo_color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3, 1.8 ),
+"transitions": PoolRealArray( 0.901251, 0.90125, 38.0546 ),
+"update": 0,
+"values": [ Color( 0.239216, 0.054902, 0.054902, 1 ), Color( 0.27451, 0.0509804, 0.0509804, 1 ), Color( 0.227451, 0.227451, 0.227451, 1 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "Perish"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:scale")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8 ),
-"transitions": PoolRealArray( 0.5, 1, 0.8, 1, 0.8, 1, 0.8 ),
+"times": PoolRealArray( 0, 0.3, 1 ),
+"transitions": PoolRealArray( 1.23115, 0.108819, 0.00961832 ),
 "update": 0,
-"values": [ Vector3( 0, 0, 0 ), Vector3( 0.1, 0.1, 0.1 ), Vector3( 0.05, 0.05, 0.05 ), Vector3( 0.15, 0.15, 0.15 ), Vector3( 0.1, 0.1, 0.1 ), Vector3( 0.2, 0.2, 0.2 ), Vector3( 0.19, 0.19, 0.19 ) ]
+"values": [ Vector3( 1, 1, 1 ), Vector3( 1.1, 0.9, 1.1 ), Vector3( 0.01, 5, 0.01 ) ]
 }
 
-[sub_resource type="SphereMesh" id=2]
+[sub_resource type="SphereMesh" id=3]
 
-[node name="Black Pill Enemy" instance=ExtResource( 1 )]
+[sub_resource type="SphereMesh" id=4]
+
+[node name="Black Pill Enemy" groups=[
+"actor",
+"targettable",
+"vulnerable",
+] instance=ExtResource( 1 )]
 script = ExtResource( 3 )
 
 [node name="AnimationPlayer" parent="." index="0"]
-anims/Casting = SubResource( 1 )
+anims/Casting = ExtResource( 14 )
+anims/Damaged = SubResource( 1 )
+anims/Perish = SubResource( 2 )
 
 [node name="State_Machine" parent="." index="2"]
 script = ExtResource( 12 )
@@ -72,11 +110,30 @@ transform = Transform( 1, 0, 0, 0, -4.20504e-08, 1, 0, -0.962, -4.37114e-08, 0, 
 [node name="Rig" parent="." index="5" instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 0 )
 
-[node name="cast_position" type="Position3D" parent="Rig" index="1"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 1.4 )
+[node name="Body" parent="Rig" index="0"]
+material/0 = ExtResource( 16 )
 
-[node name="cast_glow" type="MeshInstance" parent="Rig/cast_position" index="0"]
+[node name="projectile_position" type="Position3D" parent="Rig" index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 1.5 )
+
+[node name="cast_glow" type="MeshInstance" parent="Rig/projectile_position" index="0"]
+transform = Transform( 0.001, 0, 0, 0, 0.001, 0, 0, 0, 0.001, 0, 0, 0 )
+visible = false
+mesh = SubResource( 3 )
+material/0 = ExtResource( 15 )
+
+[node name="cast_position" type="Position3D" parent="Camera_Rig/Pivot" index="4"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.6 )
+
+[node name="cast_glow" type="MeshInstance" parent="Camera_Rig/Pivot/cast_position" index="0"]
 transform = Transform( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 )
-mesh = SubResource( 2 )
+visible = false
+mesh = SubResource( 4 )
 material/0 = ExtResource( 13 )
 [connection signal="ai_input_changed" from="." to="Camera_Rig" method="_on_Character_ai_input_changed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="health_depleted" from="Attributes/Health" to="." method="_on_Health_health_depleted"]
+
+[editable path="Rig"]
+
+[editable path="Camera_Rig"]

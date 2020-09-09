@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://models/objects/items_player/arrows/water_arrow/water_arrow.material" type="Material" id=1]
+[ext_resource path="res://models/objects/items_player/arrows/arrow_shaft.material" type="Material" id=2]
+[ext_resource path="res://models/objects/items_player/arrows/arrow_shaft.tres" type="CapsuleMesh" id=3]
+[ext_resource path="res://models/objects/items_player/arrows/water_arrow/water_arrow_tip.tres" type="CapsuleMesh" id=4]
+
+[node name="Arrow_Mesh" type="Spatial"]
+
+[node name="Arrow_Shaft" type="MeshInstance" parent="."]
+transform = Transform( 0.015, 0, 0, 0, 0.015, 0, 0, 0, 0.85, 0, 0, 0 )
+mesh = ExtResource( 3 )
+material/0 = ExtResource( 2 )
+
+[node name="Water_Arrow_Tip" type="MeshInstance" parent="."]
+transform = Transform( 0.03, 0, 0, 0, 0.03, 0, 0, 0, 0.1, 0, 0, 1.36966 )
+mesh = ExtResource( 4 )
+material/0 = ExtResource( 1 )

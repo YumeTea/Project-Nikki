@@ -8,13 +8,12 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	is_falling = false
+	.enter()
 	connect_enemy_signals()
 
 
 #Cleans up state, reinitializes values like timers
 func exit():
-	is_falling = false
 	disconnect_enemy_signals()
 
 
@@ -36,6 +35,6 @@ func update(delta):
 		emit_signal("finished", "previous")
 
 
-func _on_animation_finished(anim_name):
+func _on_animation_finished(_anim_name):
 	return
 

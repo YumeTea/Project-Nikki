@@ -45,11 +45,11 @@ func cast_projectile():
 	#Sets current projectile
 	var projectile_current = MAGIC_ORB
 	#Sets facing angle to character model direction
-	var facing_angle = owner.get_node("Rig").get_global_transform().basis.get_euler().y
+	var facing_angle = owner.get_node("Camera_Rig/Pivot").get_global_transform().basis.get_euler().y
 	#Gets target node from root node, sets as projectile's target node
 	var target_pos = focus_target_pos
 	
-	owner.get_node("Rig").get_node("cast_position").get_node("cast_glow").visible = true
+	owner.get_node("Camera_Rig/Pivot/cast_position/cast_glow").visible = true
 	
 	if is_casting == false:
 		is_casting = true
@@ -60,7 +60,7 @@ func cast_projectile():
 			var projectile = projectile_current.instance()
 	
 			#Initialize and spawn projectile
-			var position_init = owner.get_node("Rig").get_node("cast_position").global_transform
+			var position_init = owner.get_node("Camera_Rig/Pivot/cast_position").global_transform
 			var direction_init = Vector3(sin(facing_angle), 0, cos(facing_angle))
 			#Set projectile starting position, direction, and target. Add to scene tree
 			projectile.start(position_init, direction_init, target_pos)
@@ -68,7 +68,7 @@ func cast_projectile():
 
 			is_casting = false
 			finished_casting = false
-			owner.get_node("Rig").get_node("cast_position").get_node("cast_glow").visible = false
+			owner.get_node("Camera_Rig/Pivot/cast_position/cast_glow").visible = false
 			owner.get_node("AnimationPlayer").stop(true)
 
 

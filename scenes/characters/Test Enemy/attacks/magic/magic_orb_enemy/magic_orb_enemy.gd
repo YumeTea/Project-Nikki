@@ -5,6 +5,7 @@ onready var timer = get_node("Timer")
 onready var rand_num = rand()
 
 #Projectile Variables
+var damage_dealt = 64
 var speed = 60
 var turn_radius = deg2rad(3)
 var bob_speed = 6
@@ -143,9 +144,17 @@ func projectile_path(delta, _time):
 	collision = move_and_collide(velocity, false, false, true)
 	
 	if collision:
-		queue_free()
+		impact(collision)
 	else:
-			move_and_collide(velocity, false, false)
+		velocity = move_and_collide(velocity, false, false)
+
+
+func impact(collision_object):
+	var collider = collision_object.collider
+	for actor in get_tree().get_nodes_in_group("vulnerable"):
+		if actor == collider:
+			collider.take_damage(damage_dealt)
+	queue_free()
 
 
 # warning-ignore:shadowed_variable

@@ -11,7 +11,6 @@ func enter():
 	.enter()
 	cast_jump = false #cast jump should be complete on entering air_cast state
 	finished_casting = false
-	is_falling = false
 	connect_enemy_signals()
 	if !owner.get_node("AnimationPlayer").is_playing() and finished_casting == false:
 		owner.get_node("AnimationPlayer").play("Casting")
@@ -49,6 +48,6 @@ func update(delta):
 		is_falling = true
 
 
-func _on_AnimationPlayer_animation_finished(anim_name):
+func _on_AnimationPlayer_animation_finished(_anim_name):
 	return
 

@@ -1,4 +1,4 @@
-extends "res://scenes/Player/player_states/motion.gd"
+extends "res://scenes/Player/player_states/move/motion.gd"
 
 
 
@@ -16,15 +16,15 @@ func exit():
 
 
 #Creates output based on the input event passed in
-func handle_input(event):
+func handle_input(_event):
 	return
 
 
 #Acts as the _process method would
-func update(delta):
+func update(_delta):
 	return
 
 
-func _on_animation_finished(anim_name):
+func on_animation_finished(_anim_name):
 	return
 

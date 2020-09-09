@@ -27,7 +27,6 @@ mesh = SubResource( 2 )
 material/0 = SubResource( 3 )
 
 [node name="glow" type="OmniLight" parent="CollisionShape"]
-shadow_enabled = true
 omni_attenuation = 0.000622343
 omni_shadow_mode = 0
 

@@ -5,9 +5,11 @@ onready var timer = get_node("Timer")
 onready var rand_num = rand()
 
 #Projectile Variables
+var damage_dealt = 64
 var speed = 60
 var turn_radius = deg2rad(3)
 var bob_speed = 6
+var despawn_time = 15 #in seconds
 var uturn
 var location
 var direction = Vector3()
@@ -31,7 +33,7 @@ var range_default = 5.5
 
 func _ready():
 	#Set Despawn Timer
-	timer.set_wait_time(15)
+	timer.set_wait_time(despawn_time)
 	timer.start()
 
 
@@ -143,27 +145,38 @@ func projectile_path(delta, _time):
 	collision = move_and_collide(velocity, false, false, true)
 	
 	if collision:
-		queue_free()
+		impact(collision)
 	else:
-			move_and_collide(velocity, false, false)
+		velocity = move_and_collide(velocity, false, false)
+
+
+func impact(collision_object):
+	var collider = collision_object.collider
+	for actor in get_tree().get_nodes_in_group("vulnerable"):
+		if actor == collider:
+			collider.take_damage(damage_dealt)
+	queue_free()
 
 
 # warning-ignore:shadowed_variable
 func glow(_delta, time):
 	glow_oscillation = ((abs(cos(time)) + 1.5) / 3.0) * range_default
 	$CollisionShape/glow.set_param(3, glow_oscillation)
-	
+
+
 # warning-ignore:shadowed_variable
 func bob(_delta, time):
 	$CollisionShape.transform.origin.y = (sin(time * bob_speed)) * 0.5
 	$CollisionShape.transform.origin.x = cos(time * bob_speed * 0.5)
 	$CollisionShape.transform.origin.z = sin(time * bob_speed * 0.8)
-	
+
+
 # warning-ignore:shadowed_variable
 func pulse(time):
 	mesh.get_surface_material(0).set_shader_param("time", time)
 	mesh.get_surface_material(0).set_shader_param("time2", time)
-	
+
+
 func rand():
 	var nums = [30,61,57,6,34,32,51,49,22,52,60,47,12,43,1,7,10,18,38,0,21,2,5,28,14,13,45,36,35,11,25,4,59,29,62,16,37,17,20,44,23,24,53,58,42,48,54,27,50,8,56,9,33,55,64,31,46,19,41,3,40,15,39,26] #list to choose from
 	return nums[randi() % nums.size()]

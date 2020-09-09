@@ -2,6 +2,7 @@ extends "res://scripts/State Machine/states/state.gd"
 
 
 "	-Find a better method to connect to signals from current level"
+"   -Jump inputs are still not handled"
 
 
 
@@ -47,31 +48,22 @@ var centering = false
 var centered = false
 
 
-#Creates output based on the input event passed in
-func handle_input(event):
-	return
+#func handle_input(event):
+#	if event.is_action_pressed("print_to_console") and event.get_device() == 0:
+#		print(input["input_previous"])
 
 
-func handle_ai_input(input):
+func handle_ai_input(_input):
 	return
 
 
 #Acts as the _process method would
-func update(delta):
+func update(_delta):
 	return
 
 
-func _on_animation_finished(anim_name):
+func _on_animation_finished(_anim_name):
 	return
-
-
-func is_ai_action_pressed(action, input_dic):
-	for input_name in input_dic:
-		if typeof(input_dic[input_name]) == typeof(action):
-			if input[input_name] == action:
-				return true
-	
-	return false
 
 
 func connect_enemy_signals():
@@ -88,6 +80,39 @@ func disconnect_enemy_signals():
 	owner.get_node("State_Machine").disconnect("initialized_values_dic_set", self, "_on_initialized_values_dic_set")
 	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_death")
 	owner.get_node("Camera_Rig").disconnect("view_locked", self, "_on_view_locked")
+
+
+func press_ai_input(input_name, value):
+	input["input_current"][input_name] = value
+
+
+func is_ai_action_pressed(action, input_dic):
+	for input_name in input_dic["input_current"]:
+		if typeof(input_dic["input_current"][input_name]) == typeof(action):
+			if input_dic["input_current"][input_name] == action:
+					return true
+	
+	return false
+
+
+func is_ai_action_released(action, input_dic):
+	for input_name in input_dic["input_previous"]:
+		if typeof(input_dic["input_previous"][input_name]) == typeof(action):
+			if input_dic["input_previous"][input_name] == action:
+				if input["input_previous"][input_name] != input["input_current"][input_name]:
+					return true
+	
+	return false
+
+
+func is_ai_action_just_pressed(action, input_dic):
+	for input_name in input_dic["input_current"]:
+		if typeof(input_dic["input_current"][input_name]) == typeof(action):
+			if input["input_current"][input_name] == action:
+				if input["input_current"][input_name] == input["input_previous"][input_name]:
+					return true
+	
+	return false
 
 
 func _on_ai_input_changed(inputs):

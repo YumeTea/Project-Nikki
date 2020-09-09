@@ -1,0 +1,212 @@
+[gd_scene load_steps=25 format=2]
+
+[ext_resource path="res://scripts/environment_objects/torch.gd" type="Script" id=1]
+
+[sub_resource type="SphereShape" id=1]
+
+[sub_resource type="SphereMesh" id=2]
+
+[sub_resource type="ShaderMaterial" id=3]
+
+[sub_resource type="VisualShaderNodeColorOp" id=4]
+output_port_for_preview = 0
+operator = 8
+
+[sub_resource type="VisualShaderNodeScalarUniform" id=5]
+uniform_name = "time2"
+
+[sub_resource type="VisualShaderNodeInput" id=6]
+input_name = "time"
+
+[sub_resource type="VisualShaderNodeScalarFunc" id=7]
+function = 1
+
+[sub_resource type="VisualShaderNodeScalarOp" id=8]
+default_input_values = [ 0, 0.0, 1, 3.0 ]
+operator = 3
+
+[sub_resource type="VisualShaderNodeScalarFunc" id=9]
+function = 12
+
+[sub_resource type="VisualShaderNodeScalarOp" id=10]
+default_input_values = [ 0, 0.0, 1, 0.5 ]
+
+[sub_resource type="VisualShaderNodeColorConstant" id=11]
+constant = Color( 0.708942, 0.722656, 0.283806, 1 )
+
+[sub_resource type="VisualShaderNodeScalarOp" id=12]
+default_input_values = [ 0, 0.0, 1, 1.2 ]
+operator = 2
+
+[sub_resource type="VisualShaderNodeScalarOp" id=13]
+default_input_values = [ 0, 0.0, 1, 3.0 ]
+operator = 3
+
+[sub_resource type="VisualShaderNodeScalarUniform" id=14]
+uniform_name = "time"
+
+[sub_resource type="VisualShaderNodeInput" id=15]
+input_name = "time"
+
+[sub_resource type="VisualShaderNodeInput" id=16]
+input_name = "vertex"
+
+[sub_resource type="VisualShaderNodeVectorOp" id=17]
+operator = 2
+
+[sub_resource type="VisualShaderNodeScalarOp" id=18]
+default_input_values = [ 0, 0.0, 1, 1.2 ]
+operator = 2
+
+[sub_resource type="VisualShaderNodeScalarFunc" id=19]
+function = 1
+
+[sub_resource type="VisualShaderNodeScalarFunc" id=20]
+function = 12
+
+[sub_resource type="VisualShaderNodeScalarOp" id=21]
+default_input_values = [ 0, 0.0, 1, 0.5 ]
+
+[sub_resource type="VisualShader" id=22]
+code = "shader_type spatial;
+render_mode unshaded, ambient_light_disabled;
+
+uniform float time;
+uniform float time2;
+
+
+
+void vertex() {
+// Input:4
+	vec3 n_out4p0 = VERTEX;
+
+// ScalarUniform:11
+	float n_out11p0 = time;
+
+// ScalarFunc:7
+	float n_out7p0 = cos(n_out11p0);
+
+// ScalarFunc:8
+	float n_out8p0 = abs(n_out7p0);
+
+// ScalarOp:9
+	float n_in9p1 = 0.50000;
+	float n_out9p0 = n_out8p0 + n_in9p1;
+
+// ScalarOp:10
+	float n_in10p1 = 3.00000;
+	float n_out10p0 = n_out9p0 / n_in10p1;
+
+// VectorOp:5
+	vec3 n_out5p0 = n_out4p0 * vec3(n_out10p0);
+
+// Output:0
+	VERTEX = n_out5p0;
+
+}
+
+void fragment() {
+// ScalarUniform:11
+	float n_out11p0 = time2;
+
+// ScalarFunc:4
+	float n_out4p0 = cos(n_out11p0);
+
+// ScalarFunc:6
+	float n_out6p0 = abs(n_out4p0);
+
+// ScalarOp:7
+	float n_in7p1 = 0.50000;
+	float n_out7p0 = n_out6p0 + n_in7p1;
+
+// ScalarOp:5
+	float n_in5p1 = 3.00000;
+	float n_out5p0 = n_out7p0 / n_in5p1;
+
+// Output:0
+	ALPHA = n_out5p0;
+
+}
+
+void light() {
+// Output:0
+
+}
+"
+flags/ambient_light_disabled = true
+flags/unshaded = true
+nodes/vertex/0/position = Vector2( 1200, 0 )
+nodes/vertex/2/node = SubResource( 15 )
+nodes/vertex/2/position = Vector2( 20, 160 )
+nodes/vertex/4/node = SubResource( 16 )
+nodes/vertex/4/position = Vector2( 800, 0 )
+nodes/vertex/5/node = SubResource( 17 )
+nodes/vertex/5/position = Vector2( 980, 0 )
+nodes/vertex/6/node = SubResource( 18 )
+nodes/vertex/6/position = Vector2( 160, 100 )
+nodes/vertex/7/node = SubResource( 19 )
+nodes/vertex/7/position = Vector2( 320, 80 )
+nodes/vertex/8/node = SubResource( 20 )
+nodes/vertex/8/position = Vector2( 480, 80 )
+nodes/vertex/9/node = SubResource( 21 )
+nodes/vertex/9/position = Vector2( 640, 80 )
+nodes/vertex/10/node = SubResource( 13 )
+nodes/vertex/10/position = Vector2( 800, 80 )
+nodes/vertex/11/node = SubResource( 14 )
+nodes/vertex/11/position = Vector2( 140, 20 )
+nodes/vertex/connections = PoolIntArray( 4, 0, 5, 0, 5, 0, 0, 0, 7, 0, 8, 0, 8, 0, 9, 0, 9, 0, 10, 0, 10, 0, 5, 1, 11, 0, 7, 0 )
+nodes/fragment/0/position = Vector2( 1219, -8 )
+nodes/fragment/3/node = SubResource( 6 )
+nodes/fragment/3/position = Vector2( -240, 100 )
+nodes/fragment/4/node = SubResource( 7 )
+nodes/fragment/4/position = Vector2( 80, 40 )
+nodes/fragment/5/node = SubResource( 8 )
+nodes/fragment/5/position = Vector2( 600, 40 )
+nodes/fragment/6/node = SubResource( 9 )
+nodes/fragment/6/position = Vector2( 260, 40 )
+nodes/fragment/7/node = SubResource( 10 )
+nodes/fragment/7/position = Vector2( 440, 40 )
+nodes/fragment/8/node = SubResource( 11 )
+nodes/fragment/8/position = Vector2( 766, -190 )
+nodes/fragment/9/node = SubResource( 12 )
+nodes/fragment/9/position = Vector2( -80, 40 )
+nodes/fragment/10/node = SubResource( 4 )
+nodes/fragment/10/position = Vector2( 910, -189 )
+nodes/fragment/11/node = SubResource( 5 )
+nodes/fragment/11/position = Vector2( -100, -20 )
+nodes/fragment/connections = PoolIntArray( 4, 0, 6, 0, 6, 0, 7, 0, 7, 0, 5, 0, 5, 0, 0, 1, 3, 0, 9, 0, 11, 0, 4, 0, 8, 0, 10, 0, 5, 0, 10, 1 )
+
+[sub_resource type="ShaderMaterial" id=23]
+render_priority = 1
+next_pass = SubResource( 3 )
+shader = SubResource( 22 )
+shader_param/time = null
+shader_param/time2 = null
+
+[node name="Torch" type="StaticBody" groups=[
+"actor",
+]]
+collision_layer = 0
+collision_mask = 5
+script = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 0.7, 0, 0, 0, 0.5, 0, 0, 0, 0.7, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CollisionShape"]
+transform = Transform( 0.428571, 0, 0, 0, 0.6, 0, 0, 0, 0.428571, 0, 0, 0 )
+mesh = SubResource( 2 )
+material/0 = SubResource( 23 )
+
+[node name="Light" type="OmniLight" parent="CollisionShape"]
+transform = Transform( 1.42857, 0, 0, 0, 2, 0, 0, 0, 1.42857, 0, 0, 0 )
+light_color = Color( 0.74, 0.74, 0.4736, 1 )
+light_energy = 0.5
+shadow_enabled = true
+shadow_bias = 0.5
+omni_range = 20.0
+omni_attenuation = 0.790443
+omni_shadow_mode = 0
+
+[node name="Timer" type="Timer" parent="."]

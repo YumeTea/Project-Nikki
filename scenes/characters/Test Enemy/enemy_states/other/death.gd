@@ -16,19 +16,19 @@ func exit():
 
 
 #Creates output based on the input event passed in
-func handle_input(event):
+func handle_input(_event):
 	return
 
 
-func handle_ai_input(input):
+func handle_ai_input(_input):
 	return
 
 
 #Acts as the _process method would
-func update(delta):
+func update(_delta):
 	return
 
 
-func _on_animation_finished(anim_name):
+func on_animation_finished(_anim_name):
 	return
 

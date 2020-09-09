@@ -10,8 +10,10 @@ func initialize(init_values_dic):
 func enter():
 	#Send initial value for facing direction
 	emit_signal("facing_direction_changed", get_node_direction(owner.get_node("Rig")))
-	move_direction = Vector2(0,0)
+	direction = Vector3(0,0,0)
+	left_joystick_axis = Vector2(0,0)
 	is_walking = false
+	is_falling = false
 	connect_enemy_signals()
 #	owner.get_node("AnimationPlayer").play("Idle")
 
@@ -28,7 +30,7 @@ func handle_input(event):
 
 
 func handle_ai_input(input):
-	if get_move_direction(move_direction) != Vector2(0,0):
+	if get_move_direction(input) != Vector2(0,0):
 		emit_signal("finished", "walk") #emit the finished signal and input walk as next state (from state.gd)
 	.handle_ai_input(input)
 
@@ -40,38 +42,43 @@ func update(delta):
 		rotate_to_target()
 	.update(delta)
 
-func _on_animation_finished(anim_name):
+func on_animation_finished(_anim_name):
 	pass
 
 
 func rotate_to_target():
 	facing_angle = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	
+	if centering_time_left <= 0:
+		centered = true
+	
+	
 	if focus_target_pos != null:
 		var target_position = focus_target_pos.get_global_transform().origin
 		var target_angle = calculate_global_y_rotation(owner.get_global_transform().origin.direction_to(target_position))
 	
-		#Check if centered based on camera rig signal
-		if centering_time_left <= 0:
-			centered = true
-	
 		if !centered:
-			if centering_time_left == centering_time:
-				turn_angle = target_angle - facing_angle
-					#Turning left at degrees > 180
-				if (turn_angle > deg2rad(180)):
-					turn_angle = turn_angle - deg2rad(360)
-				#Turning right at degrees < -180
-				if (turn_angle < deg2rad(-180)):
-					turn_angle = turn_angle + deg2rad(360)
-				turn_angle = turn_angle/centering_time
-			direction_angle = facing_angle + turn_angle
+			turn_angle = target_angle - facing_angle
+			#Turning left at degrees > 180
+			if (turn_angle > deg2rad(180)):
+				turn_angle = turn_angle - deg2rad(360)
+			#Turning right at degrees < -180
+			if (turn_angle < deg2rad(-180)):
+				turn_angle = turn_angle + deg2rad(360)
+			turn_angle = turn_angle/centering_time_left
 		else:
-			direction_angle = target_angle
+			turn_angle = target_angle - facing_angle
 	else:
-		direction_angle = facing_angle
+		turn_angle = 0
 	
-	owner.get_node("Rig").rotate_y(direction_angle - facing_angle)
+	emit_signal("center_view", turn_angle)
+	
+	owner.get_node("Rig").rotate_y(turn_angle)
+	
+	
+	###Decrement Timer
+	if centering_time_left > 0:
+		centering_time_left -= 1
 	
 	#Send signal for facing direction changed
 	emit_signal("facing_direction_changed", get_node_direction(owner.get_node("Rig")))

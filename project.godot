@@ -8,9 +8,20 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Resource",
+"class": "Inventory",
+"language": "GDScript",
+"path": "res://scripts/custom_classes/inventory_resource.gd"
+}, {
+"base": "Resource",
+"class": "ItemResource",
+"language": "GDScript",
+"path": "res://scripts/custom_classes/item_resource.gd"
+} ]
 _global_script_class_icons={
-
+"Inventory": "",
+"ItemResource": ""
 }
 
 [application]
@@ -23,10 +34,21 @@ config/icon="res://resources/images/icon.png"
 
 Global="*res://scripts/backend/Global.gd"
 SceneBackgroundLoader="*res://scripts/backend/Scene Loader/SceneBackgroundLoader.gd"
+ItemDatabase="*res://scripts/managers/ItemDatabase.gd"
+GameManager="*res://scripts/managers/GameManager.gd"
 
 [debug]
 
 settings/fps/force_fps=60
+gdscript/warnings/shadowed_variable=false
+gdscript/warnings/unused_signal=false
+gdscript/warnings/return_value_discarded=false
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/size/resizable=false
 
 [input]
 
@@ -112,9 +134,44 @@ lock_target={
 "events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":4,"pressure":0.0,"pressed":false,"script":null)
  ]
 }
-print_to_console={
+debug_input={
 "deadzone": 0.5,
 "events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":11,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+draw_bow={
+"deadzone": 0.5,
+"events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":7,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+switch_view={
+"deadzone": 0.5,
+"events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":10,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+arrow_next={
+"deadzone": 0.5,
+"events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":15,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+arrow_previous={
+"deadzone": 0.5,
+"events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":14,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+bow_next={
+"deadzone": 0.5,
+"events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":12,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+debug_inc={
+"deadzone": 0.5,
+"events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":5,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+debug_dec={
+"deadzone": 0.5,
+"events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":4,"pressure":0.0,"pressed":false,"script":null)
  ]
 }
 

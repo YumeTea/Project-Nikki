@@ -9,8 +9,8 @@ var initialized_values = {
 	"focus_target_pos": null,
 	"cast_jump": false,
 	"is_walking": false,
-	"move_direction": Vector2(0,0),
-	"look_direction": Vector2(0,0),
+	"left_joystick_axis": Vector2(0,0),
+	"right_joystick_axis": Vector2(0,0),
 	"input": {}
 }
 
@@ -66,10 +66,10 @@ func _change_state(state_name): #state_machine.gd does the generalized work
 	#Send out dictionary of initialized values for states that don't initialize
 	emit_signal("initialized_values_dic_set", initialized_values)
 	
-	print("npc current state: " + str(current_state.get_name()))
+#	print("npc current state: " + str(current_state.get_name()))
 
 
-func _input(event): #only for handling input that can interrupt other states i.e. something that interrupts jumping
+func _input(_event): #only for handling input that can interrupt other states i.e. something that interrupts jumping
 	return
 
 

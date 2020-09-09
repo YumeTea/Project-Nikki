@@ -1,7 +1,10 @@
-#Fix error handler (show_error not declared in current class)
-
 extends Control
 
+"""
+no show_error() function for load errors atm
+"""
+
+var loading_screen_scene_path = "res://scenes/UI/transition_scenes/Loading_Screen.tscn"
 
 var loader
 var wait_frames
@@ -26,8 +29,8 @@ func _process(_time):
 		return
 	
 	#Waits for loading screen to fade in/transition before loading
-	if get_tree().get_root().get_node("LoadingScreen/Fade_Layer/AnimationPlayer") != null:
-		if get_tree().get_root().get_node("LoadingScreen/Fade_Layer/AnimationPlayer").is_playing():
+	if get_tree().get_root().get_node("Loading_Screen/Fade_Layer/AnimationPlayer") != null:
+		if get_tree().get_root().get_node("Loading_Screen/Fade_Layer/AnimationPlayer").is_playing():
 			return
 	
 	#Clears loading screen from SceneTree
@@ -40,7 +43,7 @@ func _process(_time):
 	
 	#Waits for loading screen to fade out/transition before loading in new scene
 	if fading == true:
-		if get_tree().get_root().get_node("LoadingScreen/Fade_Layer/AnimationPlayer").is_playing():
+		if get_tree().get_root().get_node("Loading_Screen/Fade_Layer/AnimationPlayer").is_playing():
 			return
 		else:
 			var resource = loader.get_resource()
@@ -61,15 +64,15 @@ func _process(_time):
 		
 		#Checks if loading is complete/updates loading progress
 		if err == ERR_FILE_EOF: #finished loading on return of ERR_FILE_EOF
-			get_tree().get_root().get_node("LoadingScreen/Fade_Layer/AnimationPlayer").play("Fade Out")
+			get_tree().get_root().get_node("Loading_Screen/Fade_Layer/AnimationPlayer").play("Fade Out")
 			fading = true
 			break
 		elif err == OK: #polling completed without errors on return of OK
 			update_progress()
-#		else: #error during loading case
+		else: #error during loading case
 #			show_error()
-#			loader = null
-#			break
+			loader = null
+			break
 			
 		wait_frames = 1
 
@@ -86,7 +89,7 @@ func goto_scene(path): #game requests to switch to scene defined by path
 
 	current_scene.queue_free() #free current scene space
 	
-	get_tree().change_scene("res://scenes/UI/Loading Screen.tscn") #Loading screen set to main scene
+	get_tree().change_scene(loading_screen_scene_path) #Loading screen set to main scene
 
 	wait_frames = 1 #skip 1 frame to allow the loading screen to show up
 
@@ -95,7 +98,7 @@ func goto_scene(path): #game requests to switch to scene defined by path
 func update_progress():
 	var progress = (float(loader.get_stage()) / loader.get_stage_count()) * 100
 	#Update progress bar?
-	get_node("/root/LoadingScreen/Fade_Layer/ColorRect/CenterContainer/VBoxContainer/TextureProgress").set_value(progress)
+	get_node("/root/Loading_Screen/Fade_Layer/ColorRect/CenterContainer/VBoxContainer/TextureProgress").set_value(progress)
 	
 	#... or update a progress animation?
 	#var length = get_node("LoadingAnimation").get_animation_length()

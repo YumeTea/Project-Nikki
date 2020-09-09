@@ -20,7 +20,7 @@ var player_position
 var targettable_objects = []
 var visible_targets = []
 var head_position
-var head_direction
+var focus_direction
 var facing_direction
 var target_position
 var target_direction
@@ -29,21 +29,24 @@ var main_target
 
 #Character Flags
 var targetting = false
+var death = false
 
 
 func _ready():
 	for child in $State_Machine.get_children():
 		child.connect("position_changed", self, "_on_position_changed")
 	for child in $State_Machine.get_children():
-		child.connect("velocity_changed", self, "_on_velocity_changed")
-	for child in $State_Machine.get_children():
-		child.connect("facing_direction_changed", self, "_on_facing_direction_changed")
-	for child in $State_Machine.get_children():
 		child.connect("started_falling", self, "_on_started_falling")
 	for child in $State_Machine.get_children():
 		child.connect("landed", self, "_on_landing")
 	for child in $State_Machine.get_children():
 		child.connect("lock_target", self, "_on_lock_target")
+
+
+func take_damage(value):
+	if !death:
+		$AnimationPlayer.play("Damaged")
+		health_node.take_damage(value)
 
 
 func fall_damage():
@@ -57,7 +60,8 @@ func check_targets_visibility():
 	for target in targettable_objects:
 		target_position = target.get_global_transform().origin
 		target_direction = head_position.direction_to(target_position)
-		var head_dotp_target = facing_direction.dot(target_direction)
+		var head_dotp_target = focus_direction.dot(target_direction)
+		
 		#Check if target is inside character's "view cone"
 		if head_dotp_target > min_head_target_dotp: #if target is in view cone
 			var obstruction = raycast_query(head_position, target_position, target)
@@ -67,7 +71,7 @@ func check_targets_visibility():
 				else:
 					visible_targets.push_front(target)
 			else:
-				if target == main_target: #remove extra children added to main target here
+				if target == main_target: #if camera line of sight to target blocked, stop targetting
 					targetting = false
 					main_target = null
 					emit_signal("focus_target", main_target)
@@ -76,7 +80,7 @@ func check_targets_visibility():
 			if target == main_target:
 				var obstruction = raycast_query(head_position, target_position, target)
 				if obstruction:
-					if target == main_target: #remove extra children added to main target here
+					if target == main_target:
 						targetting = false
 						main_target = null
 						emit_signal("focus_target", main_target)
@@ -94,14 +98,13 @@ func get_main_target(target_array): #if array is empty, returns null
 	var target_main
 	for target in target_array:
 		var target_direction = head_position.direction_to(target.get_global_transform().origin)
-		if centering < facing_direction.dot(target_direction):
-			centering = facing_direction.dot(target_direction)
+		if centering < focus_direction.dot(target_direction):
+			centering = focus_direction.dot(target_direction)
 			target_main = target
 	return target_main
 
 
 func lock_target():
-	var focus_target = main_target
 	if !targetting:
 		main_target = get_main_target(visible_targets)
 		targetting = true
@@ -112,10 +115,6 @@ func lock_target():
 
 func _on_position_changed(position):
 	player_position = position
-
-
-func _on_velocity_changed(velocity):
-	var current_velocity = velocity
 
 
 func _on_started_falling(height):
@@ -148,10 +147,14 @@ func _on_Targetting_Area_body_exited(body):
 		visible_targets.erase(body)
 
 
+func _on_Camera_Rig_break_target():
+	lock_target()
+
+
 func _on_Camera_Rig_head_moved(head_transform):
 	head_position = head_transform.origin
 
 
-func _on_facing_direction_changed(direction):
-	facing_direction = direction
+func _on_Camera_Rig_focus_direction_changed(direction):
+	focus_direction = direction
 

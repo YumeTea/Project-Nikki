@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://scripts/custom_classes/item_resource.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+name = "Fire_Arrow"
+index = 2
+removable = true
+stackable = true
+max_stack_size = 8
+type = "Arrow"
+item_scene = "res://scenes/Player/attacks/arrows/fire_arrow/fire_arrow.tscn"
+model_scene = "res://models/objects/items_player/arrows/fire_arrow/fire_arrow_model.tscn"

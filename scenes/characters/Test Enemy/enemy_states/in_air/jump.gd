@@ -12,9 +12,10 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
+	.enter()
 	snap_vector = Vector3(0,0,0)
-	if owner.is_on_floor():
-		velocity.y = jump_strength #only jump if on the floor
+	if owner.is_on_floor() and !is_falling:
+		velocity.y = jump_strength
 	is_falling = false
 	connect_enemy_signals()
 
@@ -23,7 +24,6 @@ func enter():
 func exit():
 	if cast_jump == false: #snap_vector needs to be off going into air_cast
 		snap_vector = snap_vector_default
-	is_falling = false
 	disconnect_enemy_signals()
 
 
@@ -45,10 +45,6 @@ func update(delta):
 		emit_signal("finished", "previous")
 
 
-func _on_animation_finished(anim_name):
-	return
-
-
-func jump(delta):
+func _on_animation_finished(_anim_name):
 	return
 

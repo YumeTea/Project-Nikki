@@ -15,3 +15,5 @@ dest_files=[ "res://.import/Hill Octagonal 1.002.obj-b09b03a74718c9721bd7dc2d73c
 
 generate_tangents=true
 scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

@@ -9,6 +9,7 @@ func initialize(init_values_dic):
 #Initializes state, changes animation, etc
 func enter():
 	.enter()
+	is_falling = false
 	cast_jump = false
 	finished_casting = false
 	connect_enemy_signals()
@@ -18,7 +19,6 @@ func enter():
 
 #Cleans up state, reinitializes values like timers
 func exit():
-#	print("exit cast velocity:" + str(velocity.length()))
 	.exit()
 	disconnect_enemy_signals()
 
@@ -50,6 +50,6 @@ func update(delta):
 	.update(delta)
 
 
-func _on_AnimationPlayer_animation_finished(anim_name):
+func _on_AnimationPlayer_animation_finished(_anim_name):
 	return
 

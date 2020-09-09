@@ -1,0 +1,227 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://shaders/cel_shading/outline_shader_clip.shader" type="Shader" id=1]
+[ext_resource path="res://shaders/cel_shader_old/cel_shader_texture_backup.shader" type="Shader" id=2]
+[ext_resource path="res://shaders/cel_shading/shader_test_scene/lightdatamaterial.material" type="Material" id=3]
+[ext_resource path="res://shaders/cel_shading/shader_test_scene/speculardatamaterial.tres" type="Material" id=4]
+[ext_resource path="res://resources/textures/Tiled_Floor.png" type="Texture" id=5]
+[ext_resource path="res://shaders/cel_shading/shader_test_scene/sphere_material.material" type="Material" id=6]
+
+[sub_resource type="World" id=1]
+
+[sub_resource type="SphereMesh" id=2]
+
+[sub_resource type="World" id=3]
+
+[sub_resource type="BoxShape" id=4]
+
+[sub_resource type="CubeMesh" id=5]
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = ExtResource( 1 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="ShaderMaterial" id=7]
+render_priority = 1
+next_pass = SubResource( 6 )
+shader = ExtResource( 2 )
+shader_param/shadow_color = Color( 0.9, 0.9, 0.9, 1 )
+shader_param/texturemap = ExtResource( 5 )
+
+[sub_resource type="CubeMesh" id=8]
+
+[sub_resource type="ShaderMaterial" id=9]
+shader = ExtResource( 1 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="Shader" id=10]
+code = "shader_type spatial;
+render_mode cull_disabled, diffuse_toon, specular_toon;
+
+uniform sampler2D texturemap : hint_albedo;
+uniform sampler2D normalmap : hint_normal;
+uniform vec4 shadow_color : hint_color = vec4(0.9, 0.9, 0.9, 1.0);
+
+
+void vertex() {
+}
+
+
+void fragment() {
+	ALBEDO = texture(texturemap, UV).rgb;
+}
+
+
+void light() {
+	float attenuation = round((length(ATTENUATION) * 2.0)) / 2.8;
+	vec3 Attenuation = vec3(attenuation, attenuation, attenuation);
+
+	//converts Albedo to vec4
+	vec3 color = vec3(ALBEDO.r, ALBEDO.g, ALBEDO.b);
+	vec3 shadow = (color * shadow_color.rgb);
+
+	if (attenuation > 0.0) {
+		DIFFUSE_LIGHT += LIGHT_COLOR * ALBEDO/3.5;
+	}
+	else {
+		DIFFUSE_LIGHT += LIGHT_COLOR * ALBEDO/12.9;
+	}
+}
+
+"
+
+[sub_resource type="ShaderMaterial" id=11]
+render_priority = 1
+next_pass = SubResource( 9 )
+shader = SubResource( 10 )
+shader_param/shadow_color = Color( 0.9, 0.9, 0.9, 1 )
+
+[node name="Spatial" type="Spatial"]
+
+[node name="ToonLightDataView" type="ViewportContainer" parent="."]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="ToonLightDataView"]
+size = Vector2( 1920, 1080 )
+world = SubResource( 1 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+shadow_atlas_size = 1
+
+[node name="Sphere" type="MeshInstance" parent="ToonLightDataView/Viewport"]
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 5.84351, 1.42903, -4.44786 )
+mesh = SubResource( 2 )
+material/0 = ExtResource( 3 )
+
+[node name="Camera" type="Camera" parent="ToonLightDataView/Viewport"]
+transform = Transform( 0.972853, -0.0562688, 0.22448, 0, 0.969991, 0.243141, -0.231425, -0.23654, 0.943658, 5.81258, 5.00241, 2.56128 )
+current = true
+
+[node name="Key_Light" type="DirectionalLight" parent="ToonLightDataView/Viewport"]
+transform = Transform( 0.0458684, -0.542603, 0.838736, 0, 0.83962, 0.543175, -0.998948, -0.0249146, 0.038512, 0, 7, 0 )
+light_color = Color( 1, 0, 0, 1 )
+light_energy = 0.25
+shadow_enabled = true
+
+[node name="Fill_Light" type="DirectionalLight" parent="ToonLightDataView/Viewport"]
+transform = Transform( 0.466726, -0.412474, -0.782325, 0, 0.884581, -0.466387, 0.884402, 0.217675, 0.412857, 0, 7, 0 )
+light_color = Color( 0, 1, 0, 1 )
+
+[node name="Rim_Light" type="DirectionalLight" parent="ToonLightDataView/Viewport"]
+transform = Transform( -0.996463, 0.0365481, 0.0756715, 0.0304019, 0.996264, -0.0808388, -0.0783432, -0.0782523, -0.993851, 5.9988, 1.45303, -4.17409 )
+visible = false
+light_color = Color( 0, 0, 1, 1 )
+
+[node name="ToonSpecularDataView" type="ViewportContainer" parent="."]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="ToonSpecularDataView"]
+size = Vector2( 1920, 1080 )
+world = SubResource( 3 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+shadow_atlas_size = 1
+
+[node name="Sphere" type="MeshInstance" parent="ToonSpecularDataView/Viewport"]
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 5.84351, 1.42903, -4.44786 )
+mesh = SubResource( 2 )
+material/0 = ExtResource( 4 )
+
+[node name="Camera" type="Camera" parent="ToonSpecularDataView/Viewport"]
+transform = Transform( 0.972853, -0.0562688, 0.22448, 0, 0.969991, 0.243141, -0.231425, -0.23654, 0.943658, 5.81258, 5.00241, 2.56128 )
+current = true
+
+[node name="Key_Light" type="DirectionalLight" parent="ToonSpecularDataView/Viewport"]
+transform = Transform( 0.0458684, -0.542603, 0.838736, 0, 0.83962, 0.543175, -0.998948, -0.0249146, 0.038512, 0, 7, 0 )
+light_energy = 0.25
+shadow_enabled = true
+
+[node name="Scene Objects" type="Node" parent="."]
+
+[node name="Ground" type="StaticBody" parent="Scene Objects"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Scene Objects/Ground"]
+transform = Transform( 50, 0, 0, 0, 1, 0, 0, 0, 50, 0, -1, 0 )
+shape = SubResource( 4 )
+
+[node name="Ground" type="MeshInstance" parent="Scene Objects/Ground/CollisionShape"]
+mesh = SubResource( 5 )
+material/0 = SubResource( 7 )
+
+[node name="Cube" type="MeshInstance" parent="Scene Objects"]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 19.4229, 1.98614, -4.75197 )
+mesh = SubResource( 8 )
+material/0 = SubResource( 11 )
+
+[node name="Sphere" type="MeshInstance" parent="Scene Objects"]
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 5.84351, 1.42903, -4.44786 )
+mesh = SubResource( 2 )
+material/0 = ExtResource( 6 )
+
+[node name="LightRemote" type="RemoteTransform" parent="Scene Objects/Sphere"]
+remote_path = NodePath("../../../ToonLightDataView/Viewport/Sphere")
+
+[node name="SpecularRemote" type="RemoteTransform" parent="Scene Objects/Sphere"]
+remote_path = NodePath("../../../ToonSpecularDataView/Viewport/Sphere")
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.972853, -0.056269, 0.22448, 0, 0.969991, 0.243141, -0.231425, -0.23654, 0.943658, 5.81258, 5.00241, 2.56128 )
+current = true
+
+[node name="LightTransform" type="RemoteTransform" parent="Camera"]
+remote_path = NodePath("../../ToonLightDataView/Viewport/Camera")
+
+[node name="SpecularTransform" type="RemoteTransform" parent="Camera"]
+remote_path = NodePath("../../ToonSpecularDataView/Viewport/Camera")
+
+[node name="Light_Setup" type="Spatial" parent="."]
+transform = Transform( 0.998877, 0, 0.0473854, 0, 1, 0, -0.0473854, 0, 0.998877, 0, 7, 0 )
+
+[node name="Key_Light" type="DirectionalLight" parent="Light_Setup"]
+transform = Transform( 0.0931524, -0.540813, 0.835969, 0, 0.83962, 0.543175, -0.995652, -0.050598, 0.0782126, 0, 0, 0 )
+light_color = Color( 0, 0, 0, 1 )
+light_energy = 0.25
+shadow_enabled = true
+
+[node name="LightTransform" type="RemoteTransform" parent="Light_Setup/Key_Light"]
+remote_path = NodePath("../../../ToonLightDataView/Viewport/Key_Light")
+
+[node name="SpecularTransform" type="RemoteTransform" parent="Light_Setup/Key_Light"]
+remote_path = NodePath("../../../ToonSpecularDataView/Viewport/Key_Light")
+
+[node name="Fill_Light" type="DirectionalLight" parent="Light_Setup"]
+transform = Transform( 0.424294, -0.422325, -0.80101, 0, 0.884581, -0.466387, 0.905524, 0.197885, 0.375323, 0, 0, 0 )
+light_color = Color( 0, 0, 0, 1 )
+light_energy = 0.0
+light_indirect_energy = 0.0
+light_specular = 0.0
+light_cull_mask = 2146435072
+
+[node name="LightTransform" type="RemoteTransform" parent="Light_Setup/Fill_Light"]
+remote_path = NodePath("../../../ToonLightDataView/Viewport/Fill_Light")
+
+[node name="Rim_Light" type="DirectionalLight" parent="Light_Setup"]
+transform = Transform( -0.991631, 0.040215, 0.12268, 0.0304019, 0.996264, -0.0808389, -0.125473, -0.0764326, -0.989149, 6.18985, -5.54697, -3.88514 )
+light_color = Color( 0, 0, 0, 1 )
+light_energy = 0.0
+light_indirect_energy = 0.0
+light_cull_mask = 4293918720
+
+[node name="LightTransform" type="RemoteTransform" parent="Light_Setup/Rim_Light"]
+remote_path = NodePath("../../../ToonLightDataView/Viewport/Rim_Light")

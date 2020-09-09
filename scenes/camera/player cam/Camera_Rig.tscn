@@ -1,28 +1,43 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/camera/player cam/player_camera_controller.gd" type="Script" id=1]
+[ext_resource path="res://scenes/camera/player cam/camera_states/player_camera/third_person.gd" type="Script" id=2]
+[ext_resource path="res://scenes/camera/player cam/camera_states/camera_state_machine.gd" type="Script" id=3]
+[ext_resource path="res://scenes/camera/player cam/camera_states/player_camera/first_person.gd" type="Script" id=4]
 
 [sub_resource type="SphereShape" id=1]
 radius = 0.5
 
 [node name="Camera_Rig" type="Spatial"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
 script = ExtResource( 1 )
 
 [node name="Pivot" type="Spatial" parent="."]
 
-[node name="Camera_Collision" type="KinematicBody" parent="Pivot"]
+[node name="Cam_Position" type="KinematicBody" parent="Pivot"]
 transform = Transform( -1, 0, 3.25841e-07, 0, 1, 0, -3.25841e-07, 0, -1, 1.42109e-14, 0, -8 )
-visible = false
 input_ray_pickable = false
 collision_layer = 0
 collision_mask = 5
 
-[node name="CollisionShape" type="CollisionShape" parent="Pivot/Camera_Collision"]
+[node name="CollisionShape" type="CollisionShape" parent="Pivot/Cam_Position"]
+visible = false
 shape = SubResource( 1 )
 
-[node name="Camera_Position" type="Spatial" parent="Pivot"]
-transform = Transform( -1, 0, 3.25841e-07, 0, 1, 0, -3.25841e-07, 0, -1, 0, 0, -8.5 )
-
-[node name="Camera_Position_Default" type="Spatial" parent="Pivot"]
+[node name="Cam_Position_Default" type="Spatial" parent="Pivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.5 )
+
+[node name="Head_Target" type="Position3D" parent="Pivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10 )
+
+[node name="Cam_Position_Target" type="Position3D" parent="Pivot"]
+
+[node name="State_Machine" type="Node" parent="."]
+script = ExtResource( 3 )
+START_STATE = NodePath("Third_Person")
+
+[node name="Third_Person" type="Node" parent="State_Machine"]
+script = ExtResource( 2 )
+
+[node name="First_Person" type="Node" parent="State_Machine"]
+script = ExtResource( 4 )

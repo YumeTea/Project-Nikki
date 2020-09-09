@@ -18,7 +18,7 @@ func _process(_delta):
 		if $Layer1/FadeTransition/AnimationPlayer.is_playing():
 			return
 		else:
-			SceneBackgroundLoader.goto_scene("res://scenes/levels/Level Black Expanse.tscn")
+			SceneBackgroundLoader.goto_scene("res://scenes/levels/Black Expanse/Level Black Expanse.tscn")
 
 
 func _on_Loading_Zone_body_entered(body):

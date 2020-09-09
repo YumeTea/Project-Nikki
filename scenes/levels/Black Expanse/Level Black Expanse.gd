@@ -1,24 +1,30 @@
 extends Spatial
 
 
+signal player_voided(is_voided)
+signal scene_reloaded(is_reloaded)
+
+
 onready var load_area = false
+onready var blackout = false
 
 
 func _ready():
-	pass
+	emit_signal("scene_reloaded", true)
 
 
-func _process(delta):
+func _process(_delta):
 	if load_area == true:
-		if $Layer1/FadeTransition/AnimationPlayer.is_playing() == true:
+		if $Layer1/FadeTransition/AnimationPlayer.is_playing():
 			return
 		else:
-			SceneBackgroundLoader.goto_scene("res://scenes/levels/Level Test Grounds.tscn")
+			SceneBackgroundLoader.goto_scene("res://scenes/levels/Test Grounds/Level Test Grounds.tscn")
 	pass
 
 
 func _on_Loading_Zone_body_entered(body):
-	$Layer1/FadeTransition/AnimationPlayer.play("Fade Out")
-	load_area = true
+	if (body.get_name() == "Player") and load_area == false:
+		$Layer1/FadeTransition/AnimationPlayer.play("Fade Out")
+		load_area = true
 
 

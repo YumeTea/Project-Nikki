@@ -24,7 +24,7 @@ func _on_Debug_Value_Display_velocity_changed(velocity):
 	update_display()
 
 
-func calculate_horizontal_velocity(current_velocity):
-	var horizontal_velocity = Vector2(current_velocity.x, current_velocity.z).length()
+func calculate_horizontal_velocity(velocity):
+	var horizontal_velocity = Vector2(velocity.x, velocity.z).length()
 	return horizontal_velocity
 

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://scripts/custom_classes/item_resource.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+name = "Item_None"
+index = 0
+removable = false
+stackable = false
+max_stack_size = 1
+type = "Item"
+item_scene = ""

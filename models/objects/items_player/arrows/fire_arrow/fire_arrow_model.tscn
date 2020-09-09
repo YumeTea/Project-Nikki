@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://models/objects/items_player/arrows/fire_arrow/fire_arrow_tip.material" type="Material" id=1]
+[ext_resource path="res://models/objects/items_player/arrows/arrow_shaft.tres" type="CapsuleMesh" id=2]
+[ext_resource path="res://models/objects/items_player/arrows/arrow_shaft.material" type="Material" id=3]
+
+[sub_resource type="PrismMesh" id=1]
+
+[node name="Arrow_Mesh" type="Spatial"]
+
+[node name="Arrow_Shaft" type="MeshInstance" parent="."]
+transform = Transform( 0.015, 0, 0, 0, 0.015, 0, 0, 0, 0.85, 0, 0, 0 )
+mesh = ExtResource( 2 )
+material/0 = ExtResource( 3 )
+
+[node name="Fire_Arrow_Tip" type="Spatial" parent="."]
+transform = Transform( 0.1, 0, 0, 0, -8.74228e-09, -0.1, 0, 0.2, -4.37114e-09, 0, 2.592e-08, 1.40702 )
+
+[node name="Fire_Arrow_Tip" type="MeshInstance" parent="Fire_Arrow_Tip"]
+transform = Transform( 0.5, 0, 0.000866026, 3.55271e-15, 1, -2.60209e-18, -0.866026, 2.84217e-14, 0.0005, 0, 0, 0 )
+mesh = SubResource( 1 )
+material/0 = ExtResource( 1 )
+
+[node name="Fire_Arrow_Tip2" type="MeshInstance" parent="Fire_Arrow_Tip"]
+transform = Transform( -0.5, 0, 0.000866026, 0, 1, 0, -0.866025, 0, -0.0005, 0, 0, 0 )
+mesh = SubResource( 1 )
+material/0 = ExtResource( 1 )
+
+[node name="Fire_Arrow_Tip3" type="MeshInstance" parent="Fire_Arrow_Tip"]
+transform = Transform( 0.999848, 0, 1.74524e-05, 0, 1, 0, -0.0174524, 0, 0.000999848, -4.76837e-07, -9.53674e-07, -4.76837e-07 )
+mesh = SubResource( 1 )
+material/0 = ExtResource( 1 )
+
+[node name="OmniLight" type="OmniLight" parent="Fire_Arrow_Tip"]
+light_color = Color( 1, 0.818, 0.61, 1 )
+light_energy = 0.24
+light_specular = 0.0
+omni_range = 20.0
+omni_attenuation = 2.73208
+omni_shadow_mode = 0
