@@ -16,7 +16,6 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	speed = speed_default
 	is_falling = false
 	centered = false
 	centering_time_left = centering_time
@@ -308,6 +307,7 @@ func blend_move_anim():
 		#Check move position and if move position is already being tweened
 		if move_blend_position != -1.0 and !active_tweens.has("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"):
 			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position", move_blend_position, -1.0, 0.25, Tween.TRANS_LINEAR)
+			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineUpperBody/Walk/BlendSpace1D/blend_position", move_blend_position, -1.0, 0.25, Tween.TRANS_LINEAR)
 			owner.get_node("Tween").start()
 			add_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
 		elif move_blend_position == -1.0 and active_tweens.has("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"):
@@ -323,6 +323,7 @@ func blend_move_anim():
 	else:
 		if move_blend_position < 0 and !active_tweens.has("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"):
 			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position", move_blend_position, 0.0, 0.5, Tween.TRANS_LINEAR)
+			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineUpperBody/Walk/BlendSpace1D/blend_position", move_blend_position, 0.0, 0.5, Tween.TRANS_LINEAR)
 			owner.get_node("Tween").start()
 			add_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
 		elif move_blend_position >= 0.0:

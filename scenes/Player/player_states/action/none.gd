@@ -41,7 +41,8 @@ func handle_input(event):
 		if event.is_action_pressed("cast") and event.get_device() == 0:
 			emit_signal("finished", "cast")
 		if event.is_action_pressed("draw_bow") and event.get_device() == 0:
-			emit_signal("finished", "bow")
+			if equipped_bow.item_reference.name != "Bow_None":
+				emit_signal("finished", "bow")
 	
 	if event.is_action_pressed("bow_next") and event.get_device() == 0:
 		owner.inventory.next_item("Bow")

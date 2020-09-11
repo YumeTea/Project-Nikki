@@ -17,7 +17,7 @@ func update(delta):
 	.update(delta)
 	
 	if in_water:
-		if Player.global_transform.origin.y < surface_height - (player_center / 3.0):
+		if Player.global_transform.origin.y < (surface_height - player_center):
 			emit_signal("finished", "swim")
 	
 	if velocity.y < 0 and is_falling == false:

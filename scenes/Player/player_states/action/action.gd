@@ -50,7 +50,7 @@ func exit():
 #Creates output based on the input event passed in
 func handle_input(event):
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		owner.get_node("Tween").start()
+#		print(owner.get_node("AnimationTree").get("parameters/UpperBodyxAction/blend_amount"))
 	.handle_input(event)
 
 

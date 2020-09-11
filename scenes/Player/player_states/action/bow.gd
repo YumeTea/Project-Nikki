@@ -19,6 +19,7 @@ var arrow
 var drawing_arrow
 var arrow_ready
 var arrow_drawn
+var cancel_draw
 
 var bow_angle = Vector2()
 const bow_up_travel_lim = 0.76
@@ -36,6 +37,7 @@ func enter():
 	drawing_arrow = true
 	arrow_ready = false
 	arrow_drawn = false
+	cancel_draw = false
 	
 	#Reset bow angle value on entering
 	bow_angle = Vector2(0,0)
@@ -80,6 +82,11 @@ func exit():
 
 
 func handle_input(event):
+	#Pressing draw bow again after cancelling restarts draw
+	if event.is_action_pressed("draw_bow"):
+		if cancel_draw:
+			cancel_draw = false
+	
 	#When player lets go of bow button
 	if !Input.is_action_pressed("draw_bow"):
 		if arrow_drawn:
@@ -87,8 +94,15 @@ func handle_input(event):
 		else:
 			if arrow_ready:
 				owner.get_node("AnimationTree").set("parameters/TimeScaleAction/scale", -2.0)
-	else:
+	elif !cancel_draw:
 		owner.get_node("AnimationTree").set("parameters/TimeScaleAction/scale", 1.0)
+	
+	if event.is_action_pressed("cancel") and event.get_device() == 0:
+		if arrow_ready:
+				cancel_draw = true
+				arrow_drawn = false
+				drawing_arrow = true
+				owner.get_node("AnimationTree").set("parameters/TimeScaleAction/scale", -2.0)
 	
 	.handle_input(event)
 
@@ -110,7 +124,7 @@ func on_animation_started(anim_name):
 
 
 func on_animation_finished(anim_name):
-	if anim_name == "Draw_Arrow":
+	if anim_name == "Draw_Arrow" and !cancel_draw:
 		drawing_arrow = false
 		arrow_drawn = true
 
@@ -165,8 +179,10 @@ func set_arrow_visible(visible_bool):
 	if projectile:
 		if Arrow_Position.has_node(projectile.name):
 			if visible_bool == true:
+				print("setting_arrow_visible")
 				Arrow_Position.get_node(projectile.name).visible = true
 			elif visible_bool == false:
+				print("setting_arrow_invisible")
 				Arrow_Position.get_node(projectile.name).visible = false
 	
 	return

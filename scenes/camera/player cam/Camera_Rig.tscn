@@ -41,3 +41,7 @@ script = ExtResource( 2 )
 
 [node name="First_Person" type="Node" parent="State_Machine"]
 script = ExtResource( 4 )
+
+[node name="Aim_Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true

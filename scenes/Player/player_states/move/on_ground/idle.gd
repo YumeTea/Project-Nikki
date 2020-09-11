@@ -45,9 +45,9 @@ func update(delta):
 		emit_signal("finished", "walk") #emit the finished signal and input walk as next state (from state.gd)
 	
 	if view_mode == "third_person":
-		idle_third_person()
+		idle_third_person(delta)
 	elif view_mode == "first_person":
-		idle_first_person()
+		idle_first_person(delta)
 	
 	.update(delta)
 
@@ -55,30 +55,34 @@ func on_animation_finished(_anim_name):
 	pass
 
 
-func idle_third_person():
+func idle_third_person(delta):
 	if rotate_to_focus:
-		center_to_focus()
+		center_to_focus(delta)
 	elif centering_view:
-		rotate_to_target_third_person()
+		rotate_to_target_third_person(delta)
 	elif strafe_locked:
-		lock_to_focus()
+		lock_to_focus(delta)
+	else:
+		calculate_movement_velocity(delta)
 	
 	blend_idle_anim()
 
 
-func idle_first_person():
+func idle_first_person(delta):
 	if rotate_to_focus:
-		center_to_focus()
+		center_to_focus(delta)
 	elif centering_view:
-		rotate_to_target_first_person()
+		rotate_to_target_first_person(delta)
 	elif strafe_locked:
-		lock_to_focus()
+		lock_to_focus(delta)
+	else:
+		calculate_movement_velocity(delta)
 	
 	blend_idle_anim()
 
 
 #Rotates rig to target or rig facing angle in centering_time frames
-func rotate_to_target_third_person():
+func rotate_to_target_third_person(delta):
 	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	
 	if centering_time_left <= 0:
@@ -97,6 +101,8 @@ func rotate_to_target_third_person():
 	else:
 		turn_angle.y = 0
 	
+	calculate_movement_velocity(delta)
+	
 	emit_signal("center_view", turn_angle.y)
 	
 	owner.get_node("Rig").rotate_y(turn_angle.y)
@@ -108,7 +114,7 @@ func rotate_to_target_third_person():
 
 
 #Rotates rig to target or focus angle in centering_time frames
-func rotate_to_target_first_person():
+func rotate_to_target_first_person(delta):
 	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	
 	if centering_time_left <= 0:
@@ -133,6 +139,8 @@ func rotate_to_target_first_person():
 		if !centered:
 			turn_angle.y = turn_angle.y/centering_time_left
 	
+	calculate_movement_velocity(delta)
+	
 	emit_signal("center_view", turn_angle.y)
 	
 	owner.get_node("Rig").rotate_y(turn_angle.y)
@@ -144,7 +152,7 @@ func rotate_to_target_first_person():
 
 
 #Rotates rig to focus angle limited to turn_radius
-func lock_to_focus():
+func lock_to_focus(delta):
 	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	
@@ -161,12 +169,14 @@ func lock_to_focus():
 	if turn_angle.y > (deg2rad(turn_radius)):
 		turn_angle.y = (deg2rad(turn_radius))
 	
+	calculate_movement_velocity(delta)
+	
 	###Player Rotation
 	owner.get_node("Rig").rotate_y(turn_angle.y)
 
 
 #Rotates rig to focus angle in centering time frames
-func center_to_focus():
+func center_to_focus(delta):
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	facing_angle.y = calculate_global_y_rotation(get_node_direction(Player.get_node("Rig")))
 	
@@ -174,6 +184,8 @@ func center_to_focus():
 	turn_angle.y = camera_angle_global.y - facing_angle.y
 	turn_angle.y = bound_angle(turn_angle.y)
 	turn_angle.y = turn_angle.y/centering_time_left
+	
+	calculate_movement_velocity(delta)
 	
 	owner.get_node("Rig").rotate_y(turn_angle.y)
 	

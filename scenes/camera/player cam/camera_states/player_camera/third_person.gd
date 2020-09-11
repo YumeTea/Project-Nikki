@@ -12,7 +12,7 @@ var focus_starting_angle = Vector2(deg2rad(15), deg2rad(0))
 var focus_angle_lim = Vector2(deg2rad(57.5), deg2rad(360))
 
 #Camera Targetting Travel Variables
-var camera_targetting_offset = Vector3(-1.5, 0.0, 0.0)
+var camera_targetting_offset = Vector3(-1.5, 0.5, 0.0)
 var camera_targetting_travel = Vector3(0.0, 0.0, 2.0) 
 var target_distance_lower_lim = 10.0
 var target_distance_upper_lim = 80.0
@@ -104,11 +104,14 @@ func enter_third_person():
 	var camera_pos
 	
 	if view_change_time_left > 0:
-		if (targetting and centering) or state_action == "Bow":
+		if (targetting and centering):
+			#Get transform of camera if it were in targetting and centering position
 			camera_pos = Pivot.to_local(get_camera_targetting_transform(Camera_Rig.to_global(pivot_pos_default_local), 0.0, true).origin)
-		elif state_action == "Bow":
-			camera_pos = Pivot.to_local(get_camera_targetting_transform(Camera_Rig.to_global(pivot_pos_default_local), 0.0, false).origin)
+		elif aiming:
+			#Get transform of camera if it were in aiming position
+			camera_pos = Pivot.to_local(get_camera_aim_transform().origin)
 		else:
+			#Get default third person camera transform
 			camera_pos = camera_pos_default_local
 		
 		var pivot_move = (pivot_pos_default_local - Pivot.transform.origin) / view_change_time_left
@@ -144,9 +147,9 @@ func look_third_person():
 	elif centering and targetting:
 		center_camera()
 		interpolate_camera_default_pos(get_camera_targetting_transform(Pivot.global_transform.origin, interpolation_time_left, true), interpolation_time_left)
-	elif state_action == "Bow":
+	elif aiming:
 		rotate_camera(right_joystick_axis)
-		interpolate_camera_default_pos(get_camera_targetting_transform(Pivot.global_transform.origin, interpolation_time_left, false), interpolation_time_left)
+		interpolate_camera_default_pos(get_camera_aim_transform(), interpolation_time_left)
 	elif centering:
 		center_camera()
 		var transform = Pivot.global_transform
@@ -245,6 +248,7 @@ func rotate_camera(input_change):
 	focus_direction = get_node_direction(Pivot)
 
 
+#Pivot transform is argument for going between first and third person
 func get_camera_targetting_transform(pivot_global_transform_origin, interp_time_left, calc_travel):
 	#Calc head target pos and distance
 	var head_target_pos = Head_Target.global_transform.origin
@@ -260,8 +264,20 @@ func get_camera_targetting_transform(pivot_global_transform_origin, interp_time_
 	if calc_travel:
 		transform = target_camera_travel(focus_object, transform, pivot_global_transform_origin)
 	
-	#Apply default x angle offset
-	"Put initial rotation code here"
+	return transform
+
+
+func get_camera_aim_transform():
+	#Calc head target pos and distance
+	var head_target_pos = Head_Target.global_transform.origin
+	
+	#Camera Offsetting
+	var camera_offset = camera_pos_default_local + camera_targetting_offset
+	
+	#Calc intended final camera transform
+	var transform = Transform()
+	transform.origin = Pivot.to_global(pivot_pos_default_local + camera_offset)
+	transform = transform.looking_at(head_target_pos, Vector3(0,1,0))
 	
 	return transform
 
@@ -469,6 +485,7 @@ func camera_collision_correction(Camera_Position, Pivot, Default_Pos_Node):
 
 
 #Moves camera default position and camera to transform_final
+#0 interp time is instant translation to transform final
 func interpolate_camera_default_pos(transform_final, interp_time_left):
 	#Camera Movement Limiting (based on centering time left)
 	var move = transform_final.origin - Camera_Position_Default.global_transform.origin
@@ -516,8 +533,4 @@ func interpolate_camera_default_pos(transform_final, interp_time_left):
 	
 	if interpolation_time_left > 0:
 		interpolation_time_left -= 1
-	
-	
 
-	
-	

@@ -11,6 +11,7 @@ var initialized_values = {
 	"focus_object": null,
 	"centering": false,
 	"view_change_time_left": 0,
+	"aiming": false,
 	
 	"state_move": null,
 	"state_action": null,

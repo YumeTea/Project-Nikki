@@ -13,10 +13,10 @@ func enter():
 	
 	connect_player_signals()
 	
-#	if owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").is_playing() == false:
-#		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").start("Swim")
-#	else:
-#		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").travel("Swim")
+	if owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").is_playing() == false:
+		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").start("Swim")
+	else:
+		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").travel("Swim")
 
 
 #Cleans up state, reinitializes values like timers
@@ -33,6 +33,7 @@ func handle_input(event):
 
 #Acts as the _process method would
 func update(delta):
+	print(quick_turn)
 	if Player.global_transform.origin.y >= surfaced_height + (surface_speed * 1.01 * delta):
 		emit_signal("finished", "previous")
 	

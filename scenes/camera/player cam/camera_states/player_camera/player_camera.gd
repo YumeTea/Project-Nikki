@@ -23,6 +23,7 @@ onready var Head_Target = owner.get_node("Pivot/Head_Target")
 onready var Camera_Position = owner.get_node("Pivot/Cam_Position")
 onready var Camera_Position_Default = owner.get_node("Pivot/Cam_Position_Default")
 onready var Camera_Position_Target = owner.get_node("Pivot/Cam_Position_Target")
+onready var Aim_Timer = owner.get_node("Aim_Timer")
 
 #Node Position Local Defaults
 var head_target_offset_default = Vector3(0,0, 10.0)
@@ -75,6 +76,7 @@ var view_change_time_left = 0
 var is_obscured
 var centered = false
 var centering = false
+var aiming = false
 var view_locked = false
 var strafe_locked = false
 
@@ -244,6 +246,7 @@ func connect_camera_signals():
 	Camera_Rig.connect("focus_target", self, "_on_Nikkiv2_focus_target")
 	owner.owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_State_Machine_Move_state_changed")
 	owner.owner.get_node("State_Machine_Action").connect("action_state_changed", self, "_on_State_Machine_Action_state_changed")
+	Aim_Timer.connect("timeout", self, "_on_Aim_Timer_timeout")
 
 
 func disconnect_camera_signals():
@@ -252,6 +255,7 @@ func disconnect_camera_signals():
 	Camera_Rig.disconnect("focus_target", self, "_on_Nikkiv2_focus_target")
 	owner.owner.get_node("State_Machine_Move").disconnect("move_state_changed", self, "_on_State_Machine_Move_state_changed")
 	owner.owner.get_node("State_Machine_Action").disconnect("action_state_changed", self, "_on_State_Machine_Action_state_changed")
+	Aim_Timer.disconnect("timeout", self, "_on_Aim_Timer_timeout")
 
 
 func set_initialized_values(init_values_dic):
@@ -282,21 +286,30 @@ func _on_Nikkiv2_focus_target(target_pos_node):
 
 func _on_State_Machine_Move_state_changed(move_state):
 	state_move = move_state
+	
+	if move_state != "Idle":
+		if state_action == "None" and aiming and Aim_Timer.is_stopped():
+			Aim_Timer.start(1.0)
 
 func _on_State_Machine_Action_state_changed(action_state):
 	#Before storing new state
 	if state_action == "Bow":
-		reset_interpolate()
+		if state_move != "Idle":
+			Aim_Timer.start(1.0)
 	
 	#Store new action state
 	state_action = action_state
 	
 	#After storing new state
 	if action_state == "Bow":
+		aiming = true
+		Aim_Timer.stop()
 		reset_interpolate()
 
 
-
+func _on_Aim_Timer_timeout():
+	aiming = false
+	reset_interpolate()
 
 
 

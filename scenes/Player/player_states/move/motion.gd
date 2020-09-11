@@ -113,7 +113,7 @@ func handle_input(event):
 		reset_recenter()
 	
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print("break")
+#		print(owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"))
 	
 	.handle_input(event)
 
@@ -580,6 +580,9 @@ func _on_State_Machine_Action_state_changed(action_state):
 	if action_state == "Bow":
 		strafe_locked = true
 		speed = speed_bow_walk
+		
+		#Remove Lower Body active tween so it starts once on entering bow state
+		remove_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
 
 
 func _on_Camera_Rig_camera_direction_changed(dir):
