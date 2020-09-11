@@ -15,8 +15,11 @@ var initialized_values = {
 	"targetting": false,
 	"focus_object": null,
 	
-	"is_walking": false,
+	"is_moving": false,
 	"is_falling": false,
+	"in_water": false,
+	
+	"surface_height": 0.0,
 	
 	"view_mode": "third_person",
 	"centered": false,
@@ -36,6 +39,7 @@ func _ready():
 	"walk": $Walk,
 	"fall": $Fall,
 	"jump": $Jump,
+	"swim": $Swim,
 	"death": $Death,
 	"void": $Void
 }
@@ -49,24 +53,31 @@ func _ready():
 func _change_state(state_name): #state_machine.gd does the generalized work
 	if not _active:
 		return
-	##States that stack
-	if state_name in ["fall", "jump"]: #code for push automaton; "pushes" state_name onto top of state stack
-		states_stack.push_front(states_map[state_name])
-	##New State initialization (excludes idle for some reason)
-	if state_name in ["idle", "walk", "fall", "jump", "void"]:
+	
+	##New State initialization
+	if state_name in ["idle", "walk", "fall", "jump", "swim", "void"]:
 		#Set initialized values in old state for transfer
 		current_state.set_initialized_values(current_state.initialized_values)
 		#Transfer initialized values to new state
 		states_map[state_name].initialize(current_state.initialized_values) #initialize velocity for certain states out of walk state
+	
 	##Special new state handling
 	if state_name in ["fall"] and current_state in [$Jump]:
-		states_stack.remove(states_stack.find($Jump))
+		states_stack.pop_front()
+	if state_name in ["swim"] and current_state in [$Jump, $Fall]:
+		states_stack.pop_front()
+		
+	##Stack states that stack
+	if state_name in ["fall", "jump", "swim"]: #code for push automaton; "pushes" state_name onto top of state stack
+		states_stack.push_front(states_map[state_name])
+		
 	##Previous State initialization
 	if state_name in ["previous"]:
 		#Set initialized values in old state for transfer
 		current_state.set_initialized_values(current_state.initialized_values)
 		#Transfer initialized values to new state
 		states_stack[1].initialize(current_state.initialized_values) #pass current state velocity to previous state if switching to previous state
+	
 	##State Change
 	._change_state(state_name)
 	

@@ -1,5 +1,7 @@
 shader_type canvas_item;
 
+uniform sampler2D texturemap : hint_albedo;
+
 uniform vec2 	tiled_factor = vec2(5.0, 5.0);
 uniform float 	aspect_ratio = 0.5;
 
@@ -9,6 +11,8 @@ uniform vec2 	amplitude = vec2(0.05, 0.1);
 
 
 void fragment() {
+	
+	
 	vec2 tiled_uvs = UV * tiled_factor;
 	tiled_uvs.y *= aspect_ratio;
 		
@@ -18,6 +22,6 @@ void fragment() {
 	
 //	COLOR = vec4(tiled_uvs, 0.0, 1.0);
 //	COLOR = vec4(waves_uv_offset, 0.0, 1.0);
-	COLOR = texture(TEXTURE, tiled_uvs + waves_uv_offset * amplitude);
+	COLOR = texture(texturemap, tiled_uvs + waves_uv_offset * amplitude);
 
 }

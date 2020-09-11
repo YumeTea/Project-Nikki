@@ -110,10 +110,12 @@ func connect_player_signals():
 	owner.inventory.connect("equipped_items_changed", self, "_on_Player_equipped_items_changed")
 	owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_move_state_changed")
 	owner.get_node("State_Machine_Action").connect("initialized_values_dic_set", self, "_on_State_Machine_Action_initialized_values_dic_set")
-#	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_death")
 	owner.get_node("Camera_Rig").connect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
-#	owner.get_node("Camera_Rig").connect("view_locked", self, "_on_Camera_Rig_view_locked")
-#	owner.get_node("Camera_Rig").connect("enter_new_view", self, "_on_Camera_Rig_enter_new_view")
+	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_death")
+	
+	#World Signals
+#	owner.connect("entered_area", self, "_on_environment_area_entered")
+#	owner.connect("exited_area", self, "_on_environment_area_exited")
 	if owner.owner:
 		owner.owner.connect("player_voided", self, "_on_voided")
 
@@ -123,13 +125,17 @@ func disconnect_player_signals():
 	owner.inventory.disconnect("equipped_items_changed", self, "_on_Player_equipped_items_changed")
 	owner.get_node("State_Machine_Move").disconnect("move_state_changed", self, "_on_move_state_changed")
 	owner.get_node("State_Machine_Action").disconnect("initialized_values_dic_set", self, "_on_State_Machine_Action_initialized_values_dic_set")
-#	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_death")
 	owner.get_node("Camera_Rig").disconnect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
-#	owner.get_node("Camera_Rig").disconnect("view_locked", self, "_on_Camera_Rig_view_locked")
-#	owner.get_node("Camera_Rig").disconnect("enter_new_view", self, "_on_Camera_Rig_enter_new_view")
+	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_death")
+	
+	#World Signals
+#	owner.connect("entered_area", self, "_on_environment_area_entered")
+#	owner.connect("exited_area", self, "_on_environment_area_exited")
 	if owner.owner:
 		owner.owner.disconnect("player_voided", self, "_on_voided")
 
+
+###PLAYER SIGNAL FUNCTIONS### 
 
 func _on_Player_focus_target_changed(target_pos_node):
 	focus_object = target_pos_node
@@ -137,6 +143,14 @@ func _on_Player_focus_target_changed(target_pos_node):
 
 func _on_Player_equipped_items_changed(equipped_items_dict):
 	equipped_items = equipped_items_dict
+
+
+func _on_move_state_changed(move_state):
+	state_move = move_state
+	move_state_changed = true
+	
+	if state_move == "Swim":
+		emit_signal("finished", "none")
 
 
 func _on_State_Machine_Action_initialized_values_dic_set(init_values_dic):
@@ -147,9 +161,21 @@ func _on_Camera_Rig_focus_direction_changed(direction):
 	focus_direction = direction
 
 
-func _on_move_state_changed(move_state):
-	state_move = move_state
-	move_state_changed = true
+func _on_death(death):
+	if death:
+		emit_signal("finished", "death")
+
+
+###WORLD SIGNAL FUNCTIONS###
+
+#func _on_environment_area_entered(area_type, surface_height):
+#	if area_type == "Water":
+#		in_water = true
+#
+#
+#func _on_environment_area_exited():
+#	if area_type == "Water":
+#		in_water = false
 
 
 func _on_voided(voided):
@@ -158,7 +184,5 @@ func _on_voided(voided):
 		can_void = false
 
 
-func _on_death(death):
-	if death:
-		emit_signal("finished", "death")
+
 

@@ -284,14 +284,15 @@ func _on_State_Machine_Move_state_changed(move_state):
 	state_move = move_state
 
 func _on_State_Machine_Action_state_changed(action_state):
-	#Do something on exiting old state:
+	#Before storing new state
 	if state_action == "Bow":
 		reset_interpolate()
 	
+	#Store new action state
 	state_action = action_state
 	
-	#Do something on entering new state:
-	if state_action == "Bow":
+	#After storing new state
+	if action_state == "Bow":
 		reset_interpolate()
 
 

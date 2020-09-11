@@ -12,6 +12,8 @@ signal is_falling(is_falling)
 signal targets_changed(visible_targets)
 signal focus_target(target_pos_node)
 signal entered_new_view(view_mode)
+signal entered_area(area_type, surface_height)
+signal exited_area(area_type)
 
 
 #Scene Storage
@@ -225,6 +227,14 @@ func _on_landing(height):
 		is_falling = false
 		
 		emit_signal("is_falling", is_falling)
+
+
+func _entered_area(area_type, surface_height):
+	emit_signal("entered_area", area_type, surface_height)
+
+
+func _exited_area(area_type):
+	emit_signal("exited_area", area_type)
 
 
 func _on_Targetting_Area_body_entered(body):

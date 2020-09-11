@@ -37,10 +37,11 @@ func exit():
 #Creates output based on the input event passed in
 func handle_input(event):
 	#Check for inputs that enter new states first
-	if event.is_action_pressed("cast") and event.get_device() == 0:
-		emit_signal("finished", "cast")
-	if event.is_action_pressed("draw_bow") and event.get_device() == 0:
-		emit_signal("finished", "bow")
+	if state_move in ground_states:
+		if event.is_action_pressed("cast") and event.get_device() == 0:
+			emit_signal("finished", "cast")
+		if event.is_action_pressed("draw_bow") and event.get_device() == 0:
+			emit_signal("finished", "bow")
 	
 	if event.is_action_pressed("bow_next") and event.get_device() == 0:
 		owner.inventory.next_item("Bow")

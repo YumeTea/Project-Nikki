@@ -1,4 +1,4 @@
-[gd_scene load_steps=130 format=2]
+[gd_scene load_steps=131 format=2]
 
 [ext_resource path="res://scenes/Player/player_states/move/on_ground/idle.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Player/player/player_controller.gd" type="Script" id=2]
@@ -44,6 +44,7 @@
 [ext_resource path="res://models/characters/Nikki/textures/Sock Texture.png" type="Texture" id=42]
 [ext_resource path="res://models/characters/Nikki/textures/Shorts Texture.png" type="Texture" id=43]
 [ext_resource path="res://models/characters/Nikki/materials/cel_shader_gradient.tres" type="Gradient" id=44]
+[ext_resource path="res://scenes/Player/player_states/move/in_water/swim.gd" type="Script" id=45]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Jump"
@@ -771,7 +772,7 @@ tracks/101/imported = false
 tracks/101/enabled = true
 tracks/101/keys = PoolRealArray( 0, 1, 0.000101626, 0.507019, -0.00221653, 0.00904322, 0.0106858, -0.0552385, 0.998375, 1, 1, 1, 0.0166667, 1, -0.00162983, 0.493448, 0.0146894, 0.0211095, 0.0104814, -0.0542621, 0.998249, 1, 1, 1, 0.0333333, 1, -0.00637735, 0.456238, 0.0610444, 0.0545663, 0.00990649, -0.0515116, 0.997131, 1, 1, 1, 0.05, 1, -0.0134707, 0.40064, 0.130304, 0.105384, 0.00900975, -0.0472126, 0.993269, 1, 1, 1, 0.0833333, 1, -0.032014, 0.255299, 0.311361, 0.240253, 0.00648908, -0.0350763, 0.970055, 1, 1, 1, 0.116667, 1, -0.0518977, 0.0994521, 0.505507, 0.38111, 0.00362278, -0.0211942, 0.92428, 1, 1, 1, 0.133333, 1, -0.0606667, 0.0307217, 0.591127, 0.439693, 0.00235226, -0.0150158, 0.898019, 1, 1, 1, 0.15, 1, -0.06776, -0.0248756, 0.660387, 0.484856, 0.00133764, -0.0100711, 0.874535, 1, 1, 1, 0.166667, 1, -0.0725076, -0.0620863, 0.706742, 0.51383, 0.000669293, -0.00680894, 0.857865, 1, 1, 1, 0.183333, 1, -0.074239, -0.0756573, 0.723648, 0.524132, 0.000428178, -0.0056311, 0.851618, 1, 1, 1 )
 
-[sub_resource type="Animation" id=93]
+[sub_resource type="Animation" id=2]
 resource_name = "Land"
 length = 0.166667
 step = 0.0166667
@@ -1483,24 +1484,24 @@ tracks/100/imported = true
 tracks/100/enabled = true
 tracks/100/keys = PoolRealArray( 0, 1, 0, -0.52328, -0.00958657, 0, 0, 0, 1, 1, 1, 1, 0.0166667, 1, 0, -0.328645, 0.0412775, 0.104104, 0, 0, 0.994567, 1, 1, 1, 0.0333333, 1, 0, 0.0995517, 0.153179, 0.343502, 0, 0, 0.939152, 1, 1, 1, 0.05, 1, 0, 0.527748, 0.26508, 0.56216, 3.208e-23, 1.9077e-30, 0.827029, 1, 1, 1, 0.0666667, 1, 0, 0.722383, 0.315944, 0.645202, 1.43264e-16, 4.33072e-24, 0.764012, 1, 1, 1, 0.0833333, 1, 7.52509e-06, 0.706431, 0.292376, 0.607803, 0.000804407, -0.00415827, 0.794076, 1, 1, 1, 0.1, 1, 2.63453e-05, 0.666548, 0.233458, 0.503151, 0.00290236, -0.0150033, 0.864063, 1, 1, 1, 0.116667, 1, 5.0813e-05, 0.614701, 0.156864, 0.347864, 0.00568166, -0.0293705, 0.937068, 1, 1, 1, 0.133333, 1, 7.52807e-05, 0.562854, 0.0802695, 0.182261, 0.00829244, -0.0428666, 0.98228, 1, 1, 1, 0.15, 1, 9.41008e-05, 0.522972, 0.0213509, 0.0570793, 0.0100551, -0.0519784, 0.996965, 1, 1, 1, 0.166667, 1, 0.000101626, 0.507019, -0.00221653, 0.00904322, 0.0106858, -0.0552385, 0.998375, 1, 1, 1 )
 
-[sub_resource type="AnimationNodeAnimation" id=2]
+[sub_resource type="AnimationNodeAnimation" id=3]
 animation = "Casting_Magic_Orb"
 
-[sub_resource type="AnimationNodeAnimation" id=3]
+[sub_resource type="AnimationNodeAnimation" id=4]
 animation = "Draw_Arrow"
 
-[sub_resource type="AnimationNodeStateMachine" id=4]
-states/Casting_Magic_Orb/node = SubResource( 2 )
+[sub_resource type="AnimationNodeStateMachine" id=5]
+states/Casting_Magic_Orb/node = SubResource( 3 )
 states/Casting_Magic_Orb/position = Vector2( 549, 293 )
-states/Draw_Arrow/node = SubResource( 3 )
+states/Draw_Arrow/node = SubResource( 4 )
 states/Draw_Arrow/position = Vector2( 549, 195 )
 graph_offset = Vector2( -180.592, 141.12 )
 
-[sub_resource type="AnimationNodeAnimation" id=5]
+[sub_resource type="AnimationNodeAnimation" id=6]
 animation = "Bow_Hold"
 
-[sub_resource type="AnimationNodeStateMachine" id=6]
-states/Bow_Hold/node = SubResource( 5 )
+[sub_resource type="AnimationNodeStateMachine" id=7]
+states/Bow_Hold/node = SubResource( 6 )
 states/Bow_Hold/position = Vector2( 388, 191 )
 
 [sub_resource type="AnimationNodeAnimation" id=8]
@@ -1527,38 +1528,41 @@ node_connections = [ "output", 0, "BlendSpace1D" ]
 [sub_resource type="AnimationNodeAnimation" id=13]
 animation = "Jump"
 
-[sub_resource type="AnimationNodeAnimation" id=85]
+[sub_resource type="AnimationNodeAnimation" id=14]
 animation = "Land"
 
-[sub_resource type="AnimationNodeAnimation" id=14]
+[sub_resource type="AnimationNodeAnimation" id=15]
 animation = "Walk"
 
-[sub_resource type="AnimationNodeAnimation" id=15]
+[sub_resource type="AnimationNodeAnimation" id=16]
 animation = "Run"
 
-[sub_resource type="AnimationNodeAnimation" id=16]
+[sub_resource type="AnimationNodeAnimation" id=17]
 animation = "Bow_Walk"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=17]
-blend_point_0/node = SubResource( 14 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=18]
+blend_point_0/node = SubResource( 15 )
 blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 15 )
+blend_point_1/node = SubResource( 16 )
 blend_point_1/pos = 1.0
-blend_point_2/node = SubResource( 16 )
+blend_point_2/node = SubResource( 17 )
 blend_point_2/pos = -1.0
 
-[sub_resource type="AnimationNodeTimeScale" id=18]
+[sub_resource type="AnimationNodeTimeScale" id=19]
 
-[sub_resource type="AnimationNodeBlendTree" id=19]
+[sub_resource type="AnimationNodeBlendTree" id=20]
 graph_offset = Vector2( 12, 92.5 )
-nodes/BlendSpace1D/node = SubResource( 17 )
+nodes/BlendSpace1D/node = SubResource( 18 )
 nodes/BlendSpace1D/position = Vector2( 360, 160 )
-nodes/TimeScale/node = SubResource( 18 )
+nodes/TimeScale/node = SubResource( 19 )
 nodes/TimeScale/position = Vector2( 560, 160 )
 nodes/output/position = Vector2( 740, 160 )
 node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=21]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=22]
 xfade_time = 0.25
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=23]
@@ -1567,39 +1571,36 @@ xfade_time = 0.25
 [sub_resource type="AnimationNodeStateMachineTransition" id=24]
 xfade_time = 0.25
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=26]
+[sub_resource type="AnimationNodeStateMachineTransition" id=25]
 xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=26]
+xfade_time = 0.07
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=27]
-xfade_time = 0.25
+xfade_time = 0.07
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=28]
-xfade_time = 0.07
+xfade_time = 0.08
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=29]
-xfade_time = 0.07
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=86]
 xfade_time = 0.08
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=87]
+[sub_resource type="AnimationNodeStateMachineTransition" id=30]
 xfade_time = 0.08
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=88]
-xfade_time = 0.08
-
-[sub_resource type="AnimationNodeStateMachine" id=30]
+[sub_resource type="AnimationNodeStateMachine" id=31]
 states/Fall/node = SubResource( 8 )
 states/Fall/position = Vector2( 457, 270 )
 states/Idle/node = SubResource( 12 )
 states/Idle/position = Vector2( -40.221, 79 )
 states/Jump/node = SubResource( 13 )
 states/Jump/position = Vector2( 457, 430 )
-states/Land/node = SubResource( 85 )
+states/Land/node = SubResource( 14 )
 states/Land/position = Vector2( 457, 162.368 )
-states/Walk/node = SubResource( 19 )
+states/Walk/node = SubResource( 20 )
 states/Walk/position = Vector2( 989.779, 79 )
-transitions = [ "Walk", "Fall", SubResource( 21 ), "Walk", "Idle", SubResource( 23 ), "Idle", "Walk", SubResource( 24 ), "Idle", "Fall", SubResource( 26 ), "Jump", "Fall", SubResource( 27 ), "Idle", "Jump", SubResource( 28 ), "Walk", "Jump", SubResource( 29 ), "Land", "Idle", SubResource( 86 ), "Land", "Walk", SubResource( 87 ), "Fall", "Land", SubResource( 88 ) ]
+transitions = [ "Walk", "Fall", SubResource( 21 ), "Walk", "Idle", SubResource( 22 ), "Idle", "Walk", SubResource( 23 ), "Idle", "Fall", SubResource( 24 ), "Jump", "Fall", SubResource( 25 ), "Idle", "Jump", SubResource( 26 ), "Walk", "Jump", SubResource( 27 ), "Land", "Idle", SubResource( 28 ), "Land", "Walk", SubResource( 29 ), "Fall", "Land", SubResource( 30 ) ]
 graph_offset = Vector2( -208.221, 43.3679 )
 
 [sub_resource type="AnimationNodeAnimation" id=32]
@@ -1611,39 +1612,36 @@ animation = "Idle"
 [sub_resource type="AnimationNodeAnimation" id=34]
 animation = "Jump"
 
-[sub_resource type="AnimationNodeAnimation" id=89]
+[sub_resource type="AnimationNodeAnimation" id=35]
 animation = "Land"
 
-[sub_resource type="AnimationNodeAnimation" id=35]
+[sub_resource type="AnimationNodeAnimation" id=36]
 animation = "Walk"
 
-[sub_resource type="AnimationNodeAnimation" id=36]
+[sub_resource type="AnimationNodeAnimation" id=37]
 animation = "Run"
 
-[sub_resource type="AnimationNodeAnimation" id=37]
+[sub_resource type="AnimationNodeAnimation" id=38]
 animation = "Bow_Walk"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=38]
-blend_point_0/node = SubResource( 35 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=39]
+blend_point_0/node = SubResource( 36 )
 blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 36 )
+blend_point_1/node = SubResource( 37 )
 blend_point_1/pos = 1.0
-blend_point_2/node = SubResource( 37 )
+blend_point_2/node = SubResource( 38 )
 blend_point_2/pos = -1.0
 
-[sub_resource type="AnimationNodeTimeScale" id=39]
+[sub_resource type="AnimationNodeTimeScale" id=40]
 
-[sub_resource type="AnimationNodeBlendTree" id=40]
+[sub_resource type="AnimationNodeBlendTree" id=41]
 graph_offset = Vector2( -321, 64 )
-nodes/BlendSpace1D/node = SubResource( 38 )
+nodes/BlendSpace1D/node = SubResource( 39 )
 nodes/BlendSpace1D/position = Vector2( -80, 140 )
-nodes/TimeScale/node = SubResource( 39 )
+nodes/TimeScale/node = SubResource( 40 )
 nodes/TimeScale/position = Vector2( 100, 140 )
 nodes/output/position = Vector2( 280, 140 )
 node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=41]
-xfade_time = 0.25
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=42]
 xfade_time = 0.25
@@ -1654,219 +1652,222 @@ xfade_time = 0.25
 [sub_resource type="AnimationNodeStateMachineTransition" id=44]
 xfade_time = 0.25
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=48]
-xfade_time = 0.07
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=49]
-xfade_time = 0.07
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=50]
+[sub_resource type="AnimationNodeStateMachineTransition" id=45]
 xfade_time = 0.25
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=90]
+[sub_resource type="AnimationNodeStateMachineTransition" id=46]
+xfade_time = 0.07
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=47]
+xfade_time = 0.07
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=48]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=49]
 xfade_time = 0.08
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=91]
+[sub_resource type="AnimationNodeStateMachineTransition" id=50]
 xfade_time = 0.08
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=92]
+[sub_resource type="AnimationNodeStateMachineTransition" id=51]
 xfade_time = 0.08
 
-[sub_resource type="AnimationNodeStateMachine" id=51]
+[sub_resource type="AnimationNodeStateMachine" id=52]
 states/Fall/node = SubResource( 32 )
 states/Fall/position = Vector2( 40, 276.139 )
 states/Idle/node = SubResource( 33 )
 states/Idle/position = Vector2( -310, 112 )
 states/Jump/node = SubResource( 34 )
 states/Jump/position = Vector2( 40, 369.139 )
-states/Land/node = SubResource( 89 )
+states/Land/node = SubResource( 35 )
 states/Land/position = Vector2( 40, 187.419 )
-states/Walk/node = SubResource( 40 )
+states/Walk/node = SubResource( 41 )
 states/Walk/position = Vector2( 397, 112 )
-transitions = [ "Idle", "Walk", SubResource( 41 ), "Walk", "Idle", SubResource( 42 ), "Idle", "Fall", SubResource( 43 ), "Walk", "Fall", SubResource( 44 ), "Idle", "Jump", SubResource( 48 ), "Walk", "Jump", SubResource( 49 ), "Jump", "Fall", SubResource( 50 ), "Land", "Idle", SubResource( 90 ), "Land", "Walk", SubResource( 91 ), "Fall", "Land", SubResource( 92 ) ]
+transitions = [ "Idle", "Walk", SubResource( 42 ), "Walk", "Idle", SubResource( 43 ), "Idle", "Fall", SubResource( 44 ), "Walk", "Fall", SubResource( 45 ), "Idle", "Jump", SubResource( 46 ), "Walk", "Jump", SubResource( 47 ), "Jump", "Fall", SubResource( 48 ), "Land", "Idle", SubResource( 49 ), "Land", "Walk", SubResource( 50 ), "Fall", "Land", SubResource( 51 ) ]
 graph_offset = Vector2( -531.696, 53.4187 )
 
-[sub_resource type="AnimationNodeTimeScale" id=52]
-
-[sub_resource type="AnimationNodeBlend2" id=53]
+[sub_resource type="AnimationNodeTimeScale" id=53]
 
 [sub_resource type="AnimationNodeBlend2" id=54]
-filter_enabled = true
-filters = [ "Rig/Skeleton:bicep_l", "Rig/Skeleton:elbow_l", "Rig/Skeleton:forearm_l", "Rig/Skeleton:hand_index_1_l", "Rig/Skeleton:hand_index_2_l", "Rig/Skeleton:hand_index_3_l", "Rig/Skeleton:hand_index_controller_l", "Rig/Skeleton:hand_l", "Rig/Skeleton:hand_middle_1_l", "Rig/Skeleton:hand_middle_2_l", "Rig/Skeleton:hand_middle_3_l", "Rig/Skeleton:hand_middle_controller_l", "Rig/Skeleton:hand_pinky_1_l", "Rig/Skeleton:hand_pinky_2_l", "Rig/Skeleton:hand_pinky_3_l", "Rig/Skeleton:hand_pinky_controller_l", "Rig/Skeleton:hand_ring_1_l", "Rig/Skeleton:hand_ring_2_l", "Rig/Skeleton:hand_ring_3_l", "Rig/Skeleton:hand_ring_controller_l", "Rig/Skeleton:hand_thumb_1_l", "Rig/Skeleton:hand_thumb_2_l", "Rig/Skeleton:hand_thumb_3_l", "Rig/Skeleton:hand_thumb_controller_l" ]
 
 [sub_resource type="AnimationNodeBlend2" id=55]
 filter_enabled = true
+filters = [ "Rig/Skeleton:bicep_l", "Rig/Skeleton:elbow_l", "Rig/Skeleton:forearm_l", "Rig/Skeleton:hand_index_1_l", "Rig/Skeleton:hand_index_2_l", "Rig/Skeleton:hand_index_3_l", "Rig/Skeleton:hand_index_controller_l", "Rig/Skeleton:hand_l", "Rig/Skeleton:hand_middle_1_l", "Rig/Skeleton:hand_middle_2_l", "Rig/Skeleton:hand_middle_3_l", "Rig/Skeleton:hand_middle_controller_l", "Rig/Skeleton:hand_pinky_1_l", "Rig/Skeleton:hand_pinky_2_l", "Rig/Skeleton:hand_pinky_3_l", "Rig/Skeleton:hand_pinky_controller_l", "Rig/Skeleton:hand_ring_1_l", "Rig/Skeleton:hand_ring_2_l", "Rig/Skeleton:hand_ring_3_l", "Rig/Skeleton:hand_ring_controller_l", "Rig/Skeleton:hand_thumb_1_l", "Rig/Skeleton:hand_thumb_2_l", "Rig/Skeleton:hand_thumb_3_l", "Rig/Skeleton:hand_thumb_controller_l" ]
+
+[sub_resource type="AnimationNodeBlend2" id=56]
+filter_enabled = true
 filters = [ "AnimationTree", "Camera_Rig/Pivot/arrow_position:rotation_degrees", "Camera_Rig/Pivot/arrow_position:translation", "Rig/Projectile_Position/cast_glow:scale", "Rig/Projectile_Position/cast_glow:translation", "Rig/Projectile_Position/cast_glow:visible", "Rig/Projectile_Position:translation", "Rig/Skeleton", "Rig/Skeleton/Arm_IK/Hand_L_Controller/Hand_L_Position:translation", "Rig/Skeleton/Arm_IK/Hand_R_Controller/Hand_R_Position:translation", "Rig/Skeleton/Arm_IK/Projectile_Position:rotation_degrees", "Rig/Skeleton/Arm_IK/Projectile_Position:translation", "Rig/Skeleton/Arrow_Hand/Arrow_Position:translation", "Rig/Skeleton/Bicep_L_Position:rotation_degrees", "Rig/Skeleton/Bicep_L_Position:translation", "Rig/Skeleton/Bow_IK/Arrow_Hand/Arrow_Position:translation", "Rig/Skeleton/Bow_IK/Arrow_Hand/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Hand_L_Controller/Hand_L_Position:translation", "Rig/Skeleton/Bow_IK/Hand_L_Position:translation", "Rig/Skeleton/Bow_IK/Hand_R_Controller/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Projectile_Position:rotation_degrees", "Rig/Skeleton/Bow_IK/Projectile_Position:translation", "Rig/Skeleton/IK_System/SkeletonIK_Arrow", "Rig/Skeleton/IK_System/SkeletonIK_Arrow:interpolation", "Rig/Skeleton/IK_System/SkeletonIK_Bow", "Rig/Skeleton/IK_System/SkeletonIK_Bow:interpolation", "Rig/Skeleton/SkeletonIK", "Rig/Skeleton/SkeletonIK:interpolation", "Rig/Skeleton/SkeletonIK_Arm_L", "Rig/Skeleton/SkeletonIK_Arm_L:interpolation", "Rig/Skeleton/SkeletonIK_Arm_R", "Rig/Skeleton/SkeletonIK_Arm_R:interpolation", "Rig/Skeleton/SkeletonIK_Arrow", "Rig/Skeleton/SkeletonIK_Arrow:interpolation", "Rig/Skeleton/SkeletonIK_Bicep_L", "Rig/Skeleton/SkeletonIK_Bicep_L:interpolation", "Rig/Skeleton/SkeletonIK_Bow", "Rig/Skeleton/SkeletonIK_Bow:interpolation", "Rig/Skeleton/SkeletonIK_Bow:root_bone", "Rig/Skeleton:bicep_l", "Rig/Skeleton:bicep_r", "Rig/Skeleton:chest", "Rig/Skeleton:elbow_l", "Rig/Skeleton:elbow_r", "Rig/Skeleton:forearm_l", "Rig/Skeleton:forearm_r", "Rig/Skeleton:hand_index_1_l", "Rig/Skeleton:hand_index_1_r", "Rig/Skeleton:hand_index_2_l", "Rig/Skeleton:hand_index_2_r", "Rig/Skeleton:hand_index_3_l", "Rig/Skeleton:hand_index_3_r", "Rig/Skeleton:hand_index_controller_l", "Rig/Skeleton:hand_index_controller_r", "Rig/Skeleton:hand_l", "Rig/Skeleton:hand_middle_1_l", "Rig/Skeleton:hand_middle_1_r", "Rig/Skeleton:hand_middle_2_l", "Rig/Skeleton:hand_middle_2_r", "Rig/Skeleton:hand_middle_3_l", "Rig/Skeleton:hand_middle_3_r", "Rig/Skeleton:hand_middle_controller_l", "Rig/Skeleton:hand_middle_controller_r", "Rig/Skeleton:hand_pinky_1_l", "Rig/Skeleton:hand_pinky_1_r", "Rig/Skeleton:hand_pinky_2_l", "Rig/Skeleton:hand_pinky_2_r", "Rig/Skeleton:hand_pinky_3_l", "Rig/Skeleton:hand_pinky_3_r", "Rig/Skeleton:hand_pinky_controller_l", "Rig/Skeleton:hand_pinky_controller_r", "Rig/Skeleton:hand_r", "Rig/Skeleton:hand_ring_1_l", "Rig/Skeleton:hand_ring_1_r", "Rig/Skeleton:hand_ring_2_l", "Rig/Skeleton:hand_ring_2_r", "Rig/Skeleton:hand_ring_3_l", "Rig/Skeleton:hand_ring_3_r", "Rig/Skeleton:hand_ring_controller_l", "Rig/Skeleton:hand_ring_controller_r", "Rig/Skeleton:hand_thumb_1_l", "Rig/Skeleton:hand_thumb_1_r", "Rig/Skeleton:hand_thumb_2_l", "Rig/Skeleton:hand_thumb_2_r", "Rig/Skeleton:hand_thumb_3_l", "Rig/Skeleton:hand_thumb_3_r", "Rig/Skeleton:hand_thumb_controller_l", "Rig/Skeleton:hand_thumb_controller_r", "Rig/Skeleton:head", "Rig/Skeleton:neck", "Rig/Skeleton:shoulder_blade_l", "Rig/Skeleton:shoulder_blade_r", "Rig/Skeleton:shoulder_l", "Rig/Skeleton:shoulder_r", "Rig/Skeleton:spine", "Rig/projectile_position/cast_glow:scale", "Rig/projectile_position/cast_glow:translation", "Rig/projectile_position/cast_glow:visible", "Rig/projectile_position:translation", "State_Machine_Action/Bow" ]
 
-[sub_resource type="AnimationNodeBlendTree" id=56]
+[sub_resource type="AnimationNodeBlendTree" id=57]
 graph_offset = Vector2( -1111, -110 )
-nodes/StateMachineAction/node = SubResource( 4 )
+nodes/StateMachineAction/node = SubResource( 5 )
 nodes/StateMachineAction/position = Vector2( -560, 280 )
-nodes/StateMachineLeftHand/node = SubResource( 6 )
+nodes/StateMachineLeftHand/node = SubResource( 7 )
 nodes/StateMachineLeftHand/position = Vector2( -840, 280 )
-nodes/StateMachineLowerBody/node = SubResource( 30 )
+nodes/StateMachineLowerBody/node = SubResource( 31 )
 nodes/StateMachineLowerBody/position = Vector2( -840, -40 )
-nodes/StateMachineUpperBody/node = SubResource( 51 )
+nodes/StateMachineUpperBody/node = SubResource( 52 )
 nodes/StateMachineUpperBody/position = Vector2( -840, 120 )
-nodes/TimeScaleAction/node = SubResource( 52 )
+nodes/TimeScaleAction/node = SubResource( 53 )
 nodes/TimeScaleAction/position = Vector2( -340, 280 )
-nodes/UpperBodyxAction/node = SubResource( 53 )
+nodes/UpperBodyxAction/node = SubResource( 54 )
 nodes/UpperBodyxAction/position = Vector2( -120, 180 )
-nodes/UpperBodyxLeftHand/node = SubResource( 54 )
+nodes/UpperBodyxLeftHand/node = SubResource( 55 )
 nodes/UpperBodyxLeftHand/position = Vector2( -580, 100 )
-nodes/UpperBodyxLowerBody/node = SubResource( 55 )
+nodes/UpperBodyxLowerBody/node = SubResource( 56 )
 nodes/UpperBodyxLowerBody/position = Vector2( 160, 100 )
 nodes/output/position = Vector2( 400, 100 )
-node_connections = [ "output", 0, "UpperBodyxLowerBody", "UpperBodyxLowerBody", 0, "StateMachineLowerBody", "UpperBodyxLowerBody", 1, "UpperBodyxAction", "UpperBodyxLeftHand", 0, "StateMachineUpperBody", "UpperBodyxLeftHand", 1, "StateMachineLeftHand", "UpperBodyxAction", 0, "UpperBodyxLeftHand", "UpperBodyxAction", 1, "TimeScaleAction", "TimeScaleAction", 0, "StateMachineAction" ]
-
-[sub_resource type="AnimationNodeStateMachinePlayback" id=57]
+node_connections = [ "output", 0, "UpperBodyxLowerBody", "TimeScaleAction", 0, "StateMachineAction", "UpperBodyxAction", 0, "UpperBodyxLeftHand", "UpperBodyxAction", 1, "TimeScaleAction", "UpperBodyxLeftHand", 0, "StateMachineUpperBody", "UpperBodyxLeftHand", 1, "StateMachineLeftHand", "UpperBodyxLowerBody", 0, "StateMachineLowerBody", "UpperBodyxLowerBody", 1, "UpperBodyxAction" ]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=58]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=59]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=60]
 resource_local_to_scene = false
 
-[sub_resource type="ShaderMaterial" id=66]
+[sub_resource type="ShaderMaterial" id=61]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=67]
+[sub_resource type="GradientTexture" id=62]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=68]
+[sub_resource type="ShaderMaterial" id=63]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 66 )
+next_pass = SubResource( 61 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 41 )
-shader_param/light_ramp = SubResource( 67 )
+shader_param/light_ramp = SubResource( 62 )
 
-[sub_resource type="ShaderMaterial" id=69]
+[sub_resource type="ShaderMaterial" id=64]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=70]
+[sub_resource type="GradientTexture" id=65]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=71]
+[sub_resource type="ShaderMaterial" id=66]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 69 )
+next_pass = SubResource( 64 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 39 )
-shader_param/light_ramp = SubResource( 70 )
+shader_param/light_ramp = SubResource( 65 )
 
-[sub_resource type="ShaderMaterial" id=72]
+[sub_resource type="ShaderMaterial" id=67]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=73]
+[sub_resource type="GradientTexture" id=68]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=74]
+[sub_resource type="ShaderMaterial" id=69]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 72 )
+next_pass = SubResource( 67 )
 shader = ExtResource( 37 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/eye_light_default = Vector3( 0.2, 0.2, 0.2 )
 shader_param/texturemap = ExtResource( 36 )
-shader_param/light_ramp = SubResource( 73 )
+shader_param/light_ramp = SubResource( 68 )
 
-[sub_resource type="ShaderMaterial" id=75]
+[sub_resource type="ShaderMaterial" id=70]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="Gradient" id=76]
+[sub_resource type="Gradient" id=71]
 offsets = PoolRealArray( 0.597015, 0.60199 )
 
-[sub_resource type="GradientTexture" id=77]
-gradient = SubResource( 76 )
+[sub_resource type="GradientTexture" id=72]
+gradient = SubResource( 71 )
 
-[sub_resource type="ShaderMaterial" id=78]
+[sub_resource type="ShaderMaterial" id=73]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 75 )
+next_pass = SubResource( 70 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 42 )
-shader_param/light_ramp = SubResource( 77 )
+shader_param/light_ramp = SubResource( 72 )
 
-[sub_resource type="ShaderMaterial" id=79]
+[sub_resource type="ShaderMaterial" id=74]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=80]
+[sub_resource type="GradientTexture" id=75]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=81]
+[sub_resource type="ShaderMaterial" id=76]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 79 )
+next_pass = SubResource( 74 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 43 )
-shader_param/light_ramp = SubResource( 80 )
+shader_param/light_ramp = SubResource( 75 )
 
-[sub_resource type="ShaderMaterial" id=82]
+[sub_resource type="ShaderMaterial" id=77]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=83]
+[sub_resource type="GradientTexture" id=78]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=84]
+[sub_resource type="ShaderMaterial" id=79]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 82 )
+next_pass = SubResource( 77 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 40 )
-shader_param/light_ramp = SubResource( 83 )
+shader_param/light_ramp = SubResource( 78 )
 
-[sub_resource type="ShaderMaterial" id=60]
+[sub_resource type="ShaderMaterial" id=80]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=61]
+[sub_resource type="GradientTexture" id=81]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=62]
+[sub_resource type="ShaderMaterial" id=82]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 60 )
+next_pass = SubResource( 80 )
 shader = ExtResource( 37 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/eye_light_default = Vector3( 0.2, 0.2, 0.2 )
 shader_param/texturemap = ExtResource( 36 )
-shader_param/light_ramp = SubResource( 61 )
+shader_param/light_ramp = SubResource( 81 )
 
-[sub_resource type="SphereMesh" id=63]
+[sub_resource type="SphereMesh" id=83]
 
-[sub_resource type="CapsuleShape" id=64]
+[sub_resource type="CapsuleShape" id=84]
 radius = 0.5
 height = 5.35
 
-[sub_resource type="SphereShape" id=65]
+[sub_resource type="SphereShape" id=85]
 
 [node name="Nikki" type="KinematicBody" groups=[
 "actor",
@@ -1887,18 +1888,18 @@ anims/Draw_Arrow = ExtResource( 34 )
 anims/Fall = ExtResource( 21 )
 anims/Idle = ExtResource( 26 )
 anims/Jump = SubResource( 1 )
-anims/Land = SubResource( 93 )
+anims/Land = SubResource( 2 )
 anims/None = ExtResource( 27 )
 anims/Run = ExtResource( 28 )
 anims/Walk = ExtResource( 29 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 56 )
+tree_root = SubResource( 57 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/StateMachineAction/playback = SubResource( 57 )
-parameters/StateMachineLeftHand/playback = SubResource( 58 )
-parameters/StateMachineLowerBody/playback = SubResource( 59 )
+parameters/StateMachineAction/playback = SubResource( 58 )
+parameters/StateMachineLeftHand/playback = SubResource( 59 )
+parameters/StateMachineLowerBody/playback = SubResource( 60 )
 parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position = 0.0
 parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position = 0.0
 parameters/StateMachineLowerBody/Walk/TimeScale/scale = 1.0
@@ -1934,6 +1935,9 @@ script = ExtResource( 11 )
 [node name="Jump" type="Node" parent="State_Machine_Move"]
 script = ExtResource( 8 )
 
+[node name="Swim" type="Node" parent="State_Machine_Move"]
+script = ExtResource( 45 )
+
 [node name="Death" type="Node" parent="State_Machine_Move"]
 script = ExtResource( 15 )
 
@@ -1967,23 +1971,17 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
 [node name="Rig" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 0 )
 
-[node name="Skeleton" parent="Rig" index="0"]
-bones/0/bound_children = [ NodePath("Foot_Floor_L") ]
-bones/47/bound_children = [ NodePath("Hand_L") ]
-bones/73/bound_children = [ NodePath("Hand_R") ]
-bones/96/bound_children = [ NodePath("Foot_Floor_R") ]
-
 [node name="Body Simplified" parent="Rig/Skeleton" index="0"]
-material/0 = SubResource( 68 )
-material/1 = SubResource( 71 )
-material/2 = SubResource( 74 )
-material/3 = SubResource( 78 )
-material/4 = SubResource( 81 )
+material/0 = SubResource( 63 )
+material/1 = SubResource( 66 )
+material/2 = SubResource( 69 )
+material/3 = SubResource( 73 )
+material/4 = SubResource( 76 )
 
 [node name="Head" parent="Rig/Skeleton" index="1"]
-material/0 = SubResource( 84 )
-material/1 = SubResource( 62 )
-material/2 = SubResource( 71 )
+material/0 = SubResource( 79 )
+material/1 = SubResource( 82 )
+material/2 = SubResource( 66 )
 
 [node name="Bow_IK" type="Spatial" parent="Rig/Skeleton" index="2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.8, 0.3 )
@@ -2031,7 +2029,7 @@ visible = false
 script = ExtResource( 33 )
 
 [node name="Hand_L" type="BoneAttachment" parent="Rig/Skeleton" index="4"]
-transform = Transform( -0.0400941, 0.210143, 0.976848, 0.699032, -0.69266, 0.177699, 0.713965, 0.689974, -0.119125, 1.35679, 3.58738, -0.202368 )
+transform = Transform( -0.0393616, 0.730879, 0.681371, 0.0369263, -0.680371, 0.731938, 0.998542, 0.0539703, -0.000207722, 2.16054, 3.49606, -0.161456 )
 bone_name = "hand_l"
 
 [node name="Bow_Position" type="Position3D" parent="Rig/Skeleton/Hand_L"]
@@ -2041,7 +2039,7 @@ transform = Transform( 0.999998, -2.6077e-08, 2.7474e-08, 3.72529e-08, 0.999998,
 visible = false
 
 [node name="Hand_R" type="BoneAttachment" parent="Rig/Skeleton" index="5"]
-transform = Transform( -0.889298, 0.435543, 0.139461, 0.303227, 0.333279, 0.892736, 0.342346, 0.836197, -0.428453, -0.703157, 5.07418, 1.64138 )
+transform = Transform( -0.0393619, -0.730879, -0.68137, -0.0369248, -0.680369, 0.731939, -0.998543, 0.0539696, -0.000206321, -2.16054, 3.49607, -0.161459 )
 bone_name = "hand_r"
 
 [node name="Arrow_Position" type="Position3D" parent="Rig/Skeleton/Hand_R"]
@@ -2051,7 +2049,7 @@ transform = Transform( 0.0951196, -0.99513, -0.0258377, -0.0173634, -0.02761, 0.
 visible = false
 
 [node name="Foot_Floor_L" type="BoneAttachment" parent="Rig/Skeleton" index="6"]
-transform = Transform( -0.999349, -0.0360769, -1.09539e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.246234, 0.273716, -0.423224 )
+transform = Transform( -0.999349, -0.0360769, -1.09496e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.24332, 0.205547, -0.140259 )
 bone_name = "foot_floor_ik_l"
 
 [node name="Foot_L_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_L"]
@@ -2060,7 +2058,7 @@ enabled = true
 cast_to = Vector3( 0, -1.34, 0 )
 
 [node name="Foot_Floor_R" type="BoneAttachment" parent="Rig/Skeleton" index="7"]
-transform = Transform( -0.999349, 0.0360769, 1.09539e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.317552, 0.92905, -0.0646473 )
+transform = Transform( -0.999349, 0.0360769, 1.09496e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.24332, 0.205547, -0.140259 )
 bone_name = "foot_floor_ik_r"
 
 [node name="Foot_R_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_R"]
@@ -2117,7 +2115,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.17052, 3.11751, -0.15291 )
 
 [node name="cast_glow" type="MeshInstance" parent="Rig/Projectile_Position"]
 transform = Transform( 0.105556, 0, 0, 0, 0.105556, 0, 0, 0, 0.105556, 0, 0, 0 )
-mesh = SubResource( 63 )
+mesh = SubResource( 83 )
 material/0 = ExtResource( 18 )
 
 [node name="Raycast_Floor" type="RayCast" parent="Rig"]
@@ -2127,7 +2125,7 @@ cast_to = Vector3( 0, -4.18, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.285, -0.042 )
-shape = SubResource( 64 )
+shape = SubResource( 84 )
 
 [node name="UI_Layer" type="CanvasLayer" parent="."]
 layer = 0
@@ -2142,7 +2140,7 @@ collision_layer = 2
 collision_mask = 5
 
 [node name="CollisionShape" type="CollisionShape" parent="Targetting_Area"]
-shape = SubResource( 65 )
+shape = SubResource( 85 )
 
 [node name="target_pos" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
@@ -2157,8 +2155,8 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 [connection signal="max_health_changed" from="Attributes/Health" to="UI_Layer/UI_In_Game" method="_on_Health_max_health_changed"]
 [connection signal="move_state_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_changed"]
 [connection signal="move_state_stack_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_stack_changed"]
-[connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]
 [connection signal="action_state_changed" from="State_Machine_Action" to="State_Machine_Move" method="_on_State_Machine_Action_action_state_changed"]
+[connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]
 [connection signal="action_state_stack_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_stack_changed"]
 [connection signal="break_target" from="Camera_Rig" to="." method="_on_Camera_Rig_break_target"]
 [connection signal="camera_direction_changed" from="Camera_Rig" to="." method="_on_Camera_Rig_camera_direction_changed"]

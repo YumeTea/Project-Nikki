@@ -8,12 +8,13 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
+	connect_player_signals()
+	
 	if owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").is_playing() == false:
 		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").start("Fall")
 	else:
 		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").travel("Fall")
 	.enter()
-	connect_player_signals()
 
 
 #Cleans up state, reinitializes values like timers
@@ -28,7 +29,9 @@ func handle_input(event):
 
 #Acts as the _process method would
 func update(delta):
+	calculate_aerial_velocity(delta)
 	.update(delta)
+	
 	if owner.is_on_floor():
 		emit_signal("finished", "previous")
 

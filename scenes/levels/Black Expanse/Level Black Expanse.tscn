@@ -6,14 +6,10 @@
 [ext_resource path="res://scenes/level geometry/Black Expanse/Black Expanse.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/objects/Test Objects/Target_Tests/RigidBody Target.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/objects/event_triggers/Loading Zone.tscn" type="PackedScene" id=6]
-[ext_resource path="res://scenes/objects/Test Objects/ShaderTest.tscn" type="PackedScene" id=7]
+[ext_resource path="res://shaders/shader_tests/ShaderTest.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/camera/free cam/Free_Cam.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/objects/environment/Lamp.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scenes/characters/Test Enemy/Test Enemy.tscn" type="PackedScene" id=10]
-
-
-
-
 
 [node name="Level Black Expanse" type="Spatial" groups=[
 "world",

@@ -1,12 +1,4 @@
-extends "res://scenes/Player/player_states/move/on_ground/on_ground.gd"
-
-
-#Animation Variables
-const walk_anim_speed_max = 1.3
-const run_anim_speed_max = 2.2
-const bow_walk_anim_speed_max = 1.55
-const blend_lower_lim = 5.0
-const blend_upper_lim = 15.0
+extends "res://scenes/Player/player_states/move/in_water/in_water.gd"
 
 
 func initialize(init_values_dic):
@@ -16,23 +8,20 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	speed = speed_default
-	is_falling = false
-	centered = false
-	centering_time_left = centering_time
+	surfaced_height = surface_height - (player_center / 1.2)
+	snap_vector = Vector3(0,0,0)
+	
 	connect_player_signals()
-	if owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").is_playing() == false:
-		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").start("Walk")
-	else:
-		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").travel("Walk")
+	
+#	if owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").is_playing() == false:
+#		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").start("Swim")
+#	else:
+#		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").travel("Swim")
 
 
 #Cleans up state, reinitializes values like timers
 func exit():
-	is_moving = false
-	
 	#Clear active tweens
-	remove_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
 	
 	disconnect_player_signals()
 
@@ -44,36 +33,35 @@ func handle_input(event):
 
 #Acts as the _process method would
 func update(delta):
-	var facing_dot_velocity_horizontal = Vector2(facing_direction.x, facing_direction.z).dot(Vector2(velocity.x, velocity.z))
-	
-	#If stopped or moving backwards with no input, go to idle
-	if (velocity == Vector3(0,0,0) or facing_dot_velocity_horizontal < 0.0) and left_joystick_axis == Vector2(0,0):
-		emit_signal("finished", "idle")
+	if Player.global_transform.origin.y >= surfaced_height + (surface_speed * 1.01 * delta):
+		emit_signal("finished", "previous")
 	
 	if view_mode == "third_person":
-		walk_third_person(delta)
+		swim_third_person(delta)
 	if view_mode == "first_person":
-		walk_first_person(delta)
+		swim_first_person(delta)
+		
+	calculate_swim_velocity(delta)
 	
 	.update(delta)
 
 
 func on_animation_finished(_anim_name):
-	return
+	pass
 
 
-func walk_third_person(delta):
+func swim_third_person(delta):
 	if !centering_view and !strafe_locked:
-		walk_free(delta)
+		swim_free(delta)
 	elif centering_view:
-		walk_locked_third_person(delta)
+		swim_locked_third_person(delta)
 	elif strafe_locked:
-		walk_strafe(delta)
+		swim_strafe(delta)
 	
-	blend_move_anim()
+#	blend_move_anim()
 
 
-func walk_first_person(delta):
+func swim_first_person(delta):
 	direction = get_input_direction()
 	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
@@ -86,18 +74,18 @@ func walk_first_person(delta):
 	next_turn_angle.y = bound_angle(next_turn_angle.y)
 	
 	if rotate_to_focus:
-		walk_rotate_to_focus(delta) #for entering first person
+		swim_rotate_to_focus(delta) #for entering first person
 	elif !centering_view and !strafe_locked and ((next_turn_angle.y < focus_angle_lim.y) and (next_turn_angle.y > -focus_angle_lim.y)):
-		walk_free(delta)
+		swim_free(delta)
 	elif centering_view:
-		walk_locked_first_person(delta)
+		swim_locked_first_person(delta)
 	else:
-		walk_strafe(delta) #if trying to turn to where neck is over focus angle lim, strafe walk instead
+		swim_strafe(delta) #if trying to turn to where neck is over focus angle lim, strafe swim instead
 	
-	blend_move_anim()
+#	blend_move_anim()
 
 
-func walk_free(delta):
+func swim_free(delta):
 	direction = get_input_direction()
 	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	var input_direction_angle = calculate_global_y_rotation(direction)
@@ -137,7 +125,7 @@ func walk_free(delta):
 			is_moving = true
 			quick_turn = false
 	
-	calculate_movement_velocity(delta)
+	calculate_swim_velocity(delta)
 	
 	###Player Rotation
 	if direction:
@@ -145,7 +133,7 @@ func walk_free(delta):
 
 
 #Locks rig to target or rig facing angle (assumes locked camera control)
-func walk_locked_third_person(delta):
+func swim_locked_third_person(delta):
 	direction = get_input_direction()
 	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
@@ -173,7 +161,7 @@ func walk_locked_third_person(delta):
 		
 	emit_signal("center_view", turn_angle.y)
 	
-	calculate_movement_velocity(delta)
+	calculate_swim_velocity(delta)
 	
 	###Player Rotation
 	owner.get_node("Rig").rotate_y(turn_angle.y)
@@ -190,7 +178,7 @@ func walk_locked_third_person(delta):
 
 
 #Locks rig to target or focus angle (assumes locked camera control)
-func walk_locked_first_person(delta):
+func swim_locked_first_person(delta):
 	direction = get_input_direction()
 	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	
@@ -220,7 +208,7 @@ func walk_locked_first_person(delta):
 		
 	emit_signal("center_view", turn_angle.y)
 	
-	calculate_movement_velocity(delta)
+	calculate_swim_velocity(delta)
 	
 	###Player Rotation
 	owner.get_node("Rig").rotate_y(turn_angle.y)
@@ -237,14 +225,14 @@ func walk_locked_first_person(delta):
 
 
 #Locks rig to focus angle
-func walk_strafe(delta):
+func swim_strafe(delta):
 	direction = get_input_direction()
 	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	
 	direction_angle.y = calculate_global_y_rotation(direction)
 	
-	calculate_movement_velocity(delta)
+	calculate_swim_velocity(delta)
 	if !direction:
 		quick_turn = true
 	
@@ -266,14 +254,14 @@ func walk_strafe(delta):
 	owner.get_node("Rig").rotate_y(turn_angle.y)
 
 #Used to enter third person while moving
-func walk_rotate_to_focus(delta):
+func swim_rotate_to_focus(delta):
 	direction = get_input_direction()
 	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	
 	direction_angle.y = calculate_global_y_rotation(direction)
 	
-	calculate_movement_velocity(delta)
+	calculate_swim_velocity(delta)
 	
 	turn_angle.y = camera_angle_global.y - facing_angle.y
 	turn_angle.y = bound_angle(turn_angle.y)
@@ -291,81 +279,5 @@ func walk_rotate_to_focus(delta):
 		centered = true
 		rotate_to_focus = false
 		emit_signal("entered_new_view", view_mode)
-
-
-func blend_move_anim():
-	var time_scale
-	var bow_walk_time_scale
-	
-	###Walk/Run Blending
-	#Set move blend position in case coming from idle
-#	owner.get_node("AnimationTree").set("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position", move_blend_position)
-	
-	move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
-	
-	#Bow Walk Blend
-	if state_action == "Bow":
-		#Check move position and if move position is already being tweened
-		if move_blend_position != -1.0 and !active_tweens.has("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"):
-			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position", move_blend_position, -1.0, 0.25, Tween.TRANS_LINEAR)
-			owner.get_node("Tween").start()
-			add_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
-		elif move_blend_position == -1.0 and active_tweens.has("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"):
-			remove_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
-		
-		bow_walk_time_scale = (velocity_horizontal / blend_lower_lim) * bow_walk_anim_speed_max
-		
-		time_scale = bow_walk_time_scale
-		
-		owner.get_node("AnimationTree").set("parameters/StateMachineLowerBody/Walk/TimeScale/scale", bow_walk_time_scale)
-	
-	#None Walk Blend
-	else:
-		if move_blend_position < 0 and !active_tweens.has("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"):
-			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position", move_blend_position, 0.0, 0.5, Tween.TRANS_LINEAR)
-			owner.get_node("Tween").start()
-			add_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
-		elif move_blend_position >= 0.0:
-			if active_tweens.has("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"):
-				remove_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
-			
-		#Run normal walk blending if no special walking
-		blend_walk_anim("StateMachineLowerBody")
-		blend_walk_anim("StateMachineUpperBody")
-
-
-func blend_walk_anim(anim_state_machine_name):
-	var time_scale
-	var walk_time_scale
-	var run_time_scale
-	var bow_walk_time_scale
-	
-	var blend_position
-	
-	if velocity_horizontal < blend_lower_lim:
-		blend_position = 0.0
-		
-		walk_time_scale = (velocity_horizontal / blend_lower_lim) * walk_anim_speed_max
-		
-		time_scale = walk_time_scale
-	elif velocity_horizontal < blend_upper_lim:
-		blend_position = (velocity_horizontal - blend_lower_lim) / (blend_upper_lim - blend_lower_lim)
-		
-		walk_time_scale = (velocity_horizontal / blend_lower_lim) * walk_anim_speed_max
-		run_time_scale = (velocity_horizontal / speed_default) * run_anim_speed_max
-		
-		time_scale = (walk_time_scale - (walk_time_scale * blend_position)) + (run_time_scale * blend_position)
-	else:
-		blend_position = 1.0
-		
-		run_time_scale = (velocity_horizontal / speed_default) * run_anim_speed_max
-		
-		time_scale = run_time_scale
-	
-	owner.get_node("AnimationTree").set("parameters/" + anim_state_machine_name + "/Walk/BlendSpace1D/blend_position", blend_position)
-	owner.get_node("AnimationTree").set("parameters/" + anim_state_machine_name + "/Walk/TimeScale/scale", time_scale)
-
-
-
 
 

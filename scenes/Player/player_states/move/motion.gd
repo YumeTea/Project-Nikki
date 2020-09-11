@@ -45,6 +45,10 @@ var initialized_values = {}
 var fall_height
 var land_height
 
+#Environment Variables
+var surface_height
+var surfaced_height
+
 ###Movement Variables
 #Centering Variables
 const centering_time = 12 #in frames
@@ -79,8 +83,10 @@ var focus_angle_lim = Vector2(deg2rad(74), deg2rad(82))
 #Player Flags
 var strafe_locked = false
 var can_void = true
-var is_walking = false
+var is_moving = false
 var is_falling = false
+var in_water = false
+
 var centering_view = false
 var centered = false
 var rotate_to_focus
@@ -107,15 +113,12 @@ func handle_input(event):
 		reset_recenter()
 	
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(owner.get_node("Rig/Raycast_Floor").global_transform.origin)
+#		print("break")
 	
 	.handle_input(event)
 
 
 func update(delta):
-	###Gravity
-	velocity.y += weight * gravity * delta
-	
 	###Player Motion
 	velocity = Player.move_and_slide_with_snap(velocity, snap_vector, Vector3(0,1,0), true, 1, deg2rad(65), false) #Come back/check vars 3,4,5
 	
@@ -126,7 +129,7 @@ func update(delta):
 	run_foot_ik()
 	
 	###Motion Value Assignments
-	position = Player.get_global_transform().origin
+	position = Player.global_transform.origin
 	velocity_horizontal = Vector2(velocity.x, velocity.z).length()
 	height = position.y
 	
@@ -168,65 +171,66 @@ func get_input_direction():
 	return direction
 
 
-func get_input_direction_square():
-	direction = Vector3()
-	var direction_length
-	
-	###Camera Direction
-	var aim = camera.global_transform.basis.get_euler()
-	
-	###Directional Input
-	direction.z -= left_joystick_axis.y
-	direction.x -= left_joystick_axis.x
-	
-	direction = direction.rotated(Vector3(0,1,0), (aim.y + PI))
-	direction.y = 0.0
-	
-	#Direction Limiting
-	var input_angle = 0.0
-	var input_max
-	
-	
-	if direction.z > 0:
-		if direction.x == 0:
-			input_max = 1.0
-		#Up
-		elif direction.z >= direction.x and -direction.z < direction.x:
-			input_angle = acos(direction.z / Vector2(direction.x, direction.z).length())
-			input_max = 1.0 / cos(input_angle)
-		#Left
-		elif direction.x > direction.z:
-			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
-			input_max = 1.0 / cos(input_angle)
-		#Right
-		elif direction.x < -direction.z:
-			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
-			input_max = -1.0 / cos(input_angle)
-	elif direction.z < 0:
-		if direction.x == 0:
-			input_max = 1.0
-		#Down
-		elif -direction.z >= direction.x and direction.z < direction.x: 
-			input_angle = acos(direction.z / Vector2(direction.x, direction.z).length())
-			input_max = -1.0 / cos(input_angle)
-		#Left
-		elif direction.x > -direction.z:
-			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
-			input_max = 1.0 / cos(input_angle)
-		#Right
-		elif direction.x < direction.z:
-			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
-			input_max = -1.0 / cos(input_angle)
-	else:
-		input_max = 1.0
-	
-	direction_length = direction.length() / input_max
-	
-	direction = direction.normalized()
-	
-	direction *= direction_length
-	
-	return direction
+#Could be used for smoothing keyboard/dpad input
+#func get_input_direction_square():
+#	direction = Vector3()
+#	var direction_length
+#
+#	###Camera Direction
+#	var aim = camera.global_transform.basis.get_euler()
+#
+#	###Directional Input
+#	direction.z -= left_joystick_axis.y
+#	direction.x -= left_joystick_axis.x
+#
+#	direction = direction.rotated(Vector3(0,1,0), (aim.y + PI))
+#	direction.y = 0.0
+#
+#	#Direction Limiting
+#	var input_angle = 0.0
+#	var input_max
+#
+#
+#	if direction.z > 0:
+#		if direction.x == 0:
+#			input_max = 1.0
+#		#Up
+#		elif direction.z >= direction.x and -direction.z < direction.x:
+#			input_angle = acos(direction.z / Vector2(direction.x, direction.z).length())
+#			input_max = 1.0 / cos(input_angle)
+#		#Left
+#		elif direction.x > direction.z:
+#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
+#			input_max = 1.0 / cos(input_angle)
+#		#Right
+#		elif direction.x < -direction.z:
+#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
+#			input_max = -1.0 / cos(input_angle)
+#	elif direction.z < 0:
+#		if direction.x == 0:
+#			input_max = 1.0
+#		#Down
+#		elif -direction.z >= direction.x and direction.z < direction.x: 
+#			input_angle = acos(direction.z / Vector2(direction.x, direction.z).length())
+#			input_max = -1.0 / cos(input_angle)
+#		#Left
+#		elif direction.x > -direction.z:
+#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
+#			input_max = 1.0 / cos(input_angle)
+#		#Right
+#		elif direction.x < direction.z:
+#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
+#			input_max = -1.0 / cos(input_angle)
+#	else:
+#		input_max = 1.0
+#
+#	direction_length = direction.length() / input_max
+#
+#	direction = direction.normalized()
+#
+#	direction *= direction_length
+#
+#	return direction
 
 
 func get_left_joystick_input(event, current_axis):
@@ -318,6 +322,45 @@ func calculate_movement_velocity(delta):
 	else:
 		velocity.x = 0.0
 		velocity.z = 0.0
+	
+	velocity.y += weight * gravity * delta
+
+
+func calculate_aerial_velocity(delta):
+	velocity.y += weight * gravity * delta
+
+
+func calculate_swim_velocity(delta):
+	var temp_velocity = velocity
+	temp_velocity.y = 0
+
+	###Target Velocity
+	var target_velocity = direction * speed_swim
+
+	###Determine the type of acceleration
+	var acceleration
+	if direction.dot(temp_velocity) > 0 or temp_velocity == Vector3(0,0,0):
+		acceleration = ACCEL
+	else:
+		acceleration = DEACCEL
+
+	#Calculate a portion of the distance to go
+	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
+
+	###Final Velocity
+	if temp_velocity.length() > 0.1:
+		velocity.x = temp_velocity.x
+		velocity.z = temp_velocity.z
+	else:
+		velocity.x = 0.0
+		velocity.z = 0.0
+	
+	if Player.global_transform.origin.y < surfaced_height:
+		velocity.y += surface_accel * delta
+		if velocity.y > surface_speed:
+			velocity.y = surface_speed
+	else:
+		Player.global_transform.origin.y = surfaced_height
 
 
 func run_foot_ik():
@@ -475,28 +518,45 @@ func set_initialized_values(init_values_dic):
 		init_values_dic[value] = self[value]
 
 
+#####EXTERNAL INPUT FUNCTIONS#####
 func connect_player_signals():
+	#Player Signals
 	owner.connect("focus_target", self, "_on_Player_focus_target_changed")
 	owner.get_node("State_Machine_Move").connect("initialized_values_dic_set", self, "_on_State_Machine_Move_initialized_values_dic_set")
 	owner.get_node("State_Machine_Action").connect("action_state_changed", self, "_on_State_Machine_Action_state_changed")
-	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_death")
 	owner.get_node("Camera_Rig").connect("camera_direction_changed", self, "_on_Camera_Rig_camera_direction_changed")
 	owner.get_node("Camera_Rig").connect("view_locked", self, "_on_Camera_Rig_view_locked")
 	owner.get_node("Camera_Rig").connect("enter_new_view", self, "_on_Camera_Rig_enter_new_view")
+	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_death")
+	
+	#World Signals
+	owner.connect("entered_area", self, "_on_environment_area_entered")
+	owner.connect("exited_area", self, "_on_environment_area_exited")
 	if owner.owner:
 		owner.owner.connect("player_voided", self, "_on_voided")
 
 
 func disconnect_player_signals():
+	#Player Signals
 	owner.disconnect("focus_target", self, "_on_Player_focus_target_changed")
 	owner.get_node("State_Machine_Move").disconnect("initialized_values_dic_set", self, "_on_State_Machine_Move_initialized_values_dic_set")
 	owner.get_node("State_Machine_Action").disconnect("action_state_changed", self, "_on_State_Machine_Action_state_changed")
-	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_death")
 	owner.get_node("Camera_Rig").disconnect("camera_direction_changed", self, "_on_Camera_Rig_camera_direction_changed")
 	owner.get_node("Camera_Rig").disconnect("view_locked", self, "_on_Camera_Rig_view_locked")
 	owner.get_node("Camera_Rig").disconnect("enter_new_view", self, "_on_Camera_Rig_enter_new_view")
+	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_death")
+	
+	#World Signals
+	owner.disconnect("entered_area", self, "_on_environment_area_entered")
+	owner.disconnect("exited_area", self, "_on_environment_area_exited")
 	if owner.owner:
 		owner.owner.disconnect("player_voided", self, "_on_voided")
+
+
+###PLAYER SIGNAL FUNCTIONS###
+
+func _on_Player_focus_target_changed(target_pos_node):
+	focus_object = target_pos_node
 
 
 func _on_State_Machine_Move_initialized_values_dic_set(init_values_dic):
@@ -504,8 +564,15 @@ func _on_State_Machine_Move_initialized_values_dic_set(init_values_dic):
 
 
 func _on_State_Machine_Action_state_changed(action_state):
+	#Before changing state
+	if state_action == "Bow":
+		strafe_locked = false
+		speed = speed_default
+	
+	#Store new action state
 	state_action = action_state
 	
+	#After changing state
 	if action_state == "None":
 		#Removes walk blend tween as active so tween is only started once in walk.gd
 		remove_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
@@ -513,13 +580,6 @@ func _on_State_Machine_Action_state_changed(action_state):
 	if action_state == "Bow":
 		strafe_locked = true
 		speed = speed_bow_walk
-	else:
-		strafe_locked = false
-		speed = speed_default
-
-
-func _on_Player_focus_target_changed(target_pos_node):
-	focus_object = target_pos_node
 
 
 func _on_Camera_Rig_camera_direction_changed(dir):
@@ -545,13 +605,42 @@ func _on_Camera_Rig_enter_new_view(string):
 		emit_signal("entered_new_view", view_mode)
 
 
+func _on_death(death):
+	if death:
+		emit_signal("finished", "death")
+
+
+###WORLD SIGNAL FUNCTIONS###
+
+func _on_environment_area_entered(area_type, surface_h):
+	if area_type == "Water":
+		in_water = true
+		surface_height = surface_h
+	print("entered " + str(area_type))
+
+
+func _on_environment_area_exited(area_type):
+	if area_type == "Water":
+		in_water = false
+	print("exited " + str(area_type))
+
+
 func _on_voided(voided):
 	if voided and can_void:
 		emit_signal("finished", "void")
 		can_void = false
 
 
-func _on_death(death):
-	if death:
-		emit_signal("finished", "death")
+
+
+
+
+
+
+
+
+
+
+
+
 

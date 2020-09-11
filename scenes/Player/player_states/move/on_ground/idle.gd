@@ -14,7 +14,7 @@ func initialize(init_values_dic):
 func enter():
 	direction = Vector3(0,0,0)
 	left_joystick_axis = Vector2(0,0)
-	is_walking = false
+	is_moving = false
 	is_falling = false
 	connect_player_signals()
 	
@@ -41,7 +41,6 @@ func handle_input(event):
 
 #Acts as the _process method would
 func update(delta):
-	calculate_movement_velocity(delta)
 	if get_input_direction() != Vector3(0,0,0):
 		emit_signal("finished", "walk") #emit the finished signal and input walk as next state (from state.gd)
 	
@@ -49,7 +48,6 @@ func update(delta):
 		idle_third_person()
 	elif view_mode == "first_person":
 		idle_first_person()
-		
 	
 	.update(delta)
 

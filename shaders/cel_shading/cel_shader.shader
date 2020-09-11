@@ -20,10 +20,7 @@ void vertex() {
 
 void fragment() {
 	//Assign texture as albedo if no albedo set in inspector
-	if (albedo.rgb == vec3(1.0))
-		ALBEDO = texture(texturemap, UV).rgb;
-	else
-		ALBEDO = albedo.rgb;
+	ALBEDO = texture(texturemap, UV).rgb * albedo.rgb;
 	
 //	if (transparent == true) {
 //		TRANSMISSION = vec3(0.0, 0.0, 0.0);

@@ -18,11 +18,19 @@ var view_mode
 #Player State Storage
 var state_move
 var state_action
+var ground_states = [
+	"Idle",
+	"Walk",
+]
+
 
 #Tween Objects Storage
 var active_tweens = []
 
 ###Player Variables
+onready var player_height = owner.get_node("CollisionShape").shape.height
+onready var player_center = player_height / 2.0
+
 #View Variables
 var facing_direction = Vector3()
 var facing_angle = Vector2() #Goes from -pi > 0 > pi
@@ -31,16 +39,23 @@ var focus_angle_global = Vector2()
 var camera_direction = Vector3()
 var camera_angle_global = Vector2()
 
-##Walk constants
+##Move Constants
 const speed_default = 18
-var speed_bow_walk = 7
-const turn_radius = 5 #in degrees
-var quick_turn_radius = 12 #in degrees
-const uturn_radius = 2 	#in degrees
+const speed_bow_walk = 7
+const speed_aerial = 8
+const speed_swim = 8
+
+const surface_speed = 4
+const surface_accel = 48
+
 const ACCEL = 4
 const DEACCEL = 10
 
-##Walk variables
+const turn_radius = 5 #in degrees
+const quick_turn_radius = 12 #in degrees
+const uturn_radius = 2 	#in degrees
+
+#Move variables
 var speed = speed_default
 
 #Player Flags
@@ -63,7 +78,6 @@ func handle_input(event):
 			targetting = true
 		else:
 			targetting = false
-
 
 #Acts as the _process method would
 func update(_delta):
