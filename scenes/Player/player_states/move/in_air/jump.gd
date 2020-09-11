@@ -20,10 +20,10 @@ func enter():
 	has_jumped = false
 	connect_player_signals()
 	
-	if owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").is_playing() == false:
-		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").start("Jump")
+	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Jump")
 	else:
-		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").travel("Jump")
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Jump")
 	.enter()
 
 

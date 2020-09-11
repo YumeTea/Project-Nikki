@@ -16,15 +16,17 @@ func enter():
 	is_casting = true
 	finished_casting = false
 	
-	connect_player_signals()
-	
 	start_anim_1d_action("Casting_Magic_Orb", cast_blend_pos, xfade_in_time)
+	owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 1.0)
+	
+	connect_player_signals()
 	.enter()
 
 
 #Cleans up state, reinitializes values like timers
 func exit():
 	anim_fade_out_1d_action(xfade_out_time)
+	owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 0.0)
 	
 	disconnect_player_signals()
 	.exit()

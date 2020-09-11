@@ -10,9 +10,9 @@ onready var Bow_IK = owner.get_node("Rig/Skeleton/Bow_IK")
 onready var Arrow_Position = owner.get_node("Rig/Skeleton/Hand_R/Arrow_Position")
 onready var skeleton = owner.get_node("Rig/Skeleton")
 
-const bow_blend_pos = 0.99
+const bow_blend_pos = 1.0
 const xfade_in_time = 0.25
-const xfade_out_time = 0.5
+const xfade_out_time = 0.25
 
 var equipped_arrow
 var arrow
@@ -179,10 +179,8 @@ func set_arrow_visible(visible_bool):
 	if projectile:
 		if Arrow_Position.has_node(projectile.name):
 			if visible_bool == true:
-				print("setting_arrow_visible")
 				Arrow_Position.get_node(projectile.name).visible = true
 			elif visible_bool == false:
-				print("setting_arrow_invisible")
 				Arrow_Position.get_node(projectile.name).visible = false
 	
 	return

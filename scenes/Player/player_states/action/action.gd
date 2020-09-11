@@ -5,7 +5,6 @@ extends "res://scenes/Player/player_states/interaction/interaction.gd"
 onready var world = owner.owner
 onready var Player = owner
 onready var Rig = owner.get_node("Rig/Skeleton")
-onready var animation_state_machine_action = owner.get_node("AnimationTree").get("parameters/StateMachineUpperBody/playback")
 
 #Initialized Values Storage
 var initialized_values = {}
@@ -30,7 +29,6 @@ var projectile_time = 0
 var projectile_count = 0
 
 #Action flags
-var move_state_changed
 var is_casting = false
 var finished_casting = false
 
@@ -50,7 +48,7 @@ func exit():
 #Creates output based on the input event passed in
 func handle_input(event):
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(owner.get_node("AnimationTree").get("parameters/UpperBodyxAction/blend_amount"))
+#		print(owner.get_node("AnimationTree").get("parameters/MovexAction/blend_amount"))
 	.handle_input(event)
 
 
@@ -72,32 +70,32 @@ func start_anim_1d_action(anim_name, action_blend_pos, fade_time):
 
 #Animates blend amount for StateMachineAction
 func anim_fade_in_1d_action(fade_time, action_blend_pos):
-	var current_blend_pos = owner.get_node("AnimationTree").get("parameters/UpperBodyxAction/blend_amount")
+	var current_blend_pos = owner.get_node("AnimationTree").get("parameters/MovexAction/blend_amount")
 	
 	#Check if blend amount is already being animated and interrupt it
-	if active_tweens.has("parameters/UpperBodyxAction/blend_amount"):
-		owner.get_node("Tween").stop(owner.get_node("AnimationTree"), "parameters/UpperBodyxAction/blend_amount")
-		remove_active_tween("parameters/UpperBodyxAction/blend_amount")
+	if active_tweens.has("parameters/MovexAction/blend_amount"):
+		owner.get_node("Tween").stop(owner.get_node("AnimationTree"), "parameters/MovexAction/blend_amount")
+		remove_active_tween("parameters/MovexAction/blend_amount")
 	
 	#Start blending fade in if not already doing so
-	if current_blend_pos != action_blend_pos and !active_tweens.has("parameters/UpperBodyxAction/blend_amount"):
-		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/UpperBodyxAction/blend_amount", current_blend_pos, action_blend_pos, fade_time, Tween.TRANS_LINEAR)
+	if current_blend_pos != action_blend_pos and !active_tweens.has("parameters/MovexAction/blend_amount"):
+		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/MovexAction/blend_amount", current_blend_pos, action_blend_pos, fade_time, Tween.TRANS_LINEAR)
 		owner.get_node("Tween").start()
-		add_active_tween("parameters/UpperBodyxAction/blend_amount")
+		add_active_tween("parameters/MovexAction/blend_amount")
 
 
 func anim_fade_out_1d_action(fade_time):
-	var current_blend_pos = owner.get_node("AnimationTree").get("parameters/UpperBodyxAction/blend_amount")
+	var current_blend_pos = owner.get_node("AnimationTree").get("parameters/MovexAction/blend_amount")
 	
 	#Check if blend amount is already being animated and interrupt it
-	if active_tweens.has("parameters/UpperBodyxAction/blend_amount"):
+	if active_tweens.has("parameters/MovexAction/blend_amount"):
 		owner.get_node("Tween").stop_all()
-		remove_active_tween("parameters/UpperBodyxAction/blend_amount")
+		remove_active_tween("parameters/MovexAction/blend_amount")
 	
 	#Set tween values for blend fade out
-	owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/UpperBodyxAction/blend_amount", current_blend_pos, 0.0, fade_time, Tween.TRANS_LINEAR)
+	owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/MovexAction/blend_amount", current_blend_pos, 0.0, fade_time, Tween.TRANS_LINEAR)
 	owner.get_node("Tween").start()
-	add_active_tween("parameters/UpperBodyxAction/blend_amount")
+	add_active_tween("parameters/MovexAction/blend_amount")
 
 
 func set_initialized_values(init_values_dic):
@@ -147,7 +145,6 @@ func _on_Player_equipped_items_changed(equipped_items_dict):
 
 func _on_move_state_changed(move_state):
 	state_move = move_state
-	move_state_changed = true
 	
 	if state_move == "Swim":
 		emit_signal("finished", "none")

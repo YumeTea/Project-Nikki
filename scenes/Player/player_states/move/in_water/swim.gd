@@ -13,10 +13,10 @@ func enter():
 	
 	connect_player_signals()
 	
-	if owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").is_playing() == false:
-		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").start("Swim")
+	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Swim")
 	else:
-		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").travel("Swim")
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Swim")
 
 
 #Cleans up state, reinitializes values like timers

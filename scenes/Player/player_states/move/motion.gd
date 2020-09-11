@@ -16,7 +16,7 @@ onready var Player = owner
 onready var camera = owner.get_node("Camera_Rig/Pivot/Cam_Position") #should get camera position a different way
 onready var Pivot = owner.get_node("Camera_Rig/Pivot")
 onready var skeleton = owner.get_node("Rig/Skeleton")
-onready var animation_state_machine_move = owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback")
+onready var animation_state_machine_move = owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback")
 #Foot IK Nodes
 onready var foot_floor_l = owner.get_node("Rig/Skeleton/Foot_Floor_L")
 onready var foot_floor_r = owner.get_node("Rig/Skeleton/Foot_Floor_R")
@@ -113,7 +113,7 @@ func handle_input(event):
 		reset_recenter()
 	
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position"))
+#		print(owner.get_node("AnimationTree").get("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position"))
 	
 	.handle_input(event)
 
@@ -567,7 +567,6 @@ func _on_State_Machine_Action_state_changed(action_state):
 	#Before changing state
 	if state_action == "Bow":
 		strafe_locked = false
-		speed = speed_default
 	
 	#Store new action state
 	state_action = action_state
@@ -575,14 +574,14 @@ func _on_State_Machine_Action_state_changed(action_state):
 	#After changing state
 	if action_state == "None":
 		#Removes walk blend tween as active so tween is only started once in walk.gd
-		remove_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
+		remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
 	
 	if action_state == "Bow":
 		strafe_locked = true
 		speed = speed_bow_walk
 		
 		#Remove Lower Body active tween so it starts once on entering bow state
-		remove_active_tween("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position")
+		remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
 
 
 func _on_Camera_Rig_camera_direction_changed(dir):

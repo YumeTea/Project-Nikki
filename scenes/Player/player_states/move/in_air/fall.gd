@@ -10,10 +10,10 @@ func initialize(init_values_dic):
 func enter():
 	connect_player_signals()
 	
-	if owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").is_playing() == false:
-		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").start("Fall")
+	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Fall")
 	else:
-		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").travel("Fall")
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Fall")
 	.enter()
 
 

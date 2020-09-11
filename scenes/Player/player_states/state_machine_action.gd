@@ -13,7 +13,6 @@ var initialized_values = {
 	
 	"view_mode": "third_person",
 	"state_move": null,
-	"move_state_changed": false,
 	
 	"equipped_items": null,
 	"equipped_bow": null,

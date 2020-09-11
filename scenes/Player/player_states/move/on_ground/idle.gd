@@ -18,16 +18,16 @@ func enter():
 	is_falling = false
 	connect_player_signals()
 	
-	if owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").is_playing() == false:
-		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").start("Idle")
+	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Idle")
 	else:
-		owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/playback").travel("Idle")
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Idle")
 
 
 #Cleans up state, reinitializes values like timers
 func exit():
 	#Clear active tweens
-	remove_active_tween("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position")
+	remove_active_tween("parameters/StateMachineMove/Idle/BlendSpace1D/blend_position")
 	
 	disconnect_player_signals()
 
@@ -35,7 +35,7 @@ func exit():
 #Creates output based on the input event passed in
 func handle_input(event):
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position"))
+#		print(owner.get_node("AnimationTree").get("parameters/StateMachineMove/Idle/BlendSpace1D/blend_position"))
 	.handle_input(event)
 
 
@@ -202,29 +202,29 @@ func center_to_focus(delta):
 func blend_idle_anim():
 	###Idle Blending
 	#Set move_blend_position in case coming from walk
-#	owner.get_node("AnimationTree").set("parameters/StateMachineLowerBody/Walk/BlendSpace1D/blend_position", move_blend_position)
+#	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position", move_blend_position)
 	
-	move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position")
+	move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Idle/BlendSpace1D/blend_position")
 	
 	#Bow Idle Blend
 	if state_action == "Bow":
-		if move_blend_position != idle_bow_blend and !active_tweens.has("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position"):
-			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position", move_blend_position, idle_bow_blend, 0.25, Tween.TRANS_LINEAR)
+		if move_blend_position != idle_bow_blend and !active_tweens.has("parameters/StateMachineMove/Idle/BlendSpace1D/blend_position"):
+			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Idle/BlendSpace1D/blend_position", move_blend_position, idle_bow_blend, 0.25, Tween.TRANS_LINEAR)
 			owner.get_node("Tween").start()
-			add_active_tween("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position")
-		elif move_blend_position == idle_bow_blend and active_tweens.has("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position"):
-			remove_active_tween("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position")
+			add_active_tween("parameters/StateMachineMove/Idle/BlendSpace1D/blend_position")
+		elif move_blend_position == idle_bow_blend and active_tweens.has("parameters/StateMachineMove/Idle/BlendSpace1D/blend_position"):
+			remove_active_tween("parameters/StateMachineMove/Idle/BlendSpace1D/blend_position")
 	
 	#None Idle Blend
 	else:
 		#Animate blend to default idle blend position if coming out of bow state
 		if is_equal_approx(move_blend_position, idle_bow_blend):
-			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position", move_blend_position, 0.0, 0.5, Tween.TRANS_LINEAR)
+			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Idle/BlendSpace1D/blend_position", move_blend_position, 0.0, 0.25, Tween.TRANS_LINEAR)
 			owner.get_node("Tween").start()
-			add_active_tween("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position")
+			add_active_tween("parameters/StateMachineMove/Idle/BlendSpace1D/blend_position")
 		#Clear active tweens if not animating blend position between states
 		elif move_blend_position > idle_default_blend or is_equal_approx(move_blend_position, idle_default_blend):
-			remove_active_tween("parameters/StateMachineLowerBody/Idle/BlendSpace1D/blend_position")
+			remove_active_tween("parameters/StateMachineMove/Idle/BlendSpace1D/blend_position")
 
 
 

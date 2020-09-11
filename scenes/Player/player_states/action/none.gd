@@ -17,19 +17,12 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	if !state_move:
-		state_move = "Idle"
-		owner.get_node("AnimationTree").set("parameters/Blend2/blend_amount", 1.0)
-		owner.get_node("AnimationTree").get("parameters/StateMachineUpperBody/playback").start("Idle")
-		move_state_changed = false
-	else:
-		owner.get_node("AnimationTree").get("parameters/StateMachineUpperBody/playback").travel(state_move)
 	connect_player_signals()
 	.enter()
 
 #Cleans up state, reinitializes values like timers
 func exit():
-	owner.get_node("AnimationTree").set("parameters/UpperBodyxLeftHand/blend_amount", 0.0)
+	owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 0.0)
 	disconnect_player_signals()
 	.exit()
 
@@ -53,18 +46,13 @@ func handle_input(event):
 		owner.inventory.previous_item("Arrow")
 	
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print("UpperBodyxAction blend: " + str(owner.get_node("AnimationTree").get("parameters/UpperBodyxAction/blend_amount")))
+#		print("MovexAction blend: " + str(owner.get_node("AnimationTree").get("parameters/MovexAction/blend_amount")))
 	
 	.handle_input(event)
 
 
 #Acts as the _process method would
 func update(delta):
-	#Change action anim state to match move anim state
-	if move_state_changed and animation_state_machine_action.is_playing():
-		owner.get_node("AnimationTree").get("parameters/StateMachineUpperBody/playback").travel(state_move)
-		move_state_changed = false
-	
 	#Change left arm anim to match held item
 	set_left_hand_anim()
 	
@@ -84,9 +72,9 @@ func set_left_hand_anim():
 		if equipped_bow.item_reference.name != "Bow_None":
 			if !owner.get_node("AnimationTree").get("parameters/StateMachineLeftHand/playback").is_playing():
 				owner.get_node("AnimationTree").get("parameters/StateMachineLeftHand/playback").start("Bow_Hold")
-			owner.get_node("AnimationTree").set("parameters/UpperBodyxLeftHand/blend_amount", 1.0)
+			owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 1.0)
 		else:
-			owner.get_node("AnimationTree").set("parameters/UpperBodyxLeftHand/blend_amount", 0.0)
+			owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 0.0)
 
 
 func _on_Player_equipped_items_changed(equipped_items_dict):
