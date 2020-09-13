@@ -11,4 +11,4 @@ stackable = true
 max_stack_size = 20
 type = "Arrow"
 item_scene = "res://scenes/Player/attacks/arrows/water_arrow/water_arrow.tscn"
-model_scene = ""
+model_scene = "res://models/objects/items_player/arrows/water_arrow/water_arrow_model.tscn"

@@ -11,4 +11,4 @@ stackable = false
 max_stack_size = 1
 type = "Arrow"
 item_scene = "res://scenes/Player/attacks/arrows/blank_arrow/blank_arrow.tscn"
-model_scene = ""
+model_scene = "res://models/objects/items_player/arrows/arrow_none/arrow_none_model.tscn"

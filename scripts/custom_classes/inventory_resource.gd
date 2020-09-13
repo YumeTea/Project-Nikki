@@ -90,7 +90,7 @@ func add_item(item_name, quantity):
 	emit_signal("inventory_changed", self)
 
 
-
+#Currently removes item from inventory if depleted
 func remove_item(item_name, quantity):
 	if quantity < 0:
 		print("tried to remove a negative amount of items")
@@ -132,12 +132,17 @@ func update_item_quantity(item, quantity):
 			if equipped_items[item.item_reference.type] != null:
 				if equipped_items[item.item_reference.type].item_reference == item.item_reference:
 					equipped_items[item.item_reference.type].quantity = quantity
+					
+					#Emit updated equipped items dict
+					print("equipped_items_quantity updated and emitted")
+					emit_signal("equipped_items_changed", equipped_items)
 
 
 func equip_item(item_name): #returns true if item is possessed and can be equipped
 	for i in _items.size():
 		if item_name == _items[i].item_reference.name:
 			equipped_items[_items[i].item_reference.type] = _items[i]
+			
 			emit_signal("equipped_items_changed", equipped_items)
 			return true
 	return false
@@ -156,7 +161,7 @@ func previous_item(item_type):
 	var current_item = equipped_items[item_type]
 	var previous_item_slot = inventory[item_type].find(current_item) - 1
 	if previous_item_slot >= 0:
-		equipped_items[item_type] = inventory[item_type][previous_item_slot]
+		equip_item(inventory[item_type][previous_item_slot].item_reference.name)
 	else:
-		equipped_items[item_type] = inventory[item_type][inventory[item_type].size() - 1]
+		equip_item(inventory[item_type][inventory[item_type].size() - 1].item_reference.name)
 

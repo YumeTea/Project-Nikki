@@ -17,7 +17,6 @@ func _ready():
 func _process(_delta):
 	if not player:
 		initialize_player()
-		return
 
 
 func initialize_player():
@@ -55,7 +54,6 @@ func initialize_equipment():
 	player.inventory.equip_item("Magic_None")
 	player.inventory.equip_item("Arrow_None")
 	player.inventory.equip_item("Item_None")
-	
 
 
 func _on_Player_inventory_changed(_inventory):

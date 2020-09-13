@@ -5,8 +5,6 @@
 [ext_resource path="res://models/objects/items_player/arrows/arrow_shaft.tres" type="CapsuleMesh" id=3]
 [ext_resource path="res://models/objects/items_player/arrows/water_arrow/water_arrow_tip.tres" type="CapsuleMesh" id=4]
 
-
-
 [node name="Arrow_Mesh" type="Spatial"]
 
 [node name="Arrow_Shaft" type="MeshInstance" parent="."]

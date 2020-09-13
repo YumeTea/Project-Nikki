@@ -592,7 +592,6 @@ func _on_Camera_Rig_view_locked(is_view_locked, _time_left):
 	if !strafe_locked:
 		centering_view = is_view_locked
 		strafe_locked = is_view_locked
-#		centering_time_left = time_left
 		centered = false
 	elif state_action != "Bow":
 		centering_view = is_view_locked

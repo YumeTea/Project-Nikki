@@ -49,6 +49,15 @@ func update(delta):
 	if (velocity == Vector3(0,0,0) or facing_dot_velocity_horizontal < 0.0) and left_joystick_axis == Vector2(0,0):
 		emit_signal("finished", "idle")
 	
+	#Determine player's speed
+	if state_action == "None" and speed != speed_default:
+		var walk_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
+		#Wait for any blend value transitions to finish before setting speed
+		if walk_blend_position < 0:
+			pass
+		else:
+			speed = speed_default
+	
 	if view_mode == "third_person":
 		walk_third_person(delta)
 	if view_mode == "first_person":
@@ -62,13 +71,6 @@ func on_animation_finished(_anim_name):
 
 
 func walk_third_person(delta):
-	if state_action == "None" and speed != speed_default:
-		var walk_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
-		if walk_blend_position < 0:
-			pass
-		else:
-			speed = speed_default
-	
 	if !centering_view and !strafe_locked:
 		walk_free(delta)
 	elif centering_view:
