@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource( 1 )
-name = "Water_Arrow"
+name = "Water Arrow"
 index = 1
 removable = true
 stackable = true

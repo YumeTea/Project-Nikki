@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource( 1 )
-name = "Keeper_Bow"
+name = "Keeper Bow"
 index = 1
 removable = false
 stackable = false

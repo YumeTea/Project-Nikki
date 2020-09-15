@@ -10,13 +10,12 @@ var Player = null
 
 func _process(delta):
 	if not Player:
-		for node in get_tree().get_nodes_in_group("actor"):
-			if node.name == "Player":
-				Player = node
-				Player.inventory.connect("equipped_items_changed", self, "_on_Player_equippped_items_changed")
-				
-				#Emit initial equipment if player is found
-				emit_signal("equipped_items_changed", Player.inventory.equipped_items.duplicate())
+		if Global.Player:
+			Player = Global.Player
+			Player.inventory.connect("equipped_items_changed", self, "_on_Player_equipped_items_changed")
+			
+			#Emit initial equipment if player is found
+			emit_signal("equipped_items_changed", Player.inventory.equipped_items.duplicate())
 
 
 func _on_Health_health_changed(current_health):
@@ -27,7 +26,7 @@ func _on_Health_max_health_changed(new_max_health):
 	emit_signal("max_health_changed", new_max_health)
 
 
-func _on_Player_equippped_items_changed(equipped_items_dict):
+func _on_Player_equipped_items_changed(equipped_items_dict):
 	emit_signal("equipped_items_changed", equipped_items_dict)
 
 

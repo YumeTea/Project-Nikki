@@ -11,7 +11,7 @@ signal landed(landing_height)
 signal center_view(turn_angle)
 
 ###Node Storage
-onready var world = owner.owner
+onready var world = get_tree().current_scene
 onready var Player = owner
 onready var camera = owner.get_node("Camera_Rig/Pivot/Cam_Position") #should get camera position a different way
 onready var Pivot = owner.get_node("Camera_Rig/Pivot")
@@ -32,7 +32,7 @@ const foot_angle_lim = 60
 "Adjust collider origin when changing values here"
 const offset_max_velocity_y = 5.0 #y_velocity where velocity_y_modifier is max
 const collider_offset_max = 1.1 #max distance to move ground collider up or down
-const collider_offset_default = 0.285 #default y translation of ground collider(local)
+const collider_offset_default = 3.175 #default y translation of ground collider(local)
 const collider_offset_change_limit = 0.1 #max amount collider can move each frame
 
 #Animation Blending Variables
@@ -527,13 +527,15 @@ func connect_player_signals():
 	owner.get_node("Camera_Rig").connect("camera_direction_changed", self, "_on_Camera_Rig_camera_direction_changed")
 	owner.get_node("Camera_Rig").connect("view_locked", self, "_on_Camera_Rig_view_locked")
 	owner.get_node("Camera_Rig").connect("enter_new_view", self, "_on_Camera_Rig_enter_new_view")
-	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_death")
+	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_Player_death")
 	
 	#World Signals
 	owner.connect("entered_area", self, "_on_environment_area_entered")
 	owner.connect("exited_area", self, "_on_environment_area_exited")
-	if owner.owner:
-		owner.owner.connect("player_voided", self, "_on_voided")
+	
+	#Global Signals
+	GameManager.connect("player_respawned", self, "_on_GameManager_player_respawned")
+	GameManager.connect("player_voided", self, "_on_GameManager_player_voided")
 
 
 func disconnect_player_signals():
@@ -544,13 +546,15 @@ func disconnect_player_signals():
 	owner.get_node("Camera_Rig").disconnect("camera_direction_changed", self, "_on_Camera_Rig_camera_direction_changed")
 	owner.get_node("Camera_Rig").disconnect("view_locked", self, "_on_Camera_Rig_view_locked")
 	owner.get_node("Camera_Rig").disconnect("enter_new_view", self, "_on_Camera_Rig_enter_new_view")
-	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_death")
+	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_Player_death")
 	
 	#World Signals
 	owner.disconnect("entered_area", self, "_on_environment_area_entered")
 	owner.disconnect("exited_area", self, "_on_environment_area_exited")
-	if owner.owner:
-		owner.owner.disconnect("player_voided", self, "_on_voided")
+	
+	#Global Signals
+	GameManager.disconnect("player_respawned", self, "_on_GameManager_player_respawned")
+	GameManager.disconnect("player_voided", self, "_on_GameManager_player_voided")
 
 
 ###PLAYER SIGNAL FUNCTIONS###
@@ -617,17 +621,20 @@ func _on_environment_area_entered(area_type, surface_h):
 	if area_type == "Water":
 		in_water = true
 		surface_height = surface_h
-	print("entered " + str(area_type))
 
 
 func _on_environment_area_exited(area_type):
 	if area_type == "Water":
 		in_water = false
-	print("exited " + str(area_type))
 
 
-func _on_voided(voided):
-	if voided and can_void:
+func _on_GameManager_player_respawned():
+	can_void = true
+	emit_signal("finished", "idle")
+
+
+func _on_GameManager_player_voided():
+	if can_void:
 		emit_signal("finished", "void")
 		can_void = false
 

@@ -11,3 +11,4 @@ stackable = true
 max_stack_size = 8
 type = "Item"
 item_scene = ""
+model_scene = ""

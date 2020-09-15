@@ -54,7 +54,6 @@ func on_animation_finished(_anim_name):
 
 
 func jump():
-	print("called jump from anim")
 	if !has_jumped:
 		velocity.y = jump_strength
 		has_jumped = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=116 format=2]
+[gd_scene load_steps=117 format=2]
 
 [ext_resource path="res://scenes/Player/player_states/move/on_ground/idle.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Player/player/player_controller.gd" type="Script" id=2]
@@ -15,12 +15,13 @@
 [ext_resource path="res://models/characters/Nikki/model/anim/Bow_Stance.anim" type="Animation" id=13]
 [ext_resource path="res://scenes/Player/attributes/health.gd" type="Script" id=14]
 [ext_resource path="res://scenes/Player/player_states/other/death.gd" type="Script" id=15]
-[ext_resource path="res://scenes/Player/player_states/other/void.gd" type="Script" id=16]
+[ext_resource path="res://scenes/Player/player_states/move/void_move.gd" type="Script" id=16]
 [ext_resource path="res://scenes/Player/player_states/action/bow.gd" type="Script" id=17]
 [ext_resource path="res://scenes/Player/attacks/magic/projectiles/magic_orb/cast_glow.material" type="Material" id=18]
 [ext_resource path="res://scenes/Player/attacks/magic/projectiles/magic_orb/Casting_Magic_Orb.anim" type="Animation" id=19]
 [ext_resource path="res://models/characters/Nikki/model/anim/Bow_Walk.anim" type="Animation" id=20]
 [ext_resource path="res://models/characters/Nikki/model/anim/Fall.anim" type="Animation" id=21]
+[ext_resource path="res://scenes/Player/player_states/action/void_action.gd" type="Script" id=22]
 [ext_resource path="res://scenes/Player/player_states/state_machine_action.gd" type="Script" id=23]
 [ext_resource path="res://scenes/Player/player_states/action/none.gd" type="Script" id=24]
 [ext_resource path="res://scenes/Player/player_states/action/cast.gd" type="Script" id=25]
@@ -1646,7 +1647,7 @@ nodes/StateMachineMove/position = Vector2( -840, 100 )
 nodes/TimeScaleAction/node = SubResource( 42 )
 nodes/TimeScaleAction/position = Vector2( -360, 280 )
 nodes/output/position = Vector2( 80, 120 )
-node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexLeftHand", "MovexAction", 1, "TimeScaleAction", "MovexLeftHand", 0, "StateMachineMove", "MovexLeftHand", 1, "StateMachineLeftHand", "TimeScaleAction", 0, "StateMachineAction" ]
+node_connections = [ "output", 0, "MovexAction", "TimeScaleAction", 0, "StateMachineAction", "MovexLeftHand", 0, "StateMachineMove", "MovexLeftHand", 1, "StateMachineLeftHand", "MovexAction", 0, "MovexLeftHand", "MovexAction", 1, "TimeScaleAction" ]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=44]
 
@@ -1797,15 +1798,15 @@ height = 5.35
 
 [sub_resource type="SphereShape" id=71]
 
-[node name="Nikki" type="KinematicBody" groups=[
+[node name="Player" type="KinematicBody" groups=[
 "actor",
 "targettable",
 "vulnerable",
 ]]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.89, 0 )
 collision_layer = 2
 collision_mask = 5
 script = ExtResource( 2 )
+player_scene = "res://scenes/Player/player/Player.tscn"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Bow_Hold = ExtResource( 12 )
@@ -1870,7 +1871,7 @@ script = ExtResource( 16 )
 
 [node name="State_Machine_Action" type="Node" parent="."]
 script = ExtResource( 23 )
-START_STATE = NodePath("None")
+START_STATE = NodePath("../../Player/State_Machine_Action/None")
 
 [node name="None" type="Node" parent="State_Machine_Action"]
 script = ExtResource( 24 )
@@ -1885,21 +1886,15 @@ script = ExtResource( 25 )
 script = ExtResource( 15 )
 
 [node name="Void" type="Node" parent="State_Machine_Action"]
-script = ExtResource( 16 )
+script = ExtResource( 22 )
 
 [node name="Projectile Elements" type="Node" parent="."]
 
 [node name="Camera_Rig" parent="." instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.89, 0 )
 
 [node name="Rig" parent="." instance=ExtResource( 5 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 0 )
-
-[node name="Skeleton" parent="Rig" index="0"]
-bones/0/bound_children = [ NodePath("Foot_Floor_L") ]
-bones/47/bound_children = [ NodePath("Hand_L") ]
-bones/73/bound_children = [ NodePath("Hand_R") ]
-bones/96/bound_children = [ NodePath("Foot_Floor_R") ]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.11, 0 )
 
 [node name="Body Simplified" parent="Rig/Skeleton" index="0"]
 material/0 = SubResource( 49 )
@@ -2052,7 +2047,7 @@ enabled = true
 cast_to = Vector3( 0, -4.18, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.285, -0.042 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.175, -0.042 )
 shape = SubResource( 70 )
 
 [node name="UI_Layer" type="CanvasLayer" parent="."]
@@ -2061,10 +2056,9 @@ layer = 0
 [node name="UI_In_Game" parent="UI_Layer" instance=ExtResource( 7 )]
 
 [node name="Debug Value Display" parent="UI_Layer" instance=ExtResource( 4 )]
-visible = false
 
 [node name="Targetting_Area" type="Area" parent="."]
-transform = Transform( 176, 0, 0, 0, 176, 0, 0, 0, 176, 0, 2, 0 )
+transform = Transform( 176, 0, 0, 0, 176, 0, 0, 0, 176, 0, 4.89, 0 )
 collision_layer = 2
 collision_mask = 5
 
@@ -2072,7 +2066,7 @@ collision_mask = 5
 shape = SubResource( 71 )
 
 [node name="target_pos" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.89, 0 )
 
 [node name="Timer" type="Timer" parent="."]
 [connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]

@@ -15,7 +15,7 @@
 [ext_resource path="res://scenes/UI/debug UI/move state/move state stack display/move_state_stack_names.gd" type="Script" id=13]
 [ext_resource path="res://scenes/UI/debug UI/flags display/bool_values.gd" type="Script" id=14]
 [ext_resource path="res://scenes/UI/debug UI/flags display/bool_labels.gd" type="Script" id=15]
-[ext_resource path="res://scenes/UI/debug UI/inventory contents/inventory_test.gd" type="Script" id=16]
+[ext_resource path="res://scenes/UI/debug UI/inventory contents/inventory_contents.gd" type="Script" id=16]
 [ext_resource path="res://scenes/UI/debug UI/action state/action state display/action_state_titles.gd" type="Script" id=17]
 [ext_resource path="res://scenes/UI/debug UI/action state/action state display/action_state_display.gd" type="Script" id=18]
 [ext_resource path="res://scenes/UI/debug UI/action state/action state stack display/action_state_stack_label.gd" type="Script" id=19]

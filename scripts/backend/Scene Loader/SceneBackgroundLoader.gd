@@ -4,6 +4,8 @@ extends Control
 no show_error() function for load errors atm
 """
 
+signal scene_loaded
+
 var loading_screen_scene_path = "res://scenes/UI/transition_scenes/Loading_Screen.tscn"
 
 var loader
@@ -14,14 +16,12 @@ var loading = false
 var fading = false
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	set_process(false)
 	var root = get_tree().get_root()
 	current_scene = root.get_child(root.get_child_count() -1)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_time):
 	#Checks if loading needs to be done
 	if loader == null and loading == false and fading == false: #loading is done if null is returned
@@ -36,8 +36,8 @@ func _process(_time):
 	#Clears loading screen from SceneTree
 	if loading == true:
 		var root = get_tree().get_root()
-		current_scene = root.get_child(root.get_child_count() -2)
-		current_scene.queue_free()
+		var loading_scene = root.get_child(root.get_child_count() -2) #UNSURE OF CHILD VALUE HERE
+		loading_scene.queue_free()
 		loading = false
 		return
 	
@@ -51,6 +51,7 @@ func _process(_time):
 			set_new_scene(resource)
 			loading = true
 			fading = false
+			
 			return
 	
 	var t = OS.get_ticks_msec()
@@ -97,14 +98,8 @@ func goto_scene(path): #game requests to switch to scene defined by path
 #Updates a progress bar or a paused animation
 func update_progress():
 	var progress = (float(loader.get_stage()) / loader.get_stage_count()) * 100
-	#Update progress bar?
+	#Update progress
 	get_node("/root/Loading_Screen/Fade_Layer/ColorRect/CenterContainer/VBoxContainer/TextureProgress").set_value(progress)
-	
-	#... or update a progress animation?
-	#var length = get_node("LoadingAnimation").get_animation_length()
-	
-	#Call this on a paused animation. Use "true" as the second argument to force the animation to update
-	#get_node("LoadingAnimation").seek(progress * length, true)
 
 
 #Puts the newly loaded scene on the scene tree
@@ -115,4 +110,6 @@ func set_new_scene(scene_resource):
 	current_scene.connect("tree_entered", get_tree(), "set_current_scene", [current_scene], CONNECT_ONESHOT)
 	#Puts loaded scene on scene tree
 	get_node("/root").add_child(current_scene)
+	
+	emit_signal("scene_loaded")
 

@@ -12,12 +12,14 @@ signal is_falling(is_falling)
 signal targets_changed(visible_targets)
 signal focus_target(target_pos_node)
 signal entered_new_view(view_mode)
+
 signal entered_area(area_type, surface_height)
 signal exited_area(area_type)
 
 
 #Scene Storage
 var target_reticle = preload("res://scenes/objects/Test Objects/3D Sprites/Target Reticle/Target_Reticle_Temp/Target_Reticle_Temp.tscn")
+export (String, FILE) var player_scene
 
 #Node Storage
 onready var health_node = $Attributes/Health
@@ -77,7 +79,8 @@ func _input(event):
 		lock_target()
 	
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(inventory._items.size())
+#		for node in get_tree().get_nodes_in_group("actor"):
+#			print(node.name)
 
 
 func _physics_process(_delta):

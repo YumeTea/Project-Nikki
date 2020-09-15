@@ -1,5 +1,6 @@
 extends "res://scenes/camera/player cam/camera_states/player_camera/player_camera.gd"
 
+
 """
 Find a better way to get and store default camera position values
 """

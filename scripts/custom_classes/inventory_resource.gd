@@ -99,7 +99,7 @@ func remove_item(item_name, quantity):
 	var remaining_quantity = quantity
 	
 	#Look for item in array of all held items and remove it if found
-	for i in (_items.size() - 1):
+	for i in (_items.size()):
 		if item_name == _items[i].item_reference.name and _items[i].item_reference.removable == true:
 			var removed_item = _items[i]
 			
@@ -110,9 +110,9 @@ func remove_item(item_name, quantity):
 			#Update inventory/equipped quantity
 			update_item_quantity(removed_item, removed_item.quantity)
 			
-			#Remove item from inventory if depleted
+			#Remove item from inventory if depleted and blank out item slot
 			if removed_item.quantity == 0:
-				equip_item(removed_item.item_reference.type + "_None")
+				equip_item(null, removed_item.item_reference.type)
 				_items.remove(i)
 			
 	emit_signal("inventory_changed", self)
@@ -125,43 +125,45 @@ func sort_item_type(item_a, item_b):
 
 
 func update_item_quantity(item, quantity):
-	for i in (inventory[item.item_reference.type].size() - 1):
+	for i in (inventory[item.item_reference.type].size()):
 		if inventory[item.item_reference.type][i].item_reference == item.item_reference:
 			inventory[item.item_reference.type][i].quantity = quantity
 			#Update item in equipped items if it's equipped
 			if equipped_items[item.item_reference.type] != null:
+				print("updating " + str(item.item_reference.name))
 				if equipped_items[item.item_reference.type].item_reference == item.item_reference:
 					equipped_items[item.item_reference.type].quantity = quantity
 					
 					#Emit updated equipped items dict
-					print("equipped_items_quantity updated and emitted")
 					emit_signal("equipped_items_changed", equipped_items)
 
 
-func equip_item(item_name): #returns true if item is possessed and can be equipped
-	for i in _items.size():
-		if item_name == _items[i].item_reference.name:
-			equipped_items[_items[i].item_reference.type] = _items[i]
-			
-			emit_signal("equipped_items_changed", equipped_items)
-			return true
-	return false
+func equip_item(item_name, item_type):
+	if item_name != null:
+		for i in _items.size():
+			if item_name == _items[i].item_reference.name:
+				equipped_items[item_type] = _items[i]
+	else:
+		equipped_items[item_type] = null
+	
+	emit_signal("equipped_items_changed", equipped_items)
 
 
 func next_item(item_type):
 	var current_item = equipped_items[item_type]
 	var next_item_slot = inventory[item_type].find(current_item) + 1
 	if next_item_slot < inventory[item_type].size():
-		equip_item(inventory[item_type][next_item_slot].item_reference.name)
+		equip_item(inventory[item_type][next_item_slot].item_reference.name, item_type)
 	else:
-		equip_item(inventory[item_type][0].item_reference.name)
-
+		equip_item(null, item_type)
 
 func previous_item(item_type):
-	var current_item = equipped_items[item_type]
-	var previous_item_slot = inventory[item_type].find(current_item) - 1
-	if previous_item_slot >= 0:
-		equip_item(inventory[item_type][previous_item_slot].item_reference.name)
+	if equipped_items[item_type]:
+		var current_item = equipped_items[item_type]
+		var previous_item_slot = inventory[item_type].find(current_item) - 1
+		if previous_item_slot >= 0:
+			equip_item(inventory[item_type][previous_item_slot].item_reference.name, item_type)
+		else:
+			equip_item(null, item_type)
 	else:
-		equip_item(inventory[item_type][inventory[item_type].size() - 1].item_reference.name)
-
+		equip_item(inventory[item_type][inventory[item_type].size() - 1].item_reference.name, item_type)

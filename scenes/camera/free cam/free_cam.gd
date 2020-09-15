@@ -8,29 +8,28 @@ signal free_cam_position_changed(free_cam_position)
 
 
 #Node Storage
-var player
+var Player = null
 
 #Camera Movement Variables
 var track_speed = 1.0
 
 #Camera Tracking Variables
 var free_cam_mode = "player"
-var free_cam_transform
-var player_cam_transform
+var free_cam_transform = Transform()
+var player_cam_transform = Transform()
 
 #Camera Flags
+export var faded_out = false
 var view_obscured
 
 
-func _ready():
-	for node in get_tree().get_nodes_in_group("actor"):
-		if node.name == "Player":
-			player = node
-			player.get_node("Camera_Rig").connect("camera_moved", self, "_on_camera_moved")
-			player.get_node("Camera_Rig").connect("view_blocked", self, "_on_view_blocked")
-
-
 func _process(delta):
+	if not Player:
+		if Global.Player:
+			Player = Global.Player
+			Player.get_node("Camera_Rig").connect("camera_moved", self, "_on_camera_moved")
+			Player.get_node("Camera_Rig").connect("view_blocked", self, "_on_view_blocked")
+	
 	if free_cam_mode == "player":
 		player_camera()
 

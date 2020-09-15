@@ -11,6 +11,8 @@ var initialized_values = {
 	"targetting": false,
 	"focus_object": null,
 	
+	"can_void": true,
+	
 	"view_mode": "third_person",
 	"state_move": null,
 	
@@ -36,21 +38,30 @@ func _ready():
 func _change_state(state_name): #state_machine.gd does the generalized work
 	if not _active:
 		return
-	##States that stack
-	if state_name in []: #code for push automaton; "pushes" state_name onto top of state stack
-		states_stack.push_front(states_map[state_name])
+	
 	##New State initialization (excludes idle for some reason)
 	if state_name in ["none", "bow", "cast", "void"]:
 		#Set initialized values in old state for transfer
 		current_state.set_initialized_values(current_state.initialized_values)
 		#Transfer initialized values to new state
 		states_map[state_name].initialize(current_state.initialized_values) #initialize velocity for certain states out of walk state
+	
+	##Special State Handling
+	if state_name in ["void"]:
+		states_stack.clear()
+		states_stack.push_front(states_map[state_name])
+	
+	##States that stack
+	if state_name in []: #code for push automaton; "pushes" state_name onto top of state stack
+		states_stack.push_front(states_map[state_name])
+	
 	##Previous State initialization
 	if state_name in ["previous"]:
 		#Set initialized values in old state for transfer
 		current_state.set_initialized_values(current_state.initialized_values)
 		#Transfer initialized values to new state
 		states_stack[1].initialize(current_state.initialized_values) #pass current state velocity to previous state if switching to previous state
+	
 	##State Change
 	._change_state(state_name)
 	

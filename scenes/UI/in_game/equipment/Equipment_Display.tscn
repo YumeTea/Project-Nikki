@@ -6,7 +6,7 @@
 [ext_resource path="res://scenes/UI/in_game/equipment/arrow_model_view.gd" type="Script" id=4]
 [ext_resource path="res://models/objects/items_player/arrows/water_arrow/water_arrow_model.tscn" type="PackedScene" id=5]
 
-[sub_resource type="Shader" id=6]
+[sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
 
 uniform sampler2D background_texture : hint_albedo;
@@ -39,23 +39,22 @@ void fragment() {
 
 "
 
-[sub_resource type="ViewportTexture" id=4]
+[sub_resource type="ViewportTexture" id=2]
 viewport_path = NodePath("Arrow_Display/Arrow_Viewport/Viewport")
 
-[sub_resource type="ShaderMaterial" id=5]
+[sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
-shader = SubResource( 6 )
-shader_param/background_color = Color( 0.0588235, 0, 0.196078, 1 )
-shader_param/border_color = Color( 0.113725, 0.113725, 0.113725, 1 )
+shader = SubResource( 1 )
+shader_param/background_color = Color( 0.0705882, 0, 0.239216, 1 )
+shader_param/border_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
 shader_param/background_texture = ExtResource( 3 )
-shader_param/viewport_texture = SubResource( 4 )
+shader_param/viewport_texture = SubResource( 2 )
 
-[sub_resource type="Shader" id=7]
+[sub_resource type="Shader" id=4]
 code = "shader_type canvas_item;
 
 uniform sampler2D background_texture : hint_albedo;
 
-uniform vec4 text_color : hint_color;
 uniform vec4 background_color : hint_color;
 uniform vec4 border_color : hint_color;
 
@@ -78,14 +77,13 @@ void fragment() {
 
 "
 
-[sub_resource type="ShaderMaterial" id=8]
-shader = SubResource( 7 )
-shader_param/text_color = null
-shader_param/background_color = Color( 0.0588235, 0, 0.196078, 1 )
-shader_param/border_color = Color( 0.113725, 0.113725, 0.113725, 1 )
+[sub_resource type="ShaderMaterial" id=5]
+shader = SubResource( 4 )
+shader_param/background_color = Color( 0.0705882, 0, 0.239216, 1 )
+shader_param/border_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
 shader_param/background_texture = ExtResource( 3 )
 
-[sub_resource type="World" id=2]
+[sub_resource type="World" id=6]
 
 [node name="Equipment_Display" type="HBoxContainer"]
 anchor_left = 1.0
@@ -114,7 +112,7 @@ __meta__ = {
 }
 
 [node name="Arrow_Icon" type="TextureRect" parent="Arrow_Display/Background"]
-material = SubResource( 5 )
+material = SubResource( 3 )
 margin_right = 128.0
 margin_bottom = 128.0
 texture = ExtResource( 3 )
@@ -125,7 +123,7 @@ __meta__ = {
 }
 
 [node name="Arrow_Count_Background" type="TextureRect" parent="Arrow_Display/Background"]
-material = SubResource( 8 )
+material = SubResource( 5 )
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -32.0
@@ -181,13 +179,13 @@ stretch = true
 
 [node name="Viewport" type="Viewport" parent="Arrow_Display/Arrow_Viewport"]
 size = Vector2( 128, 148 )
-world = SubResource( 2 )
+world = SubResource( 6 )
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 3
 
 [node name="Item_Pivot" type="Spatial" parent="Arrow_Display/Arrow_Viewport/Viewport"]
-transform = Transform( 1, 0, 0, 0, 0.707105, -0.707109, 0, 0.707109, 0.707105, 0, 0, 0 )
+transform = Transform( -1.62921e-07, -0.707107, -0.707107, 0, 0.707107, -0.707107, 1, -1.15202e-07, -1.15202e-07, 0, 0, 0 )
 script = ExtResource( 4 )
 
 [node name="Arrow_Model" type="Spatial" parent="Arrow_Display/Arrow_Viewport/Viewport/Item_Pivot"]
@@ -196,7 +194,13 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.75 )
 [node name="Water_Arrow" parent="Arrow_Display/Arrow_Viewport/Viewport/Item_Pivot/Arrow_Model" instance=ExtResource( 5 )]
 layers = 524288
 
+[node name="Timer" type="Timer" parent="Arrow_Display/Arrow_Viewport/Viewport/Item_Pivot"]
+wait_time = 3.5
+
+[node name="Tween" type="Tween" parent="Arrow_Display/Arrow_Viewport/Viewport/Item_Pivot"]
+
 [node name="Camera" type="Camera" parent="Arrow_Display/Arrow_Viewport/Viewport"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0.35 )
 cull_mask = 2148532223
 current = true
+[connection signal="timeout" from="Arrow_Display/Arrow_Viewport/Viewport/Item_Pivot/Timer" to="Arrow_Display/Arrow_Viewport/Viewport/Item_Pivot" method="_on_Timer_timeout"]

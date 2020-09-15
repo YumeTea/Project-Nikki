@@ -1,19 +1,24 @@
 extends Node
 
-signal current_level_changed(current_level)
 
-var current_level
-var fade_layer
+signal current_scene_changed(current_scene)
 
-var scene_reloaded = true #starts true to connect signals on scene starting
-var player_voided = false
-var transiting = false
+
+#Node Storage
+var Player = null
+var Free_Cam = null
+
+#Scene Variable Storage
+var current_scene = null
+
 
 func _ready():
 	#Sets mouse to be captured by the game instead of the desktop
 #	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	#Maximizes window on game start
 	OS.set_window_fullscreen(true)
+	
+	connect_signals()
 
 
 func _process(_delta):
@@ -34,53 +39,37 @@ func _process(_delta):
 		#Reloads current scene
 		get_tree().reload_current_scene()
 	
-	if scene_reloaded:
-		connect_signals()
+	#Set player and free cam if not set
+	if not Player:
+		for node in get_tree().get_nodes_in_group("actor"):
+			if node.name == "Player":
+				Player = node
 	
-	if player_voided:
-		void_player()
-
-
-func _on_scene_reloaded(is_reloaded):
-	scene_reloaded = is_reloaded
+	if not Free_Cam:
+		for node in get_tree().get_nodes_in_group("actor"):
+			if node.name == "Free_Cam":
+				Free_Cam = node
 
 
 func connect_signals():
-		for node in get_tree().get_nodes_in_group("world"):
-			current_level = node
-		for node in get_tree().get_nodes_in_group("layer1"):
-			if node.get_name() in ["FadeTransition"]:
-				fade_layer = node
-		
-		if current_level:
-			current_level.connect("scene_reloaded", self, "_on_scene_reloaded")
-			current_level.connect("player_voided", self, "_on_player_voided")
-			for node in get_tree().get_nodes_in_group("actor"):
-				if node.name == "Player":
-					node.get_node("Attributes").get_node("Health").connect("health_depleted", self, "_on_player_death")
-			emit_signal("current_level_changed", current_level)
-			scene_reloaded = false
+		SceneManager.connect("scene_entered", self, "_on_SceneManager_scene_entered")
+		SceneManager.connect("scene_exited", self, "_on_SceneManager_scene_exited")
 
 
-func void_player():
-		if transiting == false:
-			fade_layer.get_node("AnimationPlayer").play("Fade Out")
-			transiting = true
-		if fade_layer.get_node("AnimationPlayer").is_playing():
-			return
-		else:
-			transiting = false
-			player_voided = false
-			get_tree().reload_current_scene()
-			scene_reloaded = true
+func _on_SceneManager_scene_entered():
+	#Set current scene
+	current_scene = SceneManager.current_scene
+	
+	#Look for Player and Free Cam
+	for node in get_tree().get_nodes_in_group("actor"):
+		if node.name == "Player":
+			Player = node
+		if node.name == "Free_Cam":
+			Free_Cam = node
 
 
-func _on_player_voided(is_voided):
-	if is_voided:
-		player_voided = is_voided
-
-
-func _on_player_death(is_death):
-	if is_death:
-		player_voided = true
+func _on_SceneManager_scene_exited():
+	#Clear player and free cam until spawning is implemented
+	Player = null
+	Free_Cam = null
 

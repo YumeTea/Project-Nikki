@@ -33,7 +33,6 @@ func handle_input(event):
 
 #Acts as the _process method would
 func update(delta):
-	print(quick_turn)
 	if Player.global_transform.origin.y >= surfaced_height + (surface_speed * 1.01 * delta):
 		emit_signal("finished", "previous")
 	

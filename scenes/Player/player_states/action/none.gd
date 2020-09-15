@@ -34,7 +34,7 @@ func handle_input(event):
 		if event.is_action_pressed("cast") and event.get_device() == 0:
 			emit_signal("finished", "cast")
 		if event.is_action_pressed("draw_bow") and event.get_device() == 0:
-			if equipped_bow.item_reference.name != "Bow_None":
+			if equipped_bow != null:
 				emit_signal("finished", "bow")
 	
 	if event.is_action_pressed("bow_next") and event.get_device() == 0:
@@ -69,22 +69,23 @@ func on_animation_finished(_anim_name):
 
 func set_left_hand_anim():
 	if equipped_bow:
-		if equipped_bow.item_reference.name != "Bow_None":
-			if !owner.get_node("AnimationTree").get("parameters/StateMachineLeftHand/playback").is_playing():
-				owner.get_node("AnimationTree").get("parameters/StateMachineLeftHand/playback").start("Bow_Hold")
-			owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 1.0)
-		else:
-			owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 0.0)
+		if !owner.get_node("AnimationTree").get("parameters/StateMachineLeftHand/playback").is_playing():
+			owner.get_node("AnimationTree").get("parameters/StateMachineLeftHand/playback").start("Bow_Hold")
+		owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 1.0)
+	else:
+		owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 0.0)
 
 
 func _on_Player_equipped_items_changed(equipped_items_dict):
 	._on_Player_equipped_items_changed(equipped_items_dict)
 	
+	#Only run if equipped items have been emitted
 	if equipped_items != null:
+		#Change bow if equipped bow has changed
 		if equipped_bow != equipped_items["Bow"]:
 			for child in owner.get_node("Rig/Skeleton/Hand_L/Bow_Position").get_children():
 				child.queue_free()
-			if equipped_items["Bow"].item_reference.model_scene:
+			if equipped_items["Bow"]:
 				var bow = load(equipped_items["Bow"].item_reference.model_scene).instance()
 				owner.get_node("Rig/Skeleton/Hand_L/Bow_Position").add_child(bow)
 			equipped_bow = equipped_items["Bow"]

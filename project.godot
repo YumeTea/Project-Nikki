@@ -18,23 +18,31 @@ _global_script_classes=[ {
 "class": "ItemResource",
 "language": "GDScript",
 "path": "res://scripts/custom_classes/item_resource.gd"
+}, {
+"base": "Resource",
+"class": "SceneResource",
+"language": "GDScript",
+"path": "res://scripts/custom_classes/scene_resource.gd"
 } ]
 _global_script_class_icons={
 "Inventory": "",
-"ItemResource": ""
+"ItemResource": "",
+"SceneResource": ""
 }
 
 [application]
 
 config/name="Project Nikki"
-run/main_scene="res://scenes/levels/Test Grounds/Level Test Grounds.tscn"
+run/main_scene="res://scenes/Main Scene.tscn"
 config/icon="res://resources/images/icon.png"
 
 [autoload]
 
 Global="*res://scripts/backend/Global.gd"
 SceneBackgroundLoader="*res://scripts/backend/Scene Loader/SceneBackgroundLoader.gd"
+SceneDatabase="*res://scripts/managers/SceneDatabase.gd"
 ItemDatabase="*res://scripts/managers/ItemDatabase.gd"
+SceneManager="*res://scripts/managers/SceneManager.gd"
 GameManager="*res://scripts/managers/GameManager.gd"
 
 [debug]
@@ -183,6 +191,6 @@ cancel={
 quality/directional_shadow/size=8192
 quality/shadow_atlas/size=8192
 quality/shadows/filter_mode=2
-environment/default_clear_color=Color( 0.160784, 0.184314, 0.211765, 1 )
+environment/default_clear_color=Color( 0.16, 0.16, 0.16, 1 )
 quality/depth/hdr=false
 environment/default_environment="res://default_environment.tres"

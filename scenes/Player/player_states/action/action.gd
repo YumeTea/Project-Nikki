@@ -2,7 +2,7 @@ extends "res://scenes/Player/player_states/interaction/interaction.gd"
 
 
 #Node Storage
-onready var world = owner.owner
+onready var world = get_tree().current_scene
 onready var Player = owner
 onready var Rig = owner.get_node("Rig/Skeleton")
 
@@ -48,7 +48,7 @@ func exit():
 #Creates output based on the input event passed in
 func handle_input(event):
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(owner.get_node("AnimationTree").get("parameters/MovexAction/blend_amount"))
+#		print(get_tree().current_scene.name)
 	.handle_input(event)
 
 
@@ -109,13 +109,15 @@ func connect_player_signals():
 	owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_move_state_changed")
 	owner.get_node("State_Machine_Action").connect("initialized_values_dic_set", self, "_on_State_Machine_Action_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").connect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
-	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_death")
+	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_Player_death")
 	
 	#World Signals
 #	owner.connect("entered_area", self, "_on_environment_area_entered")
 #	owner.connect("exited_area", self, "_on_environment_area_exited")
-	if owner.owner:
-		owner.owner.connect("player_voided", self, "_on_voided")
+	
+	#Global Signals
+	GameManager.connect("player_respawned", self, "_on_GameManager_player_respawned")
+	GameManager.connect("player_voided", self, "_on_GameManager_player_voided")
 
 
 func disconnect_player_signals():
@@ -124,13 +126,15 @@ func disconnect_player_signals():
 	owner.get_node("State_Machine_Move").disconnect("move_state_changed", self, "_on_move_state_changed")
 	owner.get_node("State_Machine_Action").disconnect("initialized_values_dic_set", self, "_on_State_Machine_Action_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").disconnect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
-	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_death")
+	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_Player_death")
 	
 	#World Signals
 #	owner.connect("entered_area", self, "_on_environment_area_entered")
 #	owner.connect("exited_area", self, "_on_environment_area_exited")
-	if owner.owner:
-		owner.owner.disconnect("player_voided", self, "_on_voided")
+	
+	#Global Signals
+	GameManager.disconnect("player_respawned", self, "_on_GameManager_player_respawned")
+	GameManager.disconnect("player_voided", self, "_on_GameManager_player_voided")
 
 
 ###PLAYER SIGNAL FUNCTIONS### 
@@ -158,7 +162,7 @@ func _on_Camera_Rig_focus_direction_changed(direction):
 	focus_direction = direction
 
 
-func _on_death(death):
+func _on_Player_death(death):
 	if death:
 		emit_signal("finished", "death")
 
@@ -175,8 +179,13 @@ func _on_death(death):
 #		in_water = false
 
 
-func _on_voided(voided):
-	if voided and can_void:
+func _on_GameManager_player_respawned():
+	can_void = true
+	emit_signal("finished", "none")
+
+
+func _on_GameManager_player_voided():
+	if can_void:
 		emit_signal("finished", "void")
 		can_void = false
 

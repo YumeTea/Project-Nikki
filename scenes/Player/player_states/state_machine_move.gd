@@ -18,6 +18,7 @@ var initialized_values = {
 	"is_moving": false,
 	"is_falling": false,
 	"in_water": false,
+	"can_void": true,
 	
 	"surface_height": 0.0,
 	
@@ -62,9 +63,11 @@ func _change_state(state_name): #state_machine.gd does the generalized work
 		states_map[state_name].initialize(current_state.initialized_values) #initialize velocity for certain states out of walk state
 	
 	##Special new state handling
-	if state_name in ["fall"] and current_state in [$Jump]:
+	if state_name in ["fall"] and current_state in [$Jump, $Fall, $Swim]:
 		states_stack.pop_front()
-	if state_name in ["swim"] and current_state in [$Jump, $Fall]:
+	if state_name in ["swim"] and current_state in [$Jump, $Fall, $Swim]:
+		states_stack.pop_front()
+	if state_name in ["void"] and current_state in [$Jump, $Fall, $Swim]:
 		states_stack.pop_front()
 		
 	##Stack states that stack

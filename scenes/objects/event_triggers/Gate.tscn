@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/objects/event_triggers/gate.gd" type="Script" id=1]
+
+[node name="Gate" type="Position3D" groups=[
+"gate",
+]]
+script = ExtResource( 1 )
+gate_idx = 1

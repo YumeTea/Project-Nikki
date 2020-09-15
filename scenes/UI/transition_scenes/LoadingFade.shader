@@ -11,11 +11,4 @@ void fragment()
 	COLOR.g = 0.0;
 	COLOR.b = 0.0;
 	COLOR.a = cutoff;
-//	float value = texture(mask, UV).r;
-//	if (value < cutoff) {
-//		COLOR = vec4(COLOR.rgb, 0.0);
-//	}
-//	else {
-//		COLOR = vec4(COLOR.rgb, 1.0);
-//	}
 }
