@@ -1647,7 +1647,7 @@ nodes/StateMachineMove/position = Vector2( -840, 100 )
 nodes/TimeScaleAction/node = SubResource( 42 )
 nodes/TimeScaleAction/position = Vector2( -360, 280 )
 nodes/output/position = Vector2( 80, 120 )
-node_connections = [ "output", 0, "MovexAction", "TimeScaleAction", 0, "StateMachineAction", "MovexLeftHand", 0, "StateMachineMove", "MovexLeftHand", 1, "StateMachineLeftHand", "MovexAction", 0, "MovexLeftHand", "MovexAction", 1, "TimeScaleAction" ]
+node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexLeftHand", "MovexAction", 1, "TimeScaleAction", "MovexLeftHand", 0, "StateMachineMove", "MovexLeftHand", 1, "StateMachineLeftHand", "TimeScaleAction", 0, "StateMachineAction" ]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=44]
 
@@ -1800,6 +1800,7 @@ height = 5.35
 
 [node name="Player" type="KinematicBody" groups=[
 "actor",
+"save",
 "targettable",
 "vulnerable",
 ]]
@@ -1895,6 +1896,12 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.89, 0 )
 
 [node name="Rig" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.11, 0 )
+
+[node name="Skeleton" parent="Rig" index="0"]
+bones/0/bound_children = [ NodePath("Foot_Floor_L") ]
+bones/47/bound_children = [ NodePath("Hand_L") ]
+bones/73/bound_children = [ NodePath("Hand_R") ]
+bones/96/bound_children = [ NodePath("Foot_Floor_R") ]
 
 [node name="Body Simplified" parent="Rig/Skeleton" index="0"]
 material/0 = SubResource( 49 )
@@ -2069,8 +2076,8 @@ shape = SubResource( 71 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.89, 0 )
 
 [node name="Timer" type="Timer" parent="."]
-[connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
 [connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
+[connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
 [connection signal="is_falling" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_is_falling"]
 [connection signal="position_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_position_changed"]
 [connection signal="targets_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_targets_changed"]

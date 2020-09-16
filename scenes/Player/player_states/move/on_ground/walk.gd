@@ -285,20 +285,20 @@ func walk_rotate_to_focus(delta):
 	
 	turn_angle.y = camera_angle_global.y - facing_angle.y
 	turn_angle.y = bound_angle(turn_angle.y)
-	turn_angle.y = turn_angle.y/centering_time_left
+	if view_change_time_left > 0:
+		turn_angle.y = turn_angle.y/view_change_time_left
 	
 	
 	###Player Rotation
 	owner.get_node("Rig").rotate_y(turn_angle.y)
 	
 	#Decrement Timer
-	if centering_time_left > 0:
-		centering_time_left -= 1
+	if view_change_time_left > 0:
+		view_change_time_left -= 1
 		
-	if centering_time_left <= 0:
+	if view_change_time_left <= 0:
 		centered = true
 		rotate_to_focus = false
-		emit_signal("entered_new_view", view_mode)
 
 
 func blend_move_anim():

@@ -10,20 +10,24 @@ signal inventory_changed(inventory_resource)
 signal equipped_items_changed(equipped_items)
 
 export var _items = Array() setget set_items, get_items
-var equipped_items = {
+export var equipped_items = {
 	"Weapon": null,
 	"Bow": null,
 	"Magic": null,
 	"Arrow": null,
 	"Item": null,
 }
-var inventory = {
+export var inventory = {
 	"Weapon": [],
 	"Bow": [],
 	"Magic": [],
 	"Arrow": [],
 	"Item": [],
 }
+
+
+func _ready():
+	emit_signal("equipped_items_changed", equipped_items)
 
 
 func set_items(new_items):
@@ -130,7 +134,6 @@ func update_item_quantity(item, quantity):
 			inventory[item.item_reference.type][i].quantity = quantity
 			#Update item in equipped items if it's equipped
 			if equipped_items[item.item_reference.type] != null:
-				print("updating " + str(item.item_reference.name))
 				if equipped_items[item.item_reference.type].item_reference == item.item_reference:
 					equipped_items[item.item_reference.type].quantity = quantity
 					
@@ -151,19 +154,42 @@ func equip_item(item_name, item_type):
 
 func next_item(item_type):
 	var current_item = equipped_items[item_type]
-	var next_item_slot = inventory[item_type].find(current_item) + 1
+	var next_item_slot
+	
+	#Find next item's index number in item type array
+	if current_item:
+		for i in inventory[item_type].size():
+			if inventory[item_type][i].item_reference.name == current_item.item_reference.name:
+				next_item_slot = i + 1
+				break
+			else:
+				next_item_slot = inventory[item_type].size() - 1
+	else:
+		next_item_slot = 0
+	
 	if next_item_slot < inventory[item_type].size():
 		equip_item(inventory[item_type][next_item_slot].item_reference.name, item_type)
 	else:
 		equip_item(null, item_type)
 
+
 func previous_item(item_type):
-	if equipped_items[item_type]:
-		var current_item = equipped_items[item_type]
-		var previous_item_slot = inventory[item_type].find(current_item) - 1
-		if previous_item_slot >= 0:
-			equip_item(inventory[item_type][previous_item_slot].item_reference.name, item_type)
-		else:
-			equip_item(null, item_type)
+	var current_item = equipped_items[item_type]
+	var previous_item_slot
+	
+	#Find previous item's index number in item type array
+	if current_item:
+		for i in inventory[item_type].size():
+			if inventory[item_type][i].item_reference.name == current_item.item_reference.name:
+				previous_item_slot = i - 1
+				break
+			else:
+				previous_item_slot = -1
+	
 	else:
-		equip_item(inventory[item_type][inventory[item_type].size() - 1].item_reference.name, item_type)
+		previous_item_slot = inventory[item_type].size() - 1
+		
+	if previous_item_slot >= 0:
+		equip_item(inventory[item_type][previous_item_slot].item_reference.name, item_type)
+	else:
+		equip_item(null, item_type)

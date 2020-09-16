@@ -9,8 +9,7 @@ var exaggerate_multiplier = 10
 func _on_UI_In_Game_health_changed(current_health):
 	animate_value(previous_health, current_health)
 	previous_health = current_health
-#	$Bar.value = current_health
-#	$Health_Count/Amount.text = "%s / %s" % [current_health, max_health] #converts current_health to a string
+
 
 func _on_UI_In_Game_max_health_changed(new_max_health):
 	max_health = new_max_health

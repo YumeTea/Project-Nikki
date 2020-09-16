@@ -176,6 +176,7 @@ func lock_to_focus(delta):
 
 
 #Rotates rig to focus angle in centering time frames
+#Used for changing view mode
 func center_to_focus(delta):
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	facing_angle.y = calculate_global_y_rotation(get_node_direction(Player.get_node("Rig")))
@@ -183,20 +184,20 @@ func center_to_focus(delta):
 	
 	turn_angle.y = camera_angle_global.y - facing_angle.y
 	turn_angle.y = bound_angle(turn_angle.y)
-	turn_angle.y = turn_angle.y/centering_time_left
+	if view_change_time_left > 0:
+		turn_angle.y = turn_angle.y/view_change_time_left
 	
 	calculate_movement_velocity(delta)
 	
 	owner.get_node("Rig").rotate_y(turn_angle.y)
 	
 	###Decrement Timer
-	if centering_time_left > 0:
-		centering_time_left -= 1
+	if view_change_time_left > 0:
+		view_change_time_left -= 1
 	
-	if centering_time_left <= 0:
+	if view_change_time_left <= 0:
 		centered = true
 		rotate_to_focus = false
-		emit_signal("entered_new_view", view_mode)
 
 
 func blend_idle_anim():

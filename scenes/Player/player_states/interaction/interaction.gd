@@ -4,8 +4,6 @@ extends "res://scripts/State Machine/states/state.gd"
 -Find a better method to connect to signals from current level
 """
 
-#Camera State Signals
-signal entered_new_view(view_mode)
 #Interaction Signals
 signal lock_target
 
@@ -23,13 +21,11 @@ var ground_states = [
 	"Walk",
 ]
 
-
 #Tween Objects Storage
 var active_tweens = []
 
 ###Player Variables
 onready var player_height = owner.get_node("CollisionShape").shape.height
-onready var player_center = player_height / 2.0
 
 #View Variables
 var facing_direction = Vector3()

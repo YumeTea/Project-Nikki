@@ -1,8 +1,6 @@
 extends Node
 
 
-
-
 export(NodePath) var START_STATE #export makes variable part of scene it is called in and editable in the editor
 var states_map = {} #stores all possible state nodes
 

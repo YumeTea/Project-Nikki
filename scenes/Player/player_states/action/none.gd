@@ -39,11 +39,16 @@ func handle_input(event):
 	
 	if event.is_action_pressed("bow_next") and event.get_device() == 0:
 		owner.inventory.next_item("Bow")
+		equipped_items = owner.inventory.equipped_items
+		cycle_equipment()
+		
 	
 	if event.is_action_pressed("arrow_next") and event.get_device() == 0:
 		owner.inventory.next_item("Arrow")
+		equipped_items = owner.inventory.equipped_items
 	if event.is_action_pressed("arrow_previous") and event.get_device() == 0:
 		owner.inventory.previous_item("Arrow")
+		equipped_items = owner.inventory.equipped_items
 	
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
 #		print("MovexAction blend: " + str(owner.get_node("AnimationTree").get("parameters/MovexAction/blend_amount")))
@@ -74,21 +79,6 @@ func set_left_hand_anim():
 		owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 1.0)
 	else:
 		owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 0.0)
-
-
-func _on_Player_equipped_items_changed(equipped_items_dict):
-	._on_Player_equipped_items_changed(equipped_items_dict)
-	
-	#Only run if equipped items have been emitted
-	if equipped_items != null:
-		#Change bow if equipped bow has changed
-		if equipped_bow != equipped_items["Bow"]:
-			for child in owner.get_node("Rig/Skeleton/Hand_L/Bow_Position").get_children():
-				child.queue_free()
-			if equipped_items["Bow"]:
-				var bow = load(equipped_items["Bow"].item_reference.model_scene).instance()
-				owner.get_node("Rig/Skeleton/Hand_L/Bow_Position").add_child(bow)
-			equipped_bow = equipped_items["Bow"]
 
 
 

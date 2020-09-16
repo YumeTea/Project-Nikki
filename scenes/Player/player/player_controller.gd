@@ -16,6 +16,13 @@ signal entered_new_view(view_mode)
 signal entered_area(area_type, surface_height)
 signal exited_area(area_type)
 
+#Save Data Variables
+onready var SAVE_KEY = "nikki_" + name
+var saved_values = {
+	"inventory": null,
+	"health": 0.0,
+	"view_mode": null
+}
 
 #Scene Storage
 var target_reticle = preload("res://scenes/objects/Test Objects/3D Sprites/Target Reticle/Target_Reticle_Temp/Target_Reticle_Temp.tscn")
@@ -46,7 +53,7 @@ var main_target
 var targetting = false
 
 #Inventory Variables
-var inventory_resource = load("res://scripts/custom_classes/inventory_resource.gd")
+var inventory_resource = load("res://scripts/custom_resources/inventory_resource.gd")
 var inventory = inventory_resource.new()
 
 
@@ -61,9 +68,9 @@ func _ready():
 	for child in $State_Machine_Move.get_children():
 		child.connect("landed", self, "_on_landing")
 	for child in $State_Machine_Move.get_children():
-		child.connect("entered_new_view", self, "_on_State_Machine_Move_entered_new_view")
-	for child in $State_Machine_Move.get_children():
 		child.connect("lock_target", self, "_on_lock_target")
+	for child in $Camera_Rig/State_Machine.get_children():
+		child.connect("entered_new_view", self, "_on_Camera_State_Machine_entered_new_view")
 	
 	#Set cast glow invisible(should think of another way to do this at start)
 	$Rig/Projectile_Position/cast_glow.visible = false
@@ -78,9 +85,11 @@ func _input(event):
 	if event.is_action_pressed("lock_target") and event.get_device() == 0:
 		lock_target()
 	
-#	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		for node in get_tree().get_nodes_in_group("actor"):
-#			print(node.name)
+	if event.is_action_pressed("debug_input") and event.get_device() == 0:
+		if inventory.equipped_items["Arrow"]:
+			print(inventory.equipped_items["Arrow"].item_reference.name)
+		else:
+			print(null)
 
 
 func _physics_process(_delta):
@@ -204,6 +213,23 @@ func hit_effect(_effect_type):
 	return
 
 
+func save_data(save_game : Resource):
+	saved_values["inventory"] = inventory
+	saved_values["health"] = $Attributes/Health.health
+	saved_values["view_mode"] = $Camera_Rig/State_Machine.current_state.view_mode
+	
+	save_game.data[SAVE_KEY] = saved_values
+
+
+func load_data(save_game : Resource):
+	saved_values = save_game.data[SAVE_KEY]
+	
+	inventory = saved_values["inventory"]
+	$Attributes/Health.set_health(saved_values["health"])
+	for child in $Camera_Rig/State_Machine.get_children():
+		child.set_view_mode(saved_values["view_mode"])
+
+
 func _on_position_changed(position):
 	player_position = position
 	emit_signal("position_changed", position)
@@ -257,7 +283,7 @@ func _on_Targetting_Area_body_exited(body):
 		emit_signal("targets_changed", visible_targets)
 
 
-func _on_State_Machine_Move_entered_new_view(view_mode):
+func _on_Camera_State_Machine_entered_new_view(view_mode):
 	if view_mode == "first_person":
 		$Rig/Skeleton/Head.set_layer_mask_bit(0, false)
 		$Rig/Skeleton/Head.set_layer_mask_bit(20, true)

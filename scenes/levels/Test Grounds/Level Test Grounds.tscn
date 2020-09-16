@@ -68,6 +68,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30.5682, 3.20326, 113.293 )
 
 [node name="Loading Zone" parent="Triggers" instance=ExtResource( 4 )]
 transform = Transform( 10.7953, 0, 0, 0, 6.04998, 0, 0, 0, 10.7953, -0.527477, -7.68141, -48.5563 )
+level_to = "Black Expanse"
 
 [node name="Void Plane" parent="Triggers" instance=ExtResource( 2 )]
 transform = Transform( 639.179, 0, 0, 0, 2.5, 0, 0, 0, 1065.3, -8.30218, -448.195, 0 )

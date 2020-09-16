@@ -49,11 +49,6 @@ var land_height
 var surface_height
 var surfaced_height
 
-###Movement Variables
-#Centering Variables
-const centering_time = 12 #in frames
-var centering_time_left = 0
-
 ###Physics Variables
 var position
 var height
@@ -77,8 +72,14 @@ const snap_vector_default = Vector3(0,-1,0)
 var snap_vector = snap_vector_default #Used for Move_and_slide_with_snap
 
 #Centering Variables
+const centering_time = 12 #in frames
+var centering_time_left = 0
 var turn_angle = Vector2()
 var focus_angle_lim = Vector2(deg2rad(74), deg2rad(82))
+
+#View Change Variables
+const view_change_time = 10
+var view_change_time_left = 0
 
 #Player Flags
 var strafe_locked = false
@@ -110,7 +111,7 @@ func handle_input(event):
 	
 	if event.is_action_pressed("switch_view") and event.get_device() == 0 and view_mode == "first_person":
 		rotate_to_focus = true
-		reset_recenter()
+		reset_view_change_time()
 	
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
 #		print(owner.get_node("AnimationTree").get("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position"))
@@ -513,6 +514,11 @@ func reset_recenter():
 	centering_time_left = centering_time
 
 
+func reset_view_change_time():
+	centered = false
+	view_change_time_left = view_change_time
+
+
 func set_initialized_values(init_values_dic):
 	for value in init_values_dic:
 		init_values_dic[value] = self[value]
@@ -607,7 +613,7 @@ func _on_Camera_Rig_enter_new_view(string):
 	if view_mode == "first_person":
 		rotate_to_focus = true
 	if view_mode == "third_person":
-		emit_signal("entered_new_view", view_mode)
+		return
 
 
 func _on_death(death):

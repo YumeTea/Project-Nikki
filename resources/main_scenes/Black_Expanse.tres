@@ -1,8 +1,9 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://scripts/custom_classes/scene_resource.gd" type="Script" id=1]
+[ext_resource path="res://scripts/custom_resources/scene_resource.gd" type="Script" id=1]
 
 [resource]
 script = ExtResource( 1 )
 name = "Black Expanse"
+type = "Level"
 scene_path = "res://scenes/levels/Black Expanse/Level Black Expanse.tscn"

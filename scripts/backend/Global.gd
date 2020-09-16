@@ -73,3 +73,19 @@ func _on_SceneManager_scene_exited():
 	Player = null
 	Free_Cam = null
 
+###SETGETS
+func set_Player(player_node):
+	Player = player_node
+
+
+func get_Player():
+	return Player
+
+
+func set_Free_Cam(free_cam_node):
+	Free_Cam = free_cam_node
+
+
+func get_Free_Cam():
+	return Free_Cam
+

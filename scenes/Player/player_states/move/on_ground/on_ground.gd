@@ -13,7 +13,7 @@ func handle_input(event):
 
 func update(delta):
 	if in_water:
-		if Player.global_transform.origin.y < (surface_height - player_center):
+		if Player.global_transform.origin.y < (surface_height - player_height):
 			emit_signal("finished", "swim")
 	
 	if owner.is_on_floor() == false:

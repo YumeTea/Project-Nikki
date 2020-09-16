@@ -35,6 +35,9 @@ var finished_casting = false
 
 #Initializes state, changes animation, etc
 func enter():
+	equipped_items = owner.inventory.equipped_items
+	cycle_equipment()
+	
 	owner.get_node("AnimationTree").connect("animation_started", self, "on_animation_started")
 	owner.get_node("AnimationTree").connect("animation_finished", self, "on_animation_finished")
 
@@ -59,6 +62,17 @@ func update(delta):
 
 func on_animation_finished(_anim_name):
 	return
+
+
+func cycle_equipment():
+	if equipped_items != null:
+		for child in owner.get_node("Rig/Skeleton/Hand_L/Bow_Position").get_children():
+			child.queue_free()
+		if equipped_items["Bow"]:
+			var bow = load(equipped_items["Bow"].item_reference.model_scene).instance()
+			owner.get_node("Rig/Skeleton/Hand_L/Bow_Position").add_child(bow)
+	
+		equipped_bow = equipped_items["Bow"]
 
 
 #Starts anim and calls function to animate blend amount
@@ -105,7 +119,6 @@ func set_initialized_values(init_values_dic):
 
 func connect_player_signals():
 	owner.connect("focus_target", self, "_on_Player_focus_target_changed")
-	owner.inventory.connect("equipped_items_changed", self, "_on_Player_equipped_items_changed")
 	owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_move_state_changed")
 	owner.get_node("State_Machine_Action").connect("initialized_values_dic_set", self, "_on_State_Machine_Action_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").connect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
@@ -122,7 +135,6 @@ func connect_player_signals():
 
 func disconnect_player_signals():
 	owner.disconnect("focus_target", self, "_on_Player_focus_target_changed")
-	owner.inventory.disconnect("equipped_items_changed", self, "_on_Player_equipped_items_changed")
 	owner.get_node("State_Machine_Move").disconnect("move_state_changed", self, "_on_move_state_changed")
 	owner.get_node("State_Machine_Action").disconnect("initialized_values_dic_set", self, "_on_State_Machine_Action_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").disconnect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
@@ -141,10 +153,6 @@ func disconnect_player_signals():
 
 func _on_Player_focus_target_changed(target_pos_node):
 	focus_object = target_pos_node
-
-
-func _on_Player_equipped_items_changed(equipped_items_dict):
-	equipped_items = equipped_items_dict
 
 
 func _on_move_state_changed(move_state):

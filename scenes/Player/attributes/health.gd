@@ -33,6 +33,9 @@ func health_depleted():
 	emit_signal("health_depleted", death)
 
 
+func set_health(value):
+	health = value
+	emit_signal("health_changed", health)
 
 
 

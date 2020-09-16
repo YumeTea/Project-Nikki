@@ -12,21 +12,27 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "Inventory",
 "language": "GDScript",
-"path": "res://scripts/custom_classes/inventory_resource.gd"
+"path": "res://scripts/custom_resources/inventory_resource.gd"
 }, {
 "base": "Resource",
 "class": "ItemResource",
 "language": "GDScript",
-"path": "res://scripts/custom_classes/item_resource.gd"
+"path": "res://scripts/custom_resources/item_resource.gd"
+}, {
+"base": "Resource",
+"class": "SaveGame_Resource",
+"language": "GDScript",
+"path": "res://scripts/custom_resources/savegame_resource.gd"
 }, {
 "base": "Resource",
 "class": "SceneResource",
 "language": "GDScript",
-"path": "res://scripts/custom_classes/scene_resource.gd"
+"path": "res://scripts/custom_resources/scene_resource.gd"
 } ]
 _global_script_class_icons={
 "Inventory": "",
 "ItemResource": "",
+"SaveGame_Resource": "",
 "SceneResource": ""
 }
 
@@ -35,6 +41,7 @@ _global_script_class_icons={
 config/name="Project Nikki"
 run/main_scene="res://scenes/Main Scene.tscn"
 config/icon="res://resources/images/icon.png"
+config/version="3.2.3-rc6"
 
 [autoload]
 
@@ -42,6 +49,7 @@ Global="*res://scripts/backend/Global.gd"
 SceneBackgroundLoader="*res://scripts/backend/Scene Loader/SceneBackgroundLoader.gd"
 SceneDatabase="*res://scripts/managers/SceneDatabase.gd"
 ItemDatabase="*res://scripts/managers/ItemDatabase.gd"
+SaveManager="*res://scripts/managers/SaveManager.gd"
 SceneManager="*res://scripts/managers/SceneManager.gd"
 GameManager="*res://scripts/managers/GameManager.gd"
 

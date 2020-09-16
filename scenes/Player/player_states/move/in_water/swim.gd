@@ -8,7 +8,7 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	surfaced_height = surface_height - (player_center / 1.2)
+	surfaced_height = surface_height - player_height
 	snap_vector = Vector3(0,0,0)
 	
 	connect_player_signals()

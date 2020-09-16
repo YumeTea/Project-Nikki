@@ -108,8 +108,12 @@ func enter_first_person():
 			
 			Pivot.rotate_x(centering_angle.x)
 			focus_angle.x += centering_angle.x
-		
+	
+	#Decrement view change time
 	view_change_time_left -= 1
+	
+	if view_change_time_left <= 0:
+		emit_signal("entered_new_view", view_mode)
 
 
 func look_first_person():

@@ -10,6 +10,7 @@ signal camera_direction_changed(camera_direction)
 signal focus_direction_changed(focus_direction)
 signal view_locked(is_view_locked, centering_time_left)
 signal enter_new_view(view_mode)
+signal entered_new_view(view_mode)
 signal view_blocked(is_obscured)
 signal break_target
 
@@ -238,6 +239,12 @@ func calculate_local_x_rotation(direction):
 		x_rotation = -test_direction.angle_to(direction)
 	
 	return x_rotation
+
+
+func set_view_mode(new_view_mode : String):
+	if view_mode != new_view_mode:
+		view_change_time_left = 1.0
+		emit_signal("finished",  new_view_mode)
 
 
 func connect_camera_signals():

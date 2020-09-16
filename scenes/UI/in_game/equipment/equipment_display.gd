@@ -12,6 +12,7 @@ onready var Arrow_Rotater = $Arrow_Display/Arrow_Viewport/Viewport/Item_Pivot
 onready var Arrow_Count = $Arrow_Display/Background/Arrow_Count_Background/Arrow_Count
 onready var Arrow_Name = $Arrow_Display/Background/Arrow_Name
 
+
 func _ready():
 	#Initialize inventory dicts
 	for node in get_tree().get_nodes_in_group("actor"):

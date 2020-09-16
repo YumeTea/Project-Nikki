@@ -45,7 +45,7 @@ viewport_path = NodePath("Arrow_Display/Arrow_Viewport/Viewport")
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
 shader = SubResource( 1 )
-shader_param/background_color = Color( 0.0705882, 0, 0.239216, 1 )
+shader_param/background_color = Color( 0.0352941, 0, 0.121569, 1 )
 shader_param/border_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
 shader_param/background_texture = ExtResource( 3 )
 shader_param/viewport_texture = SubResource( 2 )
@@ -79,7 +79,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id=5]
 shader = SubResource( 4 )
-shader_param/background_color = Color( 0.0705882, 0, 0.239216, 1 )
+shader_param/background_color = Color( 0.0352941, 0, 0.121569, 1 )
 shader_param/border_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
 shader_param/background_texture = ExtResource( 3 )
 

@@ -81,8 +81,8 @@ func handle_input(event):
 		reset_interpolate()
 	
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(Pivot.global_transform.basis.get_rotation_quat().get_euler())
-#		print(focus_angle.x)
+#		view_change_time_left = 1
+#		emit_signal("finished", "first_person")
 	
 	.handle_input(event)
 
@@ -136,6 +136,9 @@ func enter_third_person():
 			focus_angle.x += centering_angle.x
 		
 	view_change_time_left -= 1
+	
+	if view_change_time_left <= 0:
+		emit_signal("entered_new_view", view_mode)
 
 
 func look_third_person():
