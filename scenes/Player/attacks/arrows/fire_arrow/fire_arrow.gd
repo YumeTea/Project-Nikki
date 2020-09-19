@@ -18,7 +18,8 @@ var gravity = -9.8
 var weight = 0.02
 
 #Item variables
-var damage_dealt = 32
+var hit_effect = "fire"
+var damage_dealt = 128
 var despawn_time = 15
 
 #Interaction Variables
@@ -74,13 +75,13 @@ func impact():
 	for body in near_bodies:
 		#Hit effect type
 		if body in get_tree().get_nodes_in_group("actor"):
-			body.hit_effect("fire")
+			body.hit_effect(hit_effect)
 		#Damage
 		if body in get_tree().get_nodes_in_group("vulnerable"):
-			body.take_damage(128)
+			body.take_damage(damage_dealt)
 	
 	#Hit anim
-	if impact_effect:
+	if impact_burst:
 		impact_effect = impact_burst.instance()
 		impact_effect.start($CollisionRayCast.get_collision_point())
 		owner.add_child(impact_effect)

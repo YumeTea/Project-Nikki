@@ -50,8 +50,6 @@ func exit():
 
 #Creates output based on the input event passed in
 func handle_input(event):
-#	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(get_tree().current_scene.name)
 	.handle_input(event)
 
 
@@ -119,6 +117,7 @@ func set_initialized_values(init_values_dic):
 
 func connect_player_signals():
 	owner.connect("focus_target", self, "_on_Player_focus_target_changed")
+	owner.connect("inventory_loaded", self, "_on_Player_inventory_loaded")
 	owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_move_state_changed")
 	owner.get_node("State_Machine_Action").connect("initialized_values_dic_set", self, "_on_State_Machine_Action_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").connect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
@@ -135,6 +134,7 @@ func connect_player_signals():
 
 func disconnect_player_signals():
 	owner.disconnect("focus_target", self, "_on_Player_focus_target_changed")
+	owner.disconnect("inventory_loaded", self, "_on_Player_inventory_loaded")
 	owner.get_node("State_Machine_Move").disconnect("move_state_changed", self, "_on_move_state_changed")
 	owner.get_node("State_Machine_Action").disconnect("initialized_values_dic_set", self, "_on_State_Machine_Action_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").disconnect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
@@ -153,6 +153,12 @@ func disconnect_player_signals():
 
 func _on_Player_focus_target_changed(target_pos_node):
 	focus_object = target_pos_node
+
+
+#Equip correct items on character rig once inventory is loaded
+func _on_Player_inventory_loaded(inventory_res):
+	equipped_items = inventory_res.equipped_items
+	cycle_equipment()
 
 
 func _on_move_state_changed(move_state):

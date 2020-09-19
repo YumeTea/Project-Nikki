@@ -33,7 +33,7 @@ func handle_input(event):
 	if state_move in ground_states:
 		if event.is_action_pressed("cast") and event.get_device() == 0:
 			emit_signal("finished", "cast")
-		if event.is_action_pressed("draw_bow") and event.get_device() == 0:
+		if Input.is_action_pressed("draw_bow") and event.get_device() == 0:
 			if equipped_bow != null:
 				emit_signal("finished", "bow")
 	
@@ -41,7 +41,6 @@ func handle_input(event):
 		owner.inventory.next_item("Bow")
 		equipped_items = owner.inventory.equipped_items
 		cycle_equipment()
-		
 	
 	if event.is_action_pressed("arrow_next") and event.get_device() == 0:
 		owner.inventory.next_item("Arrow")
@@ -58,6 +57,11 @@ func handle_input(event):
 
 #Acts as the _process method would
 func update(delta):
+	if state_move in ground_states:
+		if Input.is_action_pressed("draw_bow"):
+				if equipped_bow != null:
+					emit_signal("finished", "bow")
+	
 	#Change left arm anim to match held item
 	set_left_hand_anim()
 	

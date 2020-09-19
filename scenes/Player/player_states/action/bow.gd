@@ -144,7 +144,9 @@ func fire_arrow():
 	arrow_drawn = false
 	drawing_arrow = false
 	
-	owner.inventory.remove_item(equipped_arrow.item_reference.name, 1)
+	if equipped_arrow:
+		owner.inventory.remove_item(equipped_arrow.item_reference.name, 1)
+	
 	emit_signal("finished", "none")
 
 
@@ -162,13 +164,13 @@ func pivot_bow():
 	#Looking up
 	if focus_angle.x <= 0:
 		bow_offset = (((focus_angle.x / deg2rad(57.5)) * bow_up_travel_lim))
-		Bow_IK.get_node("Hand_L_Controller").transform.origin.z = bow_offset
-		Bow_IK.get_node("Hand_R_Controller").transform.origin.z = bow_offset
+		Bow_IK.get_node("Hand_L_Cont").transform.origin.z = bow_offset
+		Bow_IK.get_node("Hand_R_Cont").transform.origin.z = bow_offset
 	#Looking down
 	if focus_angle.x > 0:
 		bow_offset = (((focus_angle.x / deg2rad(57.5)) * bow_down_travel_lim))
-		Bow_IK.get_node("Hand_L_Controller").transform.origin.z = bow_offset
-		Bow_IK.get_node("Hand_R_Controller").transform.origin.z = bow_offset
+		Bow_IK.get_node("Hand_L_Cont").transform.origin.z = bow_offset
+		Bow_IK.get_node("Hand_R_Cont").transform.origin.z = bow_offset
 
 
 func reset_bow_angle():

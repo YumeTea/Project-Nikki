@@ -1,7 +1,9 @@
 extends "res://scenes/Player/player_states/move/motion.gd"
 
 
-
+func initialize(init_values_dic):
+	for value in init_values_dic:
+		self[value] = init_values_dic[value]
 
 
 #Initializes state, changes animation, etc

@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource( 1 )
 name = "Fire Arrow"
-index = 2
+index = 3
 removable = true
 stackable = true
 max_stack_size = 8

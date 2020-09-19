@@ -4,20 +4,23 @@ extends KinematicBody
 Update target reticle scene when AnimatedSprite3D is fixed
 """
 
-
 signal position_changed(current_position)
 signal velocity_changed(current_velocity)
 signal facing_angle_changed(facing_angle)
 signal is_falling(is_falling)
 signal targets_changed(visible_targets)
 signal focus_target(target_pos_node)
-signal entered_new_view(view_mode)
 
+#State Machine Signals
+signal entered_new_view(view_mode)
+signal inventory_loaded(inventory)
+
+#Scene Change Signals
 signal entered_area(area_type, surface_height)
 signal exited_area(area_type)
 
 #Save Data Variables
-onready var SAVE_KEY = "nikki_" + name
+onready var DATA_PATH = "res://data/temp/player_data.tres"
 var saved_values = {
 	"inventory": null,
 	"health": 0.0,
@@ -53,7 +56,7 @@ var main_target
 var targetting = false
 
 #Inventory Variables
-var inventory_resource = load("res://scripts/custom_resources/inventory_resource.gd")
+const inventory_resource = preload("res://scripts/custom_resources/inventory_resource.gd")
 var inventory = inventory_resource.new()
 
 
@@ -84,12 +87,6 @@ func _ready():
 func _input(event):
 	if event.is_action_pressed("lock_target") and event.get_device() == 0:
 		lock_target()
-	
-	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-		if inventory.equipped_items["Arrow"]:
-			print(inventory.equipped_items["Arrow"].item_reference.name)
-		else:
-			print(null)
 
 
 func _physics_process(_delta):
@@ -213,21 +210,23 @@ func hit_effect(_effect_type):
 	return
 
 
-func save_data(save_game : Resource):
+func save_data(save_file : Resource):
 	saved_values["inventory"] = inventory
 	saved_values["health"] = $Attributes/Health.health
 	saved_values["view_mode"] = $Camera_Rig/State_Machine.current_state.view_mode
 	
-	save_game.data[SAVE_KEY] = saved_values
+	save_file.data[DATA_PATH] = saved_values
 
 
 func load_data(save_game : Resource):
-	saved_values = save_game.data[SAVE_KEY]
+	saved_values = save_game.data[DATA_PATH]
 	
 	inventory = saved_values["inventory"]
 	$Attributes/Health.set_health(saved_values["health"])
 	for child in $Camera_Rig/State_Machine.get_children():
 		child.set_view_mode(saved_values["view_mode"])
+	
+	emit_signal("inventory_loaded", inventory)
 
 
 func _on_position_changed(position):

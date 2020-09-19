@@ -75,6 +75,7 @@ func player_camera_old():
 	
 	emit_signal("free_cam_position_changed", global_transform.origin)
 
+
 func bound_angle(angle):
 	#Angle > 180
 	if (angle >= deg2rad(180)):

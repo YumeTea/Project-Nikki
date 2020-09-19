@@ -1,10 +1,10 @@
-[gd_scene load_steps=117 format=2]
+[gd_scene load_steps=124 format=2]
 
 [ext_resource path="res://scenes/Player/player_states/move/on_ground/idle.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Player/player/player_controller.gd" type="Script" id=2]
 [ext_resource path="res://scenes/Player/player_states/state_machine_move.gd" type="Script" id=3]
 [ext_resource path="res://scenes/UI/debug UI/debug value display.tscn" type="PackedScene" id=4]
-[ext_resource path="res://models/characters/Nikki/model/Nikki Character Model Test.tscn" type="PackedScene" id=5]
+[ext_resource path="res://models/characters/Nikki/model/Nikki Character Model.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/camera/player cam/Camera_Rig.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/UI/in_game/UI_In_Game.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/Player/player_states/move/in_air/jump.gd" type="Script" id=8]
@@ -45,6 +45,10 @@
 [ext_resource path="res://models/characters/Nikki/textures/Shorts Texture.png" type="Texture" id=43]
 [ext_resource path="res://shaders/cel_shading/shader_test_scene/cel_shader_gradient.tres" type="Gradient" id=44]
 [ext_resource path="res://scenes/Player/player_states/move/in_water/swim.gd" type="Script" id=45]
+[ext_resource path="res://scenes/Player/player/bow_ik/bow_ik_magnet.gd" type="Script" id=46]
+[ext_resource path="res://models/characters/Nikki/model/anim/Ledge_Hang.anim" type="Animation" id=47]
+[ext_resource path="res://scenes/Player/player_states/move/in_air/ledge_hang.gd" type="Script" id=48]
+[ext_resource path="res://scenes/Player/player/ledge_hang_system/Ledge_Hang_System.tscn" type="PackedScene" id=49]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Jump"
@@ -1486,7 +1490,7 @@ tracks/100/keys = PoolRealArray( 0, 1, 0, -0.52328, -0.00958657, 0, 0, 0, 1, 1, 
 
 [sub_resource type="AnimationNodeBlend2" id=3]
 filter_enabled = true
-filters = [ "AnimationTree", "Rig/Projectile_Position/cast_glow:scale", "Rig/Projectile_Position/cast_glow:translation", "Rig/Projectile_Position/cast_glow:visible", "Rig/Projectile_Position:translation", "Rig/Skeleton/Bow_IK/Hand_L_Controller/Hand_L_Position:translation", "Rig/Skeleton/Bow_IK/Hand_R_Controller/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Projectile_Position:rotation_degrees", "Rig/Skeleton/Bow_IK/Projectile_Position:translation", "Rig/Skeleton/SkeletonIK_Arrow", "Rig/Skeleton/SkeletonIK_Arrow:interpolation", "Rig/Skeleton/SkeletonIK_Bow", "Rig/Skeleton/SkeletonIK_Bow:interpolation", "Rig/Skeleton:arm_ik_l", "Rig/Skeleton:arm_ik_r", "Rig/Skeleton:bicep_l", "Rig/Skeleton:bicep_r", "Rig/Skeleton:chest", "Rig/Skeleton:elbow_l", "Rig/Skeleton:elbow_r", "Rig/Skeleton:forearm_l", "Rig/Skeleton:forearm_r", "Rig/Skeleton:hand_index_1_l", "Rig/Skeleton:hand_index_1_r", "Rig/Skeleton:hand_index_2_l", "Rig/Skeleton:hand_index_2_r", "Rig/Skeleton:hand_index_3_l", "Rig/Skeleton:hand_index_3_r", "Rig/Skeleton:hand_index_controller_l", "Rig/Skeleton:hand_index_controller_r", "Rig/Skeleton:hand_l", "Rig/Skeleton:hand_middle_1_l", "Rig/Skeleton:hand_middle_1_r", "Rig/Skeleton:hand_middle_2_l", "Rig/Skeleton:hand_middle_2_r", "Rig/Skeleton:hand_middle_3_l", "Rig/Skeleton:hand_middle_3_r", "Rig/Skeleton:hand_middle_controller_l", "Rig/Skeleton:hand_middle_controller_r", "Rig/Skeleton:hand_pinky_1_l", "Rig/Skeleton:hand_pinky_1_r", "Rig/Skeleton:hand_pinky_2_l", "Rig/Skeleton:hand_pinky_2_r", "Rig/Skeleton:hand_pinky_3_l", "Rig/Skeleton:hand_pinky_3_r", "Rig/Skeleton:hand_pinky_controller_l", "Rig/Skeleton:hand_pinky_controller_r", "Rig/Skeleton:hand_r", "Rig/Skeleton:hand_ring_1_l", "Rig/Skeleton:hand_ring_1_r", "Rig/Skeleton:hand_ring_2_l", "Rig/Skeleton:hand_ring_2_r", "Rig/Skeleton:hand_ring_3_l", "Rig/Skeleton:hand_ring_3_r", "Rig/Skeleton:hand_ring_controller_l", "Rig/Skeleton:hand_ring_controller_r", "Rig/Skeleton:hand_thumb_1_l", "Rig/Skeleton:hand_thumb_1_r", "Rig/Skeleton:hand_thumb_2_l", "Rig/Skeleton:hand_thumb_2_r", "Rig/Skeleton:hand_thumb_3_l", "Rig/Skeleton:hand_thumb_3_r", "Rig/Skeleton:hand_thumb_controller_l", "Rig/Skeleton:hand_thumb_controller_r", "Rig/Skeleton:head", "Rig/Skeleton:neck", "Rig/Skeleton:shoulder_blade_l", "Rig/Skeleton:shoulder_blade_r", "Rig/Skeleton:shoulder_l", "Rig/Skeleton:shoulder_r", "Rig/Skeleton:spine", "State_Machine_Action/Bow" ]
+filters = [ "AnimationTree", "Rig/Projectile_Position/cast_glow:scale", "Rig/Projectile_Position/cast_glow:translation", "Rig/Projectile_Position/cast_glow:visible", "Rig/Projectile_Position:translation", "Rig/Skeleton/Bow_IK/Hand_L_Cont/Hand_L_Position:translation", "Rig/Skeleton/Bow_IK/Hand_L_Controller/Hand_L_Position:translation", "Rig/Skeleton/Bow_IK/Hand_R_Cont/Hand_R_Position:rotation_degrees", "Rig/Skeleton/Bow_IK/Hand_R_Cont/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Hand_R_Controller/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Projectile_Position:rotation_degrees", "Rig/Skeleton/Bow_IK/Projectile_Position:translation", "Rig/Skeleton/SkeletonIK_Arrow", "Rig/Skeleton/SkeletonIK_Arrow:interpolation", "Rig/Skeleton/SkeletonIK_Bow", "Rig/Skeleton/SkeletonIK_Bow:interpolation", "Rig/Skeleton:arm_ik_l", "Rig/Skeleton:arm_ik_r", "Rig/Skeleton:bicep_l", "Rig/Skeleton:bicep_r", "Rig/Skeleton:chest", "Rig/Skeleton:elbow_l", "Rig/Skeleton:elbow_r", "Rig/Skeleton:forearm_l", "Rig/Skeleton:forearm_r", "Rig/Skeleton:hand_index_1_l", "Rig/Skeleton:hand_index_1_r", "Rig/Skeleton:hand_index_2_l", "Rig/Skeleton:hand_index_2_r", "Rig/Skeleton:hand_index_3_l", "Rig/Skeleton:hand_index_3_r", "Rig/Skeleton:hand_index_controller_l", "Rig/Skeleton:hand_index_controller_r", "Rig/Skeleton:hand_l", "Rig/Skeleton:hand_middle_1_l", "Rig/Skeleton:hand_middle_1_r", "Rig/Skeleton:hand_middle_2_l", "Rig/Skeleton:hand_middle_2_r", "Rig/Skeleton:hand_middle_3_l", "Rig/Skeleton:hand_middle_3_r", "Rig/Skeleton:hand_middle_controller_l", "Rig/Skeleton:hand_middle_controller_r", "Rig/Skeleton:hand_pinky_1_l", "Rig/Skeleton:hand_pinky_1_r", "Rig/Skeleton:hand_pinky_2_l", "Rig/Skeleton:hand_pinky_2_r", "Rig/Skeleton:hand_pinky_3_l", "Rig/Skeleton:hand_pinky_3_r", "Rig/Skeleton:hand_pinky_controller_l", "Rig/Skeleton:hand_pinky_controller_r", "Rig/Skeleton:hand_r", "Rig/Skeleton:hand_ring_1_l", "Rig/Skeleton:hand_ring_1_r", "Rig/Skeleton:hand_ring_2_l", "Rig/Skeleton:hand_ring_2_r", "Rig/Skeleton:hand_ring_3_l", "Rig/Skeleton:hand_ring_3_r", "Rig/Skeleton:hand_ring_controller_l", "Rig/Skeleton:hand_ring_controller_r", "Rig/Skeleton:hand_thumb_1_l", "Rig/Skeleton:hand_thumb_1_r", "Rig/Skeleton:hand_thumb_2_l", "Rig/Skeleton:hand_thumb_2_r", "Rig/Skeleton:hand_thumb_3_l", "Rig/Skeleton:hand_thumb_3_r", "Rig/Skeleton:hand_thumb_controller_l", "Rig/Skeleton:hand_thumb_controller_r", "Rig/Skeleton:head", "Rig/Skeleton:neck", "Rig/Skeleton:shoulder_blade_l", "Rig/Skeleton:shoulder_blade_r", "Rig/Skeleton:shoulder_l", "Rig/Skeleton:shoulder_r", "Rig/Skeleton:spine", "State_Machine_Action/Bow" ]
 
 [sub_resource type="AnimationNodeBlend2" id=4]
 filter_enabled = true
@@ -1633,7 +1637,7 @@ graph_offset = Vector2( -224.221, -194.252 )
 [sub_resource type="AnimationNodeTimeScale" id=42]
 
 [sub_resource type="AnimationNodeBlendTree" id=43]
-graph_offset = Vector2( -940.495, 7.2963 )
+graph_offset = Vector2( -779, 95 )
 nodes/MovexAction/node = SubResource( 3 )
 nodes/MovexAction/position = Vector2( -140, 120 )
 nodes/MovexLeftHand/node = SubResource( 4 )
@@ -1798,6 +1802,13 @@ height = 5.35
 
 [sub_resource type="SphereShape" id=71]
 
+[sub_resource type="CubeMesh" id=72]
+
+[sub_resource type="CubeMesh" id=73]
+
+[sub_resource type="SpatialMaterial" id=74]
+albedo_color = Color( 0.752941, 0.752941, 0.752941, 1 )
+
 [node name="Player" type="KinematicBody" groups=[
 "actor",
 "save",
@@ -1819,6 +1830,7 @@ anims/Fall = ExtResource( 21 )
 anims/Idle = ExtResource( 26 )
 anims/Jump = SubResource( 1 )
 anims/Land = SubResource( 2 )
+anims/Ledge_Hang = ExtResource( 47 )
 anims/None = ExtResource( 27 )
 anims/Run = ExtResource( 28 )
 anims/Walk = ExtResource( 29 )
@@ -1855,11 +1867,14 @@ script = ExtResource( 1 )
 [node name="Walk" type="Node" parent="State_Machine_Move"]
 script = ExtResource( 9 )
 
+[node name="Jump" type="Node" parent="State_Machine_Move"]
+script = ExtResource( 8 )
+
 [node name="Fall" type="Node" parent="State_Machine_Move"]
 script = ExtResource( 11 )
 
-[node name="Jump" type="Node" parent="State_Machine_Move"]
-script = ExtResource( 8 )
+[node name="Ledge_Hang" type="Node" parent="State_Machine_Move"]
+script = ExtResource( 48 )
 
 [node name="Swim" type="Node" parent="State_Machine_Move"]
 script = ExtResource( 45 )
@@ -1897,12 +1912,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.89, 0 )
 [node name="Rig" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.11, 0 )
 
-[node name="Skeleton" parent="Rig" index="0"]
-bones/0/bound_children = [ NodePath("Foot_Floor_L") ]
-bones/47/bound_children = [ NodePath("Hand_L") ]
-bones/73/bound_children = [ NodePath("Hand_R") ]
-bones/96/bound_children = [ NodePath("Foot_Floor_R") ]
-
 [node name="Body Simplified" parent="Rig/Skeleton" index="0"]
 material/0 = SubResource( 49 )
 material/1 = SubResource( 52 )
@@ -1918,17 +1927,26 @@ material/2 = SubResource( 52 )
 [node name="Bow_IK" type="Spatial" parent="Rig/Skeleton" index="2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.8, 0.3 )
 
-[node name="Hand_L_Controller" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
+[node name="Hand_L_Cont" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
 
-[node name="Hand_L_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_L_Controller"]
-transform = Transform( -0.448772, -0.0851308, 0.889582, 0.891873, 0.0199792, 0.45184, -0.0562385, 0.996167, 0.0669606, 0.162883, -0.553506, 2.62704 )
+[node name="Hand_L_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_L_Cont"]
+transform = Transform( -0.448772, -0.0851308, 0.889582, 0.891873, 0.0199792, 0.45184, -0.0562385, 0.996167, 0.0669606, 0.162883, -0.553506, 1.91087 )
 
-[node name="Hand_R_Controller" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
+[node name="Hand_L_Magnet" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_L_Cont"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.19, -1.3 )
+script = ExtResource( 32 )
 
-[node name="Hand_R_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_R_Controller"]
-transform = Transform( -0.024817, 0.00931351, -0.999648, -0.996517, 0.0794076, 0.025479, 0.0796171, 0.996798, 0.00731041, -0.17, -0.404, -0.094 )
+[node name="Hand_R_Cont" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
+
+[node name="Hand_R_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_R_Cont"]
+transform = Transform( 0.018769, 0.0242496, -0.999529, -0.994643, 0.102096, -0.0162003, 0.101655, 0.994478, 0.0260359, -0.208635, -0.358156, 1.17529 )
+
+[node name="Hand_R_Magnet" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_R_Cont"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.962, -2.8 )
+script = ExtResource( 46 )
 
 [node name="Raycast_Lineup" type="RayCast" parent="Rig/Skeleton/Bow_IK"]
+visible = false
 cast_to = Vector3( 0, 0, 10 )
 
 [node name="Projectile_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
@@ -1936,6 +1954,11 @@ transform = Transform( 1, 0, 0, 0, 0.999848, 0.0174524, 0, -0.0174524, 0.999848,
 
 [node name="arrow lineup" type="Position3D" parent="Rig/Skeleton/Bow_IK/Projectile_Position"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0573506, 0.287355 )
+visible = false
+
+[node name="arrow lineup 2" type="Position3D" parent="Rig/Skeleton/Bow_IK/Projectile_Position"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0807755, -0.144093, 0 )
+visible = false
 
 [node name="Foot_IK" type="Spatial" parent="Rig/Skeleton" index="3"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0 )
@@ -1946,8 +1969,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0 )
 transform = Transform( -1, 3.22423e-07, -2.22677e-09, -1.67372e-07, -0.516727, 0.85615, 2.79227e-07, 0.85615, 0.516727, 0.000319988, 0.205547, -0.245259 )
 
 [node name="Foot_L_Magnet" type="Position3D" parent="Rig/Skeleton/Foot_IK/Foot_L_Cont"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 1.3, 1.2 )
-visible = false
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 1.3, 3.2 )
 script = ExtResource( 33 )
 
 [node name="Foot_R_Cont" type="Position3D" parent="Rig/Skeleton/Foot_IK"]
@@ -1956,26 +1978,24 @@ script = ExtResource( 33 )
 transform = Transform( -1, -3.25841e-07, 0, 1.68371e-07, -0.516728, 0.85615, -2.78969e-07, 0.85615, 0.516728, 0, 0.206, -0.245 )
 
 [node name="Foot_R_Magnet" type="Position3D" parent="Rig/Skeleton/Foot_IK/Foot_R_Cont"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.3, 1.2 )
-visible = false
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.3, 3.2 )
 script = ExtResource( 33 )
 
 [node name="Hand_L" type="BoneAttachment" parent="Rig/Skeleton" index="4"]
-transform = Transform( -0.0393616, 0.730879, 0.681371, 0.0369263, -0.680371, 0.731938, 0.998542, 0.0539703, -0.000207722, 2.16054, 3.49606, -0.161456 )
+transform = Transform( -0.0393616, 0.730879, 0.681371, 0.0369264, -0.680371, 0.731938, 0.998542, 0.0539703, -0.000207774, 2.16054, 3.49606, -0.161456 )
 bone_name = "hand_l"
 
 [node name="Bow_Position" type="Position3D" parent="Rig/Skeleton/Hand_L"]
 transform = Transform( 0.999998, -2.6077e-08, 2.7474e-08, 3.72529e-08, 0.999998, -1.49012e-07, 1.14553e-07, 0, 0.999998, 0.310419, 0.22278, -0.106312 )
 
 [node name="Keeper_Bow" parent="Rig/Skeleton/Hand_L/Bow_Position" instance=ExtResource( 30 )]
-visible = false
 
 [node name="Hand_R" type="BoneAttachment" parent="Rig/Skeleton" index="5"]
-transform = Transform( -0.0393619, -0.730879, -0.68137, -0.0369248, -0.680369, 0.731939, -0.998543, 0.0539696, -0.000206321, -2.16054, 3.49607, -0.161459 )
+transform = Transform( -0.0393616, -0.730879, -0.68137, -0.036925, -0.680369, 0.731939, -0.998542, 0.0539695, -0.000207022, -2.16054, 3.49607, -0.161459 )
 bone_name = "hand_r"
 
 [node name="Arrow_Position" type="Position3D" parent="Rig/Skeleton/Hand_R"]
-transform = Transform( 0.0951196, -0.99513, -0.0258377, -0.0173634, -0.02761, 0.999467, -0.995316, -0.0946203, -0.0199051, -0.0216441, 0.289794, -0.0852602 )
+transform = Transform( -6.51926e-08, 1, 1.63913e-07, -2.04891e-08, 5.96046e-08, 0.999999, 1, 2.02563e-08, 5.21541e-08, -0.0579748, 0.282602, -0.10033 )
 
 [node name="Arrow" parent="Rig/Skeleton/Hand_R/Arrow_Position" instance=ExtResource( 31 )]
 visible = false
@@ -2002,34 +2022,26 @@ cast_to = Vector3( 0, -1.34, 0 )
 process_priority = 1
 root_bone = "bicep_l"
 tip_bone = "hand_l"
+interpolation = 0.124503
 use_magnet = true
 magnet = Vector3( 2, 5.5, -1 )
-target_node = NodePath("../Bow_IK/Hand_L_Controller/Hand_L_Position")
-
-[node name="Magnet" type="Position3D" parent="Rig/Skeleton/SkeletonIK_Bow"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 5.5, -1 )
-visible = false
-script = ExtResource( 32 )
+target_node = NodePath("../Bow_IK/Hand_L_Cont/Hand_L_Position")
 
 [node name="SkeletonIK_Arrow" type="SkeletonIK" parent="Rig/Skeleton" index="9"]
 process_priority = 1
 root_bone = "bicep_r"
 tip_bone = "hand_r"
+interpolation = 0.124503
 use_magnet = true
-magnet = Vector3( -3, 7, -2 )
-target_node = NodePath("../Bow_IK/Hand_R_Controller/Hand_R_Position")
-
-[node name="Magnet" type="Position3D" parent="Rig/Skeleton/SkeletonIK_Arrow"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 7, -2 )
-visible = false
-script = ExtResource( 32 )
+magnet = Vector3( -3, 6.762, -2.5 )
+target_node = NodePath("../Bow_IK/Hand_R_Cont/Hand_R_Position")
 
 [node name="SkeletonIK_Foot_L" type="SkeletonIK" parent="Rig/Skeleton" index="10"]
 process_priority = 1
 root_bone = "femur_l"
 tip_bone = "talus_l"
 use_magnet = true
-magnet = Vector3( 0.3, 1.3, 1.2 )
+magnet = Vector3( 0.3, 1.3, 3.2 )
 target_node = NodePath("../Foot_IK/Foot_L_Cont/Foot_L_Pos")
 
 [node name="SkeletonIK_Foot_R" type="SkeletonIK" parent="Rig/Skeleton" index="11"]
@@ -2037,7 +2049,7 @@ process_priority = 1
 root_bone = "femur_r"
 tip_bone = "talus_r"
 use_magnet = true
-magnet = Vector3( -0.3, 1.3, 1.2 )
+magnet = Vector3( -0.3, 1.3, 3.2 )
 target_node = NodePath("../Foot_IK/Foot_R_Cont/Foot_R_Pos")
 
 [node name="Projectile_Position" type="Position3D" parent="Rig"]
@@ -2053,6 +2065,14 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
 enabled = true
 cast_to = Vector3( 0, -4.18, 0 )
 
+[node name="Ledge_Hang_System" parent="Rig" instance=ExtResource( 49 )]
+
+[node name="Area" parent="Rig/Ledge_Hang_System" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.28, 0.963 )
+
+[node name="CollisionShape" parent="Rig/Ledge_Hang_System/Area" index="0"]
+transform = Transform( 1, 0, 0, 0, 0.1, 0, 0, 0, 1, 0, 0, 0 )
+
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.175, -0.042 )
 shape = SubResource( 70 )
@@ -2066,8 +2086,9 @@ layer = 0
 
 [node name="Targetting_Area" type="Area" parent="."]
 transform = Transform( 176, 0, 0, 0, 176, 0, 0, 0, 176, 0, 4.89, 0 )
-collision_layer = 2
-collision_mask = 5
+input_ray_pickable = false
+collision_layer = 0
+collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape" parent="Targetting_Area"]
 shape = SubResource( 71 )
@@ -2076,8 +2097,21 @@ shape = SubResource( 71 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.89, 0 )
 
 [node name="Timer" type="Timer" parent="."]
-[connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
+
+[node name="Temp" type="Node" parent="."]
+
+[node name="Ledge" type="MeshInstance" parent="Temp"]
+transform = Transform( 2, 0, 0, 0, 0.1, 0, 0, 0, 2, 0, 7.19104, 0 )
+visible = false
+mesh = SubResource( 72 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="Temp"]
+transform = Transform( 1.2941, 0, 0.965926, 0, 5, 0, -4.82963, 0, 0.258819, 1.49735, 2.38615, 0.157198 )
+mesh = SubResource( 73 )
+material/0 = SubResource( 74 )
 [connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
+[connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
 [connection signal="is_falling" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_is_falling"]
 [connection signal="position_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_position_changed"]
 [connection signal="targets_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_targets_changed"]
@@ -2097,3 +2131,5 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.89, 0 )
 [connection signal="body_exited" from="Targetting_Area" to="." method="_on_Targetting_Area_body_exited"]
 
 [editable path="Rig"]
+
+[editable path="Rig/Ledge_Hang_System"]

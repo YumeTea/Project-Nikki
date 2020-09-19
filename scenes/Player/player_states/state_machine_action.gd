@@ -39,8 +39,8 @@ func _change_state(state_name): #state_machine.gd does the generalized work
 	if not _active:
 		return
 	
-	##New State initialization (excludes idle for some reason)
-	if state_name in ["none", "bow", "cast", "void"]:
+	##State variable initialization (all states are initialized)
+	if !(state_name in ["previous"]):
 		#Set initialized values in old state for transfer
 		current_state.set_initialized_values(current_state.initialized_values)
 		#Transfer initialized values to new state

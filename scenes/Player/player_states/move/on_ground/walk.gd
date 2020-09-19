@@ -141,7 +141,7 @@ func walk_free(delta):
 		#Quick turn radius control right
 		elif turn_angle.y > (deg2rad(quick_turn_radius)):
 			turn_angle.y = (deg2rad(quick_turn_radius))
-		if turn_angle.y == 0:
+		if is_equal_approx(turn_angle.y, 0.0):
 			is_moving = true
 			quick_turn = false
 	

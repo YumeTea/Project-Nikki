@@ -243,7 +243,7 @@ func calculate_local_x_rotation(direction):
 
 func set_view_mode(new_view_mode : String):
 	if view_mode != new_view_mode:
-		view_change_time_left = 1.0
+		view_change_time_left = 2.0
 		emit_signal("finished",  new_view_mode)
 
 
@@ -284,11 +284,9 @@ func _on_Nikkiv2_focus_target(target_pos_node):
 		focus_object = target_pos_node
 		Head_Target.global_transform.origin = focus_object.global_transform.origin
 		targetting = true
-#		centering = true
 	else:
 		focus_object = target_pos_node
 		targetting = false
-#		centering = false
 
 
 func _on_State_Machine_Move_state_changed(move_state):
@@ -297,6 +295,7 @@ func _on_State_Machine_Move_state_changed(move_state):
 	if move_state != "Idle":
 		if state_action == "None" and aiming and Aim_Timer.is_stopped():
 			Aim_Timer.start(1.0)
+
 
 func _on_State_Machine_Action_state_changed(action_state):
 	#Before storing new state

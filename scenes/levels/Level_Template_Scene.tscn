@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/objects/event_triggers/Gate.tscn" type="PackedScene" id=1]
+
+[node name="Level_Template_Scene" type="Spatial" groups=[
+"world",
+]]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="Actors" type="Node" parent="." groups=[
+"group_node",
+]]
+
+[node name="Collectibles" type="Node" parent="." groups=[
+"group_node",
+]]
+
+[node name="Environment_Objects" type="Node" parent="." groups=[
+"group_node",
+]]
+
+[node name="Triggers" type="Node" parent="." groups=[
+"group_node",
+]]
+
+[node name="Gate" parent="Triggers" instance=ExtResource( 1 )]

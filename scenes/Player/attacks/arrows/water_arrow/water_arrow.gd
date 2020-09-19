@@ -18,7 +18,8 @@ var gravity = -9.8
 var weight = 0.02
 
 #Item variables
-var damage_dealt = 32
+var hit_effect = "water"
+var damage_dealt = 0.0
 var despawn_time = 15
 
 #Interaction Variables
@@ -73,7 +74,7 @@ func calculate_velocity(delta):
 func impact():
 	for body in near_bodies:
 		if body in get_tree().get_nodes_in_group("actor"):
-			body.hit_effect("water")
+			body.hit_effect(hit_effect)
 	impact_effect = impact_burst.instance()
 	impact_effect.start($CollisionRayCast.get_collision_point())
 	owner.add_child(impact_effect)

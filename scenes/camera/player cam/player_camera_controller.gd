@@ -17,6 +17,10 @@ signal break_target
 #Player signals to pass on
 signal focus_target(focus_target_node)
 
+
+#Node Storage
+onready var Camera_Position = $Pivot/Cam_Position
+
 var focus_starting_angle = Vector2(deg2rad(15), deg2rad(0))
 var starting_view_mode = "third_person"
 
@@ -42,13 +46,9 @@ func _ready():
 	$State_Machine.get_node($State_Machine.START_STATE).initial_rotate(Vector2(rad2deg(focus_starting_angle.y), rad2deg(focus_starting_angle.x)))
 	
 	#Get and emit initial camera values
-#	var focus_direction = get_node_direction($Pivot/Camera_Position)
-#	var camera_direction = get_node_direction($Pivot/Camera_Position)
-#	var camera_transform = $Pivot/Camera_Position.get_global_transform()
+	var camera_transform = Camera_Position.global_transform
 	
-#	emit_signal("camera_moved", camera_transform)
-#	emit_signal("camera_direction_changed", camera_direction)
-#	emit_signal("focus_direction_changed", focus_direction)
+	emit_signal("camera_moved", Camera_Position.global_transform)
 	emit_signal("enter_new_view", starting_view_mode)
 
 

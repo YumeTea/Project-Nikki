@@ -16,6 +16,7 @@ onready var Player = owner
 onready var camera = owner.get_node("Camera_Rig/Pivot/Cam_Position") #should get camera position a different way
 onready var Pivot = owner.get_node("Camera_Rig/Pivot")
 onready var skeleton = owner.get_node("Rig/Skeleton")
+onready var Raycast_Floor = owner.get_node("Rig/Raycast_Floor")
 onready var animation_state_machine_move = owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback")
 #Foot IK Nodes
 onready var foot_floor_l = owner.get_node("Rig/Skeleton/Foot_Floor_L")
@@ -121,7 +122,7 @@ func handle_input(event):
 
 func update(delta):
 	###Player Motion
-	velocity = Player.move_and_slide_with_snap(velocity, snap_vector, Vector3(0,1,0), true, 1, deg2rad(65), false) #Come back/check vars 3,4,5
+	velocity = Player.move_and_slide_with_snap(velocity, snap_vector, Vector3.UP, true, 1, deg2rad(65), false) #Come back/check vars 3,4,5
 	
 	###Player Slope Adjustment
 	adjust_to_ground()

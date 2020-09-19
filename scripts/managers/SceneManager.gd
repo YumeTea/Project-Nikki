@@ -5,9 +5,6 @@ signal scene_entered
 signal scene_exited
 
 
-export var initial_scene : String = "Test Grounds"
-export var initial_gate : int = 1
-
 #Scene Variable Storage
 var current_scene = null
 
@@ -21,9 +18,6 @@ var new_scene_loaded = false
 
 
 func _ready():
-	next_scene = initial_scene
-	next_gate = initial_gate
-	transiting = true
 	SceneBackgroundLoader.connect("scene_loaded", self, "_on_SceneBackgroundLoader_scene_loaded")
 
 
