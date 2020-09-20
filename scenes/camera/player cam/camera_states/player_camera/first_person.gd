@@ -141,7 +141,7 @@ func look_first_person():
 	emit_signal("focus_direction_changed", get_node_direction(Pivot))
 
 
-#Allows rotation of camera up to focus_angle_lim and adjusts for body turning (limits neck rotation)
+#Allows rotation of camera up to focus_angle_lim and adjusts based on last facing direction
 func rotate_camera_angle_limited(input_change):
 	var focus_angle_change = Vector2(0,0)
 	var turn_angle = Vector2()

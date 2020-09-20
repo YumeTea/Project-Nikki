@@ -18,11 +18,16 @@ onready var Pivot = owner.get_node("Camera_Rig/Pivot")
 onready var skeleton = owner.get_node("Rig/Skeleton")
 onready var Raycast_Floor = owner.get_node("Rig/Raycast_Floor")
 onready var animation_state_machine_move = owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback")
+#Ledge Grab Nodes
+onready var Ledge_Grab_System = owner.get_node("Rig/Ledge_Grab_System")
 #Foot IK Nodes
 onready var foot_floor_l = owner.get_node("Rig/Skeleton/Foot_Floor_L")
 onready var foot_floor_r = owner.get_node("Rig/Skeleton/Foot_Floor_R")
 onready var foot_l_cont = owner.get_node("Rig/Skeleton/Foot_IK/Foot_L_Cont")
 onready var foot_r_cont = owner.get_node("Rig/Skeleton/Foot_IK/Foot_R_Cont")
+
+#Ledge Grab Variables
+var ledge_grab_transform : Transform
 
 #Foot IK Variables
 const foot_cont_position_offset = Vector3(0, 0, 0)
@@ -37,26 +42,28 @@ const collider_offset_default = 3.175 #default y translation of ground collider(
 const collider_offset_change_limit = 0.1 #max amount collider can move each frame
 
 #Animation Blending Variables
-var move_blend_position
+var move_blend_position : float
 
 #Initialized Values Storage
 var initialized_values = {}
 
 #World Interaction Variables
-var fall_height
-var land_height
+var fall_height : float
+var land_height : float
 
 #Environment Variables
-var surface_height
-var surfaced_height
+var ledge_height : float
+var ledge_hang_height : float
+var surface_height : float
+var surfaced_height : float
 
 ###Physics Variables
-var position
-var height
+var position : Vector3
+var height : float
 var direction = Vector3(0,0,0)
 var direction_angle = Vector2(0,0)
 var velocity = Vector3(0,0,0)
-var velocity_horizontal = Vector2()
+var velocity_horizontal : float
 const gravity = -9.8
 const weight = 5
 
@@ -91,7 +98,7 @@ var in_water = false
 
 var centering_view = false
 var centered = false
-var rotate_to_focus
+var rotate_to_focus : bool
 
 #Walking Flags
 var quick_turn = true
@@ -530,11 +537,13 @@ func connect_player_signals():
 	#Player Signals
 	owner.connect("focus_target", self, "_on_Player_focus_target_changed")
 	owner.get_node("State_Machine_Move").connect("initialized_values_dic_set", self, "_on_State_Machine_Move_initialized_values_dic_set")
+	owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_State_Machine_Move_state_changed")
 	owner.get_node("State_Machine_Action").connect("action_state_changed", self, "_on_State_Machine_Action_state_changed")
 	owner.get_node("Camera_Rig").connect("camera_direction_changed", self, "_on_Camera_Rig_camera_direction_changed")
 	owner.get_node("Camera_Rig").connect("view_locked", self, "_on_Camera_Rig_view_locked")
 	owner.get_node("Camera_Rig").connect("enter_new_view", self, "_on_Camera_Rig_enter_new_view")
 	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_Player_death")
+	owner.get_node("Rig/Ledge_Grab_System").connect("grab_ledge", self, "_on_Ledge_Grab_System_grab_ledge")
 	
 	#World Signals
 	owner.connect("entered_area", self, "_on_environment_area_entered")
@@ -549,11 +558,13 @@ func disconnect_player_signals():
 	#Player Signals
 	owner.disconnect("focus_target", self, "_on_Player_focus_target_changed")
 	owner.get_node("State_Machine_Move").disconnect("initialized_values_dic_set", self, "_on_State_Machine_Move_initialized_values_dic_set")
+	owner.get_node("State_Machine_Move").disconnect("move_state_changed", self, "_on_State_Machine_Move_state_changed")
 	owner.get_node("State_Machine_Action").disconnect("action_state_changed", self, "_on_State_Machine_Action_state_changed")
 	owner.get_node("Camera_Rig").disconnect("camera_direction_changed", self, "_on_Camera_Rig_camera_direction_changed")
 	owner.get_node("Camera_Rig").disconnect("view_locked", self, "_on_Camera_Rig_view_locked")
 	owner.get_node("Camera_Rig").disconnect("enter_new_view", self, "_on_Camera_Rig_enter_new_view")
 	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_Player_death")
+	owner.get_node("Rig/Ledge_Grab_System").disconnect("grab_ledge", self, "_on_Ledge_Grab_System_grab_ledge")
 	
 	#World Signals
 	owner.disconnect("entered_area", self, "_on_environment_area_entered")
@@ -572,6 +583,10 @@ func _on_Player_focus_target_changed(target_pos_node):
 
 func _on_State_Machine_Move_initialized_values_dic_set(init_values_dic):
 	initialized_values = init_values_dic
+
+
+func _on_State_Machine_Move_state_changed(move_state):
+	state_move = move_state
 
 
 func _on_State_Machine_Action_state_changed(action_state):
@@ -615,6 +630,13 @@ func _on_Camera_Rig_enter_new_view(string):
 		rotate_to_focus = true
 	if view_mode == "third_person":
 		return
+
+
+func _on_Ledge_Grab_System_grab_ledge(transform, height):
+	if state_move == "Fall":
+		ledge_height = height
+		ledge_grab_transform = transform
+		emit_signal("finished", "ledge_hang")
 
 
 func _on_death(death):

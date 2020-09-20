@@ -1,4 +1,4 @@
-[gd_scene load_steps=124 format=2]
+[gd_scene load_steps=126 format=2]
 
 [ext_resource path="res://scenes/Player/player_states/move/on_ground/idle.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Player/player/player_controller.gd" type="Script" id=2]
@@ -1543,6 +1543,9 @@ animation = "Jump"
 [sub_resource type="AnimationNodeAnimation" id=16]
 animation = "Land"
 
+[sub_resource type="AnimationNodeAnimation" id=75]
+animation = "Ledge_Hang"
+
 [sub_resource type="AnimationNodeAnimation" id=17]
 animation = "None"
 
@@ -1618,6 +1621,8 @@ xfade_time = 0.08
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=40]
 
+[sub_resource type="AnimationNodeStateMachineTransition" id=76]
+
 [sub_resource type="AnimationNodeStateMachine" id=41]
 states/Fall/node = SubResource( 10 )
 states/Fall/position = Vector2( 457, -79 )
@@ -1627,17 +1632,19 @@ states/Jump/node = SubResource( 15 )
 states/Jump/position = Vector2( 457, -168 )
 states/Land/node = SubResource( 16 )
 states/Land/position = Vector2( 457, 1.368 )
+states/Ledge_Hang/node = SubResource( 75 )
+states/Ledge_Hang/position = Vector2( 110.779, -113.252 )
 states/Swim/node = SubResource( 17 )
 states/Swim/position = Vector2( 457, 199.368 )
 states/Walk/node = SubResource( 23 )
 states/Walk/position = Vector2( 989.779, 79 )
-transitions = [ "Walk", "Fall", SubResource( 24 ), "Walk", "Idle", SubResource( 25 ), "Idle", "Walk", SubResource( 26 ), "Idle", "Fall", SubResource( 27 ), "Jump", "Fall", SubResource( 28 ), "Idle", "Jump", SubResource( 29 ), "Walk", "Jump", SubResource( 30 ), "Land", "Idle", SubResource( 31 ), "Land", "Walk", SubResource( 32 ), "Fall", "Land", SubResource( 33 ), "Swim", "Idle", SubResource( 34 ), "Swim", "Walk", SubResource( 35 ), "Swim", "Fall", SubResource( 36 ), "Jump", "Swim", SubResource( 37 ), "Fall", "Swim", SubResource( 38 ), "Idle", "Swim", SubResource( 39 ), "Walk", "Swim", SubResource( 40 ) ]
-graph_offset = Vector2( -224.221, -194.252 )
+transitions = [ "Walk", "Fall", SubResource( 24 ), "Walk", "Idle", SubResource( 25 ), "Idle", "Walk", SubResource( 26 ), "Idle", "Fall", SubResource( 27 ), "Jump", "Fall", SubResource( 28 ), "Idle", "Jump", SubResource( 29 ), "Walk", "Jump", SubResource( 30 ), "Land", "Idle", SubResource( 31 ), "Land", "Walk", SubResource( 32 ), "Fall", "Land", SubResource( 33 ), "Swim", "Idle", SubResource( 34 ), "Swim", "Walk", SubResource( 35 ), "Swim", "Fall", SubResource( 36 ), "Jump", "Swim", SubResource( 37 ), "Fall", "Swim", SubResource( 38 ), "Idle", "Swim", SubResource( 39 ), "Walk", "Swim", SubResource( 40 ), "Fall", "Ledge_Hang", SubResource( 76 ) ]
+graph_offset = Vector2( -173.221, -205.252 )
 
 [sub_resource type="AnimationNodeTimeScale" id=42]
 
 [sub_resource type="AnimationNodeBlendTree" id=43]
-graph_offset = Vector2( -779, 95 )
+graph_offset = Vector2( -915, 8 )
 nodes/MovexAction/node = SubResource( 3 )
 nodes/MovexAction/position = Vector2( -140, 120 )
 nodes/MovexLeftHand/node = SubResource( 4 )
@@ -1651,7 +1658,7 @@ nodes/StateMachineMove/position = Vector2( -840, 100 )
 nodes/TimeScaleAction/node = SubResource( 42 )
 nodes/TimeScaleAction/position = Vector2( -360, 280 )
 nodes/output/position = Vector2( 80, 120 )
-node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexLeftHand", "MovexAction", 1, "TimeScaleAction", "MovexLeftHand", 0, "StateMachineMove", "MovexLeftHand", 1, "StateMachineLeftHand", "TimeScaleAction", 0, "StateMachineAction" ]
+node_connections = [ "output", 0, "MovexAction", "TimeScaleAction", 0, "StateMachineAction", "MovexLeftHand", 0, "StateMachineMove", "MovexLeftHand", 1, "StateMachineLeftHand", "MovexAction", 0, "MovexLeftHand", "MovexAction", 1, "TimeScaleAction" ]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=44]
 
@@ -1912,6 +1919,12 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.89, 0 )
 [node name="Rig" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.11, 0 )
 
+[node name="Skeleton" parent="Rig" index="0"]
+bones/0/bound_children = [ NodePath("Foot_Floor_R") ]
+bones/2/bound_children = [ NodePath("Foot_Floor_L") ]
+bones/14/bound_children = [ NodePath("Hand_L") ]
+bones/39/bound_children = [ NodePath("Hand_R") ]
+
 [node name="Body Simplified" parent="Rig/Skeleton" index="0"]
 material/0 = SubResource( 49 )
 material/1 = SubResource( 52 )
@@ -1982,16 +1995,17 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.3, 3.2 )
 script = ExtResource( 33 )
 
 [node name="Hand_L" type="BoneAttachment" parent="Rig/Skeleton" index="4"]
-transform = Transform( -0.0393616, 0.730879, 0.681371, 0.0369264, -0.680371, 0.731938, 0.998542, 0.0539703, -0.000207774, 2.16054, 3.49606, -0.161456 )
+transform = Transform( -0.993306, -0.0879624, 0.0748739, -0.0719576, 0.978235, 0.194625, -0.0903649, 0.187936, -0.978015, 0.442445, 7.16047, 0.359639 )
 bone_name = "hand_l"
 
 [node name="Bow_Position" type="Position3D" parent="Rig/Skeleton/Hand_L"]
 transform = Transform( 0.999998, -2.6077e-08, 2.7474e-08, 3.72529e-08, 0.999998, -1.49012e-07, 1.14553e-07, 0, 0.999998, 0.310419, 0.22278, -0.106312 )
 
 [node name="Keeper_Bow" parent="Rig/Skeleton/Hand_L/Bow_Position" instance=ExtResource( 30 )]
+visible = false
 
 [node name="Hand_R" type="BoneAttachment" parent="Rig/Skeleton" index="5"]
-transform = Transform( -0.0393616, -0.730879, -0.68137, -0.036925, -0.680369, 0.731939, -0.998542, 0.0539695, -0.000207022, -2.16054, 3.49607, -0.161459 )
+transform = Transform( -0.993305, 0.0879632, -0.0748757, 0.0719578, 0.978235, 0.194626, 0.0903665, 0.187935, -0.978016, -0.442443, 7.16047, 0.359637 )
 bone_name = "hand_r"
 
 [node name="Arrow_Position" type="Position3D" parent="Rig/Skeleton/Hand_R"]
@@ -2001,7 +2015,7 @@ transform = Transform( -6.51926e-08, 1, 1.63913e-07, -2.04891e-08, 5.96046e-08, 
 visible = false
 
 [node name="Foot_Floor_L" type="BoneAttachment" parent="Rig/Skeleton" index="6"]
-transform = Transform( -0.999349, -0.0360769, -1.09496e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.24332, 0.205547, -0.140259 )
+transform = Transform( -0.999349, -0.0360769, -1.09539e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.243319, 0.221834, 0.0937046 )
 bone_name = "foot_floor_ik_l"
 
 [node name="Foot_L_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_L"]
@@ -2010,7 +2024,7 @@ enabled = true
 cast_to = Vector3( 0, -1.34, 0 )
 
 [node name="Foot_Floor_R" type="BoneAttachment" parent="Rig/Skeleton" index="7"]
-transform = Transform( -0.999349, 0.0360769, 1.09496e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.24332, 0.205547, -0.140259 )
+transform = Transform( -0.999349, 0.0360769, 1.09539e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.243319, 0.221834, 0.0937046 )
 bone_name = "foot_floor_ik_r"
 
 [node name="Foot_R_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_R"]
@@ -2065,13 +2079,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
 enabled = true
 cast_to = Vector3( 0, -4.18, 0 )
 
-[node name="Ledge_Hang_System" parent="Rig" instance=ExtResource( 49 )]
-
-[node name="Area" parent="Rig/Ledge_Hang_System" index="0"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.28, 0.963 )
-
-[node name="CollisionShape" parent="Rig/Ledge_Hang_System/Area" index="0"]
-transform = Transform( 1, 0, 0, 0, 0.1, 0, 0, 0, 1, 0, 0, 0 )
+[node name="Ledge_Grab_System" parent="Rig" instance=ExtResource( 49 )]
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.175, -0.042 )
@@ -2106,12 +2114,12 @@ visible = false
 mesh = SubResource( 72 )
 material/0 = null
 
-[node name="MeshInstance" type="MeshInstance" parent="Temp"]
-transform = Transform( 1.2941, 0, 0.965926, 0, 5, 0, -4.82963, 0, 0.258819, 1.49735, 2.38615, 0.157198 )
+[node name="Wall" type="MeshInstance" parent="Temp"]
+transform = Transform( 5, 0, 8.9407e-08, 0, 5, 0, 4.29153e-06, 0, 1, 0, 2.286, 1.475 )
 mesh = SubResource( 73 )
 material/0 = SubResource( 74 )
-[connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
 [connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
+[connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
 [connection signal="is_falling" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_is_falling"]
 [connection signal="position_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_position_changed"]
 [connection signal="targets_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_targets_changed"]
@@ -2131,5 +2139,3 @@ material/0 = SubResource( 74 )
 [connection signal="body_exited" from="Targetting_Area" to="." method="_on_Targetting_Area_body_exited"]
 
 [editable path="Rig"]
-
-[editable path="Rig/Ledge_Hang_System"]

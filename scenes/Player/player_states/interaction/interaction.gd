@@ -20,6 +20,10 @@ var ground_states = [
 	"Idle",
 	"Walk",
 ]
+var air_states = [
+	"Jump",
+	"Fall"
+]
 
 #Tween Objects Storage
 var active_tweens = []
@@ -98,6 +102,16 @@ func bound_angle(angle):
 func get_node_direction(node):
 	var direction = Vector3(0,0,1)
 	var rotate_by = node.get_global_transform().basis.get_euler()
+	direction = direction.rotated(Vector3(1,0,0), rotate_by.x)
+	direction = direction.rotated(Vector3(0,1,0), rotate_by.y)
+	direction = direction.rotated(Vector3(0,0,1), rotate_by.z)
+	
+	return direction
+
+
+func get_transform_direction(transform):
+	var direction = Vector3(0,0,1)
+	var rotate_by = transform.basis.get_euler()
 	direction = direction.rotated(Vector3(1,0,0), rotate_by.x)
 	direction = direction.rotated(Vector3(0,1,0), rotate_by.y)
 	direction = direction.rotated(Vector3(0,0,1), rotate_by.z)

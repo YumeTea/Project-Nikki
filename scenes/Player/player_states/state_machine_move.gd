@@ -12,6 +12,9 @@ var initialized_values = {
 	"velocity_horizontal": Vector2(),
 	"speed": 0.0,
 	
+	"ledge_height": 0.0,
+	"ledge_grab_transform": Transform(),
+	
 	"targetting": false,
 	"focus_object": null,
 	

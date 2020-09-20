@@ -14,8 +14,6 @@ signal entered_new_view(view_mode)
 signal view_blocked(is_obscured)
 signal break_target
 
-var initialized_values = {}
-
 #Node Storage
 onready var Player = owner.owner
 onready var Camera_Rig = owner
@@ -25,6 +23,9 @@ onready var Camera_Position = owner.get_node("Pivot/Cam_Position")
 onready var Camera_Position_Default = owner.get_node("Pivot/Cam_Position_Default")
 onready var Camera_Position_Target = owner.get_node("Pivot/Cam_Position_Target")
 onready var Aim_Timer = owner.get_node("Aim_Timer")
+
+#Initialized Value Storage
+var initialized_values = {}
 
 #Node Position Local Defaults
 var head_target_offset_default = Vector3(0,0, 10.0)
@@ -295,6 +296,9 @@ func _on_State_Machine_Move_state_changed(move_state):
 	if move_state != "Idle":
 		if state_action == "None" and aiming and Aim_Timer.is_stopped():
 			Aim_Timer.start(1.0)
+	
+	if move_state == "Ledge_Hang":
+		return
 
 
 func _on_State_Machine_Action_state_changed(action_state):
