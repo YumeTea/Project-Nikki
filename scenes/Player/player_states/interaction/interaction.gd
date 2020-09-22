@@ -64,13 +64,15 @@ var speed = speed_default
 #Player Flags
 var targetting = false
 
+
 #Initializes state, changes animation, etc
 func enter():
-	owner.get_node("AnimationPlayer").connect("animation_finished", self, "on_animation_finished")
+	return
+
 
 #Cleans up state, reinitializes values like timers
 func exit():
-	owner.get_node("AnimationPlayer").disconnect("animation_finished", self, "on_animation_finished")
+	return
 
 
 #Creates output based on the input event passed in
@@ -81,6 +83,7 @@ func handle_input(event):
 			targetting = true
 		else:
 			targetting = false
+
 
 #Acts as the _process method would
 func update(_delta):

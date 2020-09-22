@@ -1,14 +1,12 @@
 extends "res://scenes/Player/player_states/move/motion.gd"
 
-"""
-Consider using fourth raycast exclusively for when player is on ledge to get wall normal
-"""
 
 onready var Raycast_Wall = Ledge_Grab_System.get_node("Area/Raycast_Wall")
 onready var Raycast_Ledge = Ledge_Grab_System.get_node("Area/Raycast_Ledge")
 onready var Raycast_Facing_Wall = Ledge_Grab_System.get_node("Raycast_Facing_Wall")
 onready var Raycast_Facing_Ledge = Ledge_Grab_System.get_node("Raycast_Facing_Ledge")
 onready var Raycast_Ceiling = Ledge_Grab_System.get_node("Raycast_Ceiling")
+
 
 var ledge_move_speed = 2.0
 
@@ -41,12 +39,22 @@ func exit():
 	Ledge_Grab_System.get_node("Timer").start(0.134)
 	
 	disconnect_player_signals()
+	
+	.exit()
 
 
 #Creates output based on the input event passed in
 func handle_input(event):
+	direction = get_input_direction()
+	facing_direction = get_node_direction(Rig)
+	var facing_dot_direction = facing_direction.dot(direction)
+	
+	
 	if event.is_action_pressed("jump") and event.get_device() == 0:
-		emit_signal("finished", "fall")
+		if facing_dot_direction < -0.333:
+			emit_signal("finished", "fall")
+		else:
+			emit_signal("finished", "ledge_climb")
 	.handle_input(event)
 
 

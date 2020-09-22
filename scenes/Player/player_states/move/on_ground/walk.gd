@@ -16,6 +16,7 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
+	quick_turn = true #quick turn must be true at start
 	is_falling = false
 	centered = false
 	centering_time_left = centering_time
@@ -128,10 +129,11 @@ func walk_free(delta):
 		elif turn_angle.y > (deg2rad(turn_radius)):
 			turn_angle.y = (deg2rad(turn_radius))
 		#Change direction and velocity to match new facing direction
-		if (direction.x != 0 or direction.z != 0):
-			direction_angle.y = facing_angle.y + turn_angle.y
-			direction = direction.rotated(Vector3(0,1,0), direction_angle.y - input_direction_angle)
-			velocity = velocity.rotated(Vector3(0,1,0), turn_angle.y)
+		direction_angle.y = facing_angle.y + turn_angle.y
+		direction = direction.rotated(Vector3(0,1,0), -(input_direction_angle - direction_angle.y))
+		velocity = velocity.rotated(Vector3(0,1,0), turn_angle.y)
+	
+	
 	
 	###Quick turn radius limiting
 	if quick_turn:
@@ -141,6 +143,7 @@ func walk_free(delta):
 		#Quick turn radius control right
 		elif turn_angle.y > (deg2rad(quick_turn_radius)):
 			turn_angle.y = (deg2rad(quick_turn_radius))
+		#Stop quick turning once facing angle matches input direction angle
 		if is_equal_approx(turn_angle.y, 0.0):
 			is_moving = true
 			quick_turn = false
@@ -174,23 +177,19 @@ func walk_locked_third_person(delta):
 		if !centered:
 			turn_angle.y = turn_angle.y/centering_time_left
 	else:
-		turn_angle.y = camera_angle_global.y - facing_angle.y
-		turn_angle.y = bound_angle(turn_angle.y)
-		if !centered:
-			turn_angle.y = turn_angle.y/centering_time_left
+		turn_angle.y = 0
 		
 	emit_signal("center_view", turn_angle.y)
 	
 	calculate_movement_velocity(delta)
 	
 	###Player Rotation
-	owner.get_node("Rig").rotate_y(turn_angle.y)
+	Rig.rotate_y(turn_angle.y)
 	
 	if direction:
 		is_moving = true
 	else:
 		is_moving = false
-		
 		
 	###Decrement Timer
 	if centering_time_left > 0:

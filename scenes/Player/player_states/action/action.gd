@@ -38,14 +38,12 @@ func enter():
 	equipped_items = owner.inventory.equipped_items
 	cycle_equipment()
 	
-	owner.get_node("AnimationTree").connect("animation_started", self, "on_animation_started")
-	owner.get_node("AnimationTree").connect("animation_finished", self, "on_animation_finished")
+	.enter()
 
 
 #Cleans up state, reinitializes values like timers
 func exit():
-	owner.get_node("AnimationTree").disconnect("animation_started", self, "on_animation_started")
-	owner.get_node("AnimationTree").disconnect("animation_finished", self, "on_animation_finished")
+	.exit()
 
 
 #Creates output based on the input event passed in
@@ -116,6 +114,8 @@ func set_initialized_values(init_values_dic):
 
 
 func connect_player_signals():
+	owner.get_node("AnimationTree").connect("animation_started", self, "on_animation_started")
+	owner.get_node("AnimationTree").connect("animation_finished", self, "on_animation_finished")
 	owner.connect("focus_target", self, "_on_Player_focus_target_changed")
 	owner.connect("inventory_loaded", self, "_on_Player_inventory_loaded")
 	owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_move_state_changed")
@@ -133,6 +133,8 @@ func connect_player_signals():
 
 
 func disconnect_player_signals():
+	owner.get_node("AnimationTree").disconnect("animation_started", self, "on_animation_started")
+	owner.get_node("AnimationTree").disconnect("animation_finished", self, "on_animation_finished")
 	owner.disconnect("focus_target", self, "_on_Player_focus_target_changed")
 	owner.disconnect("inventory_loaded", self, "_on_Player_inventory_loaded")
 	owner.get_node("State_Machine_Move").disconnect("move_state_changed", self, "_on_move_state_changed")

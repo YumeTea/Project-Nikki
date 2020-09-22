@@ -474,7 +474,7 @@ func camera_collision_correction(Camera_Position, Pivot, Default_Pos_Node):
 	
 	if collision:
 		#Check if camera would move past pivot point
-		camera_slide_vector = collision.travel + (focus_direction * correction_distance)
+		camera_slide_vector = collision.travel
 
 		#Move camera to collision point
 		Camera_Position.global_translate(camera_slide_vector)

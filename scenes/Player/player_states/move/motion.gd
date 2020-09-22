@@ -106,6 +106,14 @@ var rotate_to_focus : bool
 var quick_turn = true
 
 
+func enter():
+	.enter()
+
+
+func exit():
+	.exit()
+
+
 func handle_input(event):
 	if event is InputEventJoypadMotion and event.get_device() == 0:
 		left_joystick_axis = get_left_joystick_input(event, left_joystick_axis)
@@ -124,12 +132,15 @@ func handle_input(event):
 		reset_view_change_time()
 	
 #	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(owner.get_node("AnimationTree").get("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position"))
+#		print(quick_turn)
 	
 	.handle_input(event)
 
 
 func update(delta):
+	###Set held direction
+	direction = get_input_direction()
+	
 	###Player Motion
 	velocity = Player.move_and_slide_with_snap(velocity, snap_vector, Vector3.UP, true, 1, deg2rad(65), false) #Come back/check vars 3,4,5
 	
@@ -145,7 +156,7 @@ func update(delta):
 	height = position.y
 	
 	###Player Value Assignment
-	facing_direction = get_node_direction(owner.get_node("Rig"))
+	facing_direction = get_node_direction(Rig)
 	
 	#Signal Emission
 	emit_signal("position_changed", position)
@@ -503,6 +514,8 @@ func set_initialized_values(init_values_dic):
 #####EXTERNAL INPUT FUNCTIONS#####
 func connect_player_signals():
 	#Player Signals
+	owner.get_node("AnimationTree").connect("animation_started", self, "on_animation_started")
+	owner.get_node("AnimationTree").connect("animation_finished", self, "on_animation_finished")
 	owner.connect("focus_target", self, "_on_Player_focus_target_changed")
 	owner.get_node("State_Machine_Move").connect("initialized_values_dic_set", self, "_on_State_Machine_Move_initialized_values_dic_set")
 	owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_State_Machine_Move_state_changed")
@@ -524,6 +537,8 @@ func connect_player_signals():
 
 func disconnect_player_signals():
 	#Player Signals
+	owner.get_node("AnimationTree").disconnect("animation_started", self, "on_animation_started")
+	owner.get_node("AnimationTree").disconnect("animation_finished", self, "on_animation_finished")
 	owner.disconnect("focus_target", self, "_on_Player_focus_target_changed")
 	owner.get_node("State_Machine_Move").disconnect("initialized_values_dic_set", self, "_on_State_Machine_Move_initialized_values_dic_set")
 	owner.get_node("State_Machine_Move").disconnect("move_state_changed", self, "_on_State_Machine_Move_state_changed")

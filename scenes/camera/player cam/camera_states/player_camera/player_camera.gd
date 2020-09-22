@@ -44,7 +44,6 @@ var camera_rotation = Vector2()
 var camera_position_default
 var focus_object
 var focus_location
-var correction_distance = 1
 
 #Joystick Variables
 var right_joystick_axis = Vector2(0,0)

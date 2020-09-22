@@ -5,9 +5,11 @@ signal move_state_changed(move_state)
 signal move_state_stack_changed(state_stack)
 signal initialized_values_dic_set(init_values_dic)
 
+
 var initialized_values = {
 	"active_tweens": [],
 	
+	"direction": Vector3(),
 	"velocity": Vector3(),
 	"velocity_horizontal": Vector2(),
 	"speed": 0.0,
@@ -38,6 +40,7 @@ var initialized_values = {
 	"right_joystick_axis": Vector2(),
 }
 
+
 func _ready():
 	states_map = {
 	"idle": $Idle,
@@ -45,6 +48,7 @@ func _ready():
 	"jump": $Jump,
 	"fall": $Fall,
 	"ledge_hang": $Ledge_Hang,
+	"ledge_climb": $Ledge_Climb,
 	"swim": $Swim,
 	"death": $Death,
 	"void": $Void
@@ -68,7 +72,9 @@ func _change_state(state_name): #state_machine.gd does the generalized work
 		states_map[state_name].initialize(current_state.initialized_values) #initialize velocity for certain states out of walk state
 	
 	##Special new state handling
-	if state_name in ["fall"] and current_state in [$Jump, $Fall, $Ledge_Hang, $Swim]:
+	if state_name in ["idle"] and current_state in [$Ledge_Climb]:
+		states_stack.pop_front()
+	if state_name in ["fall"] and current_state in [$Jump, $Fall, $Ledge_Hang, $Ledge_Climb, $Swim]:
 		states_stack.pop_front()
 	if state_name in ["swim"] and current_state in [$Jump, $Fall, $Swim]:
 		states_stack.pop_front()

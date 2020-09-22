@@ -12,8 +12,6 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	direction = Vector3(0,0,0)
-	left_joystick_axis = Vector2(0,0)
 	is_moving = false
 	is_falling = false
 	connect_player_signals()

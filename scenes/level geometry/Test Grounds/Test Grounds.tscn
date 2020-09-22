@@ -54,8 +54,7 @@ material/3 = null
 [node name="Test_Geometry" type="Node" parent="."]
 
 [node name="Ledge_Test" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( -7.82647e-07, 2.92091e-06, -5, 0.996685, 0.081362, -2.71201e-06, 0.081362, -0.996685, -1.48745e-05, 60.1916, 9.98107, -14.1902 )
-visible = false
+transform = Transform( -7.82647e-07, 2.92091e-06, -5, 0.996685, 0.081362, -2.71201e-06, 0.081362, -0.996685, -1.48745e-05, 60.1916, 12.1622, -13.3061 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 3 )
 
@@ -63,7 +62,6 @@ material/0 = SubResource( 3 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Ledge_Test/StaticBody"]
 shape = SubResource( 4 )
-disabled = true
 
 [node name="Ramp" type="MeshInstance" parent="Test_Geometry"]
 transform = Transform( 1, 0, 0, 0, 0.707106, 0.707108, 0, -0.707108, 0.707106, 36.479, 9.968, 102.464 )

@@ -3,8 +3,6 @@
 [ext_resource path="res://models/objects/items_player/arrows/water_arrow/water_arrow_model.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/items/arrows/water_arrow/water_arrow_pickup.gd" type="Script" id=2]
 
-
-
 [sub_resource type="SphereShape" id=1]
 
 [node name="Water_Arrow_Pickup" type="Area" groups=[
@@ -13,7 +11,7 @@
 script = ExtResource( 2 )
 
 [node name="Arrow_Mesh" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, -0.98995, -0.98995 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )

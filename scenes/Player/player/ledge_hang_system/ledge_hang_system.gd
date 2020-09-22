@@ -34,6 +34,7 @@ onready var Raycast_Wall_default_cast_to = Raycast_Wall.cast_to
 var object_detected = false
 var on_ledge = false
 
+
 func _ready():
 	owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_State_Machine_Move_state_changed")
 	

@@ -1,0 +1,67 @@
+[gd_resource type="Resource" load_steps=8 format=2]
+
+[ext_resource path="res://scripts/custom_resources/savefile_resource.gd" type="Script" id=1]
+[ext_resource path="res://scripts/custom_resources/inventory_resource.gd" type="Script" id=2]
+[ext_resource path="res://resources/items/Water_Arrow.tres" type="Resource" id=3]
+[ext_resource path="res://resources/items/Keeper_Bow.tres" type="Resource" id=4]
+[ext_resource path="res://resources/items/Fire_Arrow.tres" type="Resource" id=5]
+[ext_resource path="res://resources/items/Ice_Arrow.tres" type="Resource" id=6]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 2 )
+_items = [ {
+"item_reference": ExtResource( 4 ),
+"quantity": 1
+}, {
+"item_reference": ExtResource( 3 ),
+"quantity": 15
+}, {
+"item_reference": ExtResource( 6 ),
+"quantity": 10
+}, {
+"item_reference": ExtResource( 5 ),
+"quantity": 8
+} ]
+equipped_items = {
+"Arrow": {
+"item_reference": ExtResource( 3 ),
+"quantity": 15
+},
+"Bow": {
+"item_reference": ExtResource( 4 ),
+"quantity": 1
+},
+"Item": null,
+"Magic": null,
+"Weapon": null
+}
+inventory = {
+"Arrow": [ {
+"item_reference": ExtResource( 3 ),
+"quantity": 15
+}, {
+"item_reference": ExtResource( 6 ),
+"quantity": 10
+}, {
+"item_reference": ExtResource( 5 ),
+"quantity": 8
+} ],
+"Bow": [ {
+"item_reference": ExtResource( 4 ),
+"quantity": 1
+} ],
+"Item": [  ],
+"Magic": [  ],
+"Weapon": [  ]
+}
+
+[resource]
+script = ExtResource( 1 )
+game_version = "3.2.3-rc6"
+data = {
+"res://data/temp/player_data.tres": {
+"health": 256,
+"inventory": SubResource( 1 ),
+"view_mode": "third_person"
+}
+}
