@@ -7,6 +7,7 @@ signal initialized_values_dic_set(init_values_dic)
 
 var initialized_values = {
 	"focus_angle": Vector2(),
+	"previous_facing_angle": Vector2(),
 	"targetting": false,
 	"focus_object": null,
 	"centering": false,

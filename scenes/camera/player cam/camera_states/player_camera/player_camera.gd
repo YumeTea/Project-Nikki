@@ -33,8 +33,9 @@ var head_target_offset_default = Vector3(0,0, 10.0)
 #State Storage
 var state_move
 var state_action
-var state_move_changed = false
-var state_action_changed = false
+var rig_locked_states = [
+	"Ledge_Hang"
+]
 
 ###Camera Variables
 var camera_angle = Vector2() #stores camera global rotation
@@ -49,8 +50,7 @@ var correction_distance = 1
 var right_joystick_axis = Vector2(0,0)
 var joystick_inner_deadzone = 0.01
 var joystick_outer_deadzone = 0.9
-var right_joystick_sensitivity = 1.0 #####CONSIDER SETTING THIS A DIFFERENT, GLOBAL WAY
-var look_speed = 1.0
+var right_joystick_sensitivity = 1.5 #####CONSIDER SETTING THIS A DIFFERENT, GLOBAL WAY
 
 #Centering Variables
 var centering_turn_radius = deg2rad(25)
@@ -84,7 +84,7 @@ var strafe_locked = false
 
 #Head Variables
 var facing_direction = Vector3()
-var previous_facing_angle = Vector2()
+var previous_facing_angle = null #start null, start state currently initializes this value
 var focus_direction = Vector2()
 var focus_angle = Vector2()
 var focus_angle_global = Vector2()
@@ -126,13 +126,7 @@ func get_body_centering_angle(body_node):
 		###Body Y Rotation
 		if !centered:
 			if centering_time_left == centering_time:
-				body_turn_angle.y = target_angle - facing_angle
-				#Turning left at degrees > 180
-				if (body_turn_angle.y > deg2rad(180)):
-					body_turn_angle.y = body_turn_angle.y - deg2rad(360)
-				#Turning right at degrees < -180
-				if (body_turn_angle.y < deg2rad(-180)):
-					body_turn_angle.y = body_turn_angle.y + deg2rad(360)
+				body_turn_angle.y = bound_angle(body_turn_angle.y)
 				body_turn_angle.y = body_turn_angle.y/centering_time_left
 		else:
 			body_turn_angle.y = target_angle - facing_angle
@@ -240,6 +234,28 @@ func calculate_local_x_rotation(direction):
 		x_rotation = -test_direction.angle_to(direction)
 	
 	return x_rotation
+
+
+func calculate_focus_angle():
+	var camera_angle_global : Vector2
+	var facing_angle : Vector2
+	var angle : Vector2
+	
+	#X
+	camera_angle_global.x = calculate_local_x_rotation((get_node_direction(Pivot)))
+	facing_angle.x = calculate_local_x_rotation(get_node_direction(Player.get_node("Rig")))
+	
+	angle.x = camera_angle_global.x - facing_angle.x
+	angle.x = stepify(bound_angle(angle.x), 0.0001)
+	
+	#Y
+	camera_angle_global.y = calculate_global_y_rotation(get_node_direction(Camera_Rig))
+	facing_angle.y = calculate_global_y_rotation(get_node_direction(Player.get_node("Rig")))
+	
+	angle.y = camera_angle_global.y - facing_angle.y
+	angle.y = stepify(bound_angle(angle.y), 0.0001)
+	
+	return angle
 
 
 func set_view_mode(new_view_mode : String):

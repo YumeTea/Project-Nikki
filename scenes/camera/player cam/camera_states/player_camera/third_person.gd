@@ -25,12 +25,14 @@ func initialize(init_values_dic):
 #Initializes state, changes animation, etc
 func enter():
 	view_mode = "third_person"
+	
 	#Initial values for rotate function
-	previous_facing_angle.y = calculate_global_y_rotation(facing_direction)
-	previous_facing_angle.x = calculate_local_x_rotation(facing_direction)
+	if !previous_facing_angle:
+		previous_facing_angle = Vector2()
+		previous_facing_angle.y = calculate_global_y_rotation(facing_direction)
+		previous_facing_angle.x = calculate_local_x_rotation(facing_direction)
 	
 	#More initial values after initial rotation
-	focus_angle.y = 0.0
 	facing_direction = get_node_direction(Player.get_node("Rig"))
 	
 	#Initial values for displays/targetting
@@ -92,6 +94,7 @@ func update(_delta):
 	if view_change_time_left > 0:
 		enter_third_person()
 	look_third_person()
+	.update(_delta)
 
 
 func _on_animation_finished(_anim_name):
@@ -225,16 +228,16 @@ func rotate_camera(input_change):
 	if input_change.length() > 0:
 		var angle_change = Vector2()
 	
-		angle_change.y = deg2rad(-input_change.x) * look_speed
-		if focus_angle.y + angle_change.y < focus_angle_lim.y and focus_angle.y + angle_change.y > -focus_angle_lim.y:
+		angle_change.y = deg2rad(-input_change.x)
+		if focus_angle.y + angle_change.y <= focus_angle_lim.y and focus_angle.y + angle_change.y >= -focus_angle_lim.y:
 			owner.rotate_y(deg2rad(-input_change.x))
 			focus_angle.y += angle_change.y
 		else:
 			owner.rotate_y((focus_angle_lim.y * sign(focus_angle.y)) - focus_angle.y)
 			focus_angle.y += ((focus_angle_lim.y * sign(focus_angle.y)) - focus_angle.y)
 	
-		angle_change.x = deg2rad(input_change.y) * look_speed
-		if focus_angle.x + angle_change.x < focus_angle_lim.x and focus_angle.x + angle_change.x > -focus_angle_lim.x:
+		angle_change.x = deg2rad(input_change.y)
+		if focus_angle.x + angle_change.x <= focus_angle_lim.x and focus_angle.x + angle_change.x >= -focus_angle_lim.x:
 			Pivot.rotate_x(deg2rad(input_change.y))
 			focus_angle.x += angle_change.x
 		else:

@@ -24,6 +24,9 @@ var air_states = [
 	"Jump",
 	"Fall"
 ]
+var rig_locked_states = [
+	"Ledge_Hang"
+]
 
 #Tween Objects Storage
 var active_tweens = []

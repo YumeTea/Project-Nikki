@@ -15,6 +15,7 @@ onready var world = get_tree().current_scene
 onready var Player = owner
 onready var camera = owner.get_node("Camera_Rig/Pivot/Cam_Position") #should get camera position a different way
 onready var Pivot = owner.get_node("Camera_Rig/Pivot")
+onready var Rig = owner.get_node("Rig")
 onready var skeleton = owner.get_node("Rig/Skeleton")
 onready var Raycast_Floor = owner.get_node("Rig/Raycast_Floor")
 onready var animation_state_machine_move = owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback")
@@ -28,6 +29,7 @@ onready var foot_r_cont = owner.get_node("Rig/Skeleton/Foot_IK/Foot_R_Cont")
 
 #Ledge Grab Variables
 var ledge_grab_transform : Transform
+var wall_normal : Vector3
 
 #Foot IK Variables
 const foot_cont_position_offset = Vector3(0, 0, 0)
@@ -156,6 +158,7 @@ func on_animation_finished(_anim_name):
 	return
 
 
+#Returns direction relative to camera view angle
 func get_input_direction():
 	direction = Vector3() #Resets direction of player to default
 	
@@ -178,68 +181,6 @@ func get_input_direction():
 	direction = direction_normalized * direction_length
 	
 	return direction
-
-
-#Could be used for smoothing keyboard/dpad input
-#func get_input_direction_square():
-#	direction = Vector3()
-#	var direction_length
-#
-#	###Camera Direction
-#	var aim = camera.global_transform.basis.get_euler()
-#
-#	###Directional Input
-#	direction.z -= left_joystick_axis.y
-#	direction.x -= left_joystick_axis.x
-#
-#	direction = direction.rotated(Vector3(0,1,0), (aim.y + PI))
-#	direction.y = 0.0
-#
-#	#Direction Limiting
-#	var input_angle = 0.0
-#	var input_max
-#
-#
-#	if direction.z > 0:
-#		if direction.x == 0:
-#			input_max = 1.0
-#		#Up
-#		elif direction.z >= direction.x and -direction.z < direction.x:
-#			input_angle = acos(direction.z / Vector2(direction.x, direction.z).length())
-#			input_max = 1.0 / cos(input_angle)
-#		#Left
-#		elif direction.x > direction.z:
-#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
-#			input_max = 1.0 / cos(input_angle)
-#		#Right
-#		elif direction.x < -direction.z:
-#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
-#			input_max = -1.0 / cos(input_angle)
-#	elif direction.z < 0:
-#		if direction.x == 0:
-#			input_max = 1.0
-#		#Down
-#		elif -direction.z >= direction.x and direction.z < direction.x: 
-#			input_angle = acos(direction.z / Vector2(direction.x, direction.z).length())
-#			input_max = -1.0 / cos(input_angle)
-#		#Left
-#		elif direction.x > -direction.z:
-#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
-#			input_max = 1.0 / cos(input_angle)
-#		#Right
-#		elif direction.x < direction.z:
-#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
-#			input_max = -1.0 / cos(input_angle)
-#	else:
-#		input_max = 1.0
-#
-#	direction_length = direction.length() / input_max
-#
-#	direction = direction.normalized()
-#
-#	direction *= direction_length
-#
-#	return direction
 
 
 func get_left_joystick_input(event, current_axis):
@@ -309,7 +250,7 @@ func get_right_joystick_input(event, current_axis):
 func calculate_movement_velocity(delta):
 	###Velocity Calculation
 	var temp_velocity = velocity
-	temp_velocity.y = 0
+	temp_velocity.y = 0.0
 
 	###Target Velocity
 	var target_velocity = direction * speed
@@ -337,6 +278,33 @@ func calculate_movement_velocity(delta):
 
 func calculate_aerial_velocity(delta):
 	velocity.y += weight * gravity * delta
+
+
+func calculate_ledge_velocity(delta):
+	###Velocity Calculation
+	var temp_velocity = velocity
+	temp_velocity.y = 0
+
+	###Target Velocity
+	var target_velocity = direction * speed
+
+	###Determine the type of acceleration
+	var acceleration
+	if direction.dot(temp_velocity) > 0 or temp_velocity == Vector3(0,0,0):
+		acceleration = ACCEL
+	else:
+		acceleration = DEACCEL
+
+	#Calculate a portion of the distance to go
+	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
+
+	###Final Velocity
+	if temp_velocity.length() > 0.1:
+		velocity.x = temp_velocity.x
+		velocity.z = temp_velocity.z
+	else:
+		velocity.x = 0.0
+		velocity.z = 0.0
 
 
 func calculate_swim_velocity(delta):
@@ -543,7 +511,7 @@ func connect_player_signals():
 	owner.get_node("Camera_Rig").connect("view_locked", self, "_on_Camera_Rig_view_locked")
 	owner.get_node("Camera_Rig").connect("enter_new_view", self, "_on_Camera_Rig_enter_new_view")
 	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_Player_death")
-	owner.get_node("Rig/Ledge_Grab_System").connect("grab_ledge", self, "_on_Ledge_Grab_System_grab_ledge")
+	owner.get_node("Rig/Ledge_Grab_System").connect("ledge_grab_point", self, "_on_Ledge_Grab_System_ledge_grab_point")
 	
 	#World Signals
 	owner.connect("entered_area", self, "_on_environment_area_entered")
@@ -564,7 +532,7 @@ func disconnect_player_signals():
 	owner.get_node("Camera_Rig").disconnect("view_locked", self, "_on_Camera_Rig_view_locked")
 	owner.get_node("Camera_Rig").disconnect("enter_new_view", self, "_on_Camera_Rig_enter_new_view")
 	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_Player_death")
-	owner.get_node("Rig/Ledge_Grab_System").disconnect("grab_ledge", self, "_on_Ledge_Grab_System_grab_ledge")
+	owner.get_node("Rig/Ledge_Grab_System").disconnect("ledge_grab_point", self, "_on_Ledge_Grab_System_ledge_grab_point")
 	
 	#World Signals
 	owner.disconnect("entered_area", self, "_on_environment_area_entered")
@@ -632,10 +600,12 @@ func _on_Camera_Rig_enter_new_view(string):
 		return
 
 
-func _on_Ledge_Grab_System_grab_ledge(transform, height):
-	if state_move == "Fall":
-		ledge_height = height
-		ledge_grab_transform = transform
+func _on_Ledge_Grab_System_ledge_grab_point(transform, height, normal):
+	ledge_height = height
+	ledge_grab_transform = transform
+	wall_normal = normal
+	
+	if (state_move in ["Fall", "Swim"]) and Ledge_Grab_System.get_node("Timer").is_stopped():
 		emit_signal("finished", "ledge_hang")
 
 
@@ -681,3 +651,63 @@ func _on_GameManager_player_voided():
 
 
 
+#Could be used for smoothing keyboard/dpad input
+#func get_input_direction_square():
+#	direction = Vector3()
+#	var direction_length
+#
+#	###Camera Direction
+#	var aim = camera.global_transform.basis.get_euler()
+#
+#	###Directional Input
+#	direction.z -= left_joystick_axis.y
+#	direction.x -= left_joystick_axis.x
+#
+#	direction = direction.rotated(Vector3(0,1,0), (aim.y + PI))
+#	direction.y = 0.0
+#
+#	#Direction Limiting
+#	var input_angle = 0.0
+#	var input_max
+#
+#
+#	if direction.z > 0:
+#		if direction.x == 0:
+#			input_max = 1.0
+#		#Up
+#		elif direction.z >= direction.x and -direction.z < direction.x:
+#			input_angle = acos(direction.z / Vector2(direction.x, direction.z).length())
+#			input_max = 1.0 / cos(input_angle)
+#		#Left
+#		elif direction.x > direction.z:
+#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
+#			input_max = 1.0 / cos(input_angle)
+#		#Right
+#		elif direction.x < -direction.z:
+#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
+#			input_max = -1.0 / cos(input_angle)
+#	elif direction.z < 0:
+#		if direction.x == 0:
+#			input_max = 1.0
+#		#Down
+#		elif -direction.z >= direction.x and direction.z < direction.x: 
+#			input_angle = acos(direction.z / Vector2(direction.x, direction.z).length())
+#			input_max = -1.0 / cos(input_angle)
+#		#Left
+#		elif direction.x > -direction.z:
+#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
+#			input_max = 1.0 / cos(input_angle)
+#		#Right
+#		elif direction.x < direction.z:
+#			input_angle = acos(direction.x / Vector2(direction.x, direction.z).length())
+#			input_max = -1.0 / cos(input_angle)
+#	else:
+#		input_max = 1.0
+#
+#	direction_length = direction.length() / input_max
+#
+#	direction = direction.normalized()
+#
+#	direction *= direction_length
+#
+#	return direction

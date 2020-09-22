@@ -23,11 +23,12 @@ func enter():
 	view_locked = true
 	
 	#Initial values for rotate function
-	previous_facing_angle.y = calculate_global_y_rotation(facing_direction)
-	previous_facing_angle.x = calculate_local_x_rotation(facing_direction)
+	if !previous_facing_angle:
+		previous_facing_angle = Vector2()
+		previous_facing_angle.y = calculate_global_y_rotation(facing_direction)
+		previous_facing_angle.x = calculate_local_x_rotation(facing_direction)
 	
 	#More initial values after initial rotation
-	focus_angle.y = 0.0
 	facing_direction = get_node_direction(Player.get_node("Rig"))
 	
 	#Initial values for displays/targetting
@@ -78,6 +79,7 @@ func update(_delta):
 	if view_change_time_left > 0:
 		enter_first_person()
 	look_first_person()
+	.update(_delta)
 
 
 func _on_animation_finished(_anim_name):
@@ -88,6 +90,7 @@ func enter_first_person():
 	Camera_Position.get_node("CollisionShape").disabled = true
 	
 	if view_change_time_left > 0:
+		#Move camera node positions gradually
 		var pivot_move = (pivot_pos_default_local - Pivot.transform.origin) / view_change_time_left
 		var head_target_move = ((Pivot.transform.origin + head_target_offset_default) - Head_Target.transform.origin) / view_change_time_left
 		var camera_move = (camera_pos_default_local - Camera_Position.transform.origin) / view_change_time_left
@@ -107,7 +110,30 @@ func enter_first_person():
 			centering_angle.x = (target_angle.x - calculate_local_x_rotation(get_node_direction(Pivot))) / view_change_time_left
 			
 			Pivot.rotate_x(centering_angle.x)
-			focus_angle.x += centering_angle.x
+		
+		#Rotate camera rig and pivot gradually if outside focus angle lim and rig rotation is locked
+		if state_move in rig_locked_states:
+			var current_focus_angle : Vector2
+			var angle : Vector2
+			
+			current_focus_angle = calculate_focus_angle()
+			
+			#X
+			if current_focus_angle.x > focus_angle_lim.x or current_focus_angle.x < -focus_angle_lim.x:
+				angle.x = -(current_focus_angle.x - (focus_angle_lim.x * sign(current_focus_angle.x)))
+				angle.x /= view_change_time_left
+				
+				Pivot.rotate_x(angle.x)
+			
+			#Y
+			if current_focus_angle.y > focus_angle_lim.y or current_focus_angle.y < -focus_angle_lim.y:
+				angle.y = -(current_focus_angle.y - (focus_angle_lim.y * sign(current_focus_angle.y)))
+				angle.y /= view_change_time_left
+				
+				Camera_Rig.rotate_y(angle.y)
+	
+	#Calculate new focus angle
+	focus_angle = calculate_focus_angle()
 	
 	#Decrement view change time
 	view_change_time_left -= 1
@@ -120,10 +146,7 @@ func look_first_person():
 	#Move head target before moving camera
 	move_head_target(focus_object)
 	
-	if view_locked:
-		previous_facing_angle.y = calculate_global_y_rotation(get_node_direction(Pivot))
-		previous_facing_angle.x = calculate_local_x_rotation(get_node_direction(Camera_Rig))
-	elif centering:
+	if centering:
 		center_camera() #no camera control if centering
 	else:
 		rotate_camera_angle_limited(right_joystick_axis)
@@ -149,56 +172,46 @@ func rotate_camera_angle_limited(input_change):
 	var facing_angle = Vector2()
 	
 	focus_direction = get_node_direction(Pivot)
-	focus_angle_global.y = calculate_global_y_rotation(focus_direction)
-	focus_angle_global.x = calculate_local_x_rotation(focus_direction)
+	focus_angle = calculate_focus_angle()
 	facing_angle.y = calculate_global_y_rotation(facing_direction)
 	facing_angle.x = calculate_local_x_rotation(facing_direction)
 	
 	###Focus angle body rotation correction
 	var facing_angle_change = Vector2()
+	
 	###Y Focus Angle Limiting
 	facing_angle_change.y = previous_facing_angle.y - facing_angle.y
-	##Bounding for facing_angle_change
-	#Turning left at degrees > 180
-	if (facing_angle_change.y > deg2rad(180)):
-		facing_angle_change.y = facing_angle_change.y - deg2rad(360)
-	#Turning right at degrees < -180
-	if (facing_angle_change.y < deg2rad(-180)):
-		facing_angle_change.y = facing_angle_change.y + deg2rad(360)
+	facing_angle_change.y = bound_angle(facing_angle_change.y)
 	
-	#Change focus angle if body rotated
-	if(focus_angle.y + facing_angle_change.y) < focus_angle_lim.y and (focus_angle.y + facing_angle_change.y) > -focus_angle_lim.y:
-		focus_angle.y += facing_angle_change.y
-	else: #If facing angle goes outside focus cone, rotate camera rig
-		focus_angle_change.y = (sign(focus_angle.y) * focus_angle_lim.y) - focus_angle.y
+	#If facing angle goes outside focus cone, rotate camera rig
+	if(focus_angle.y + facing_angle_change.y) > focus_angle_lim.y or (focus_angle.y + facing_angle_change.y) < -focus_angle_lim.y:
+		focus_angle_change.y = (focus_angle_lim.y * sign(focus_angle.y)) - focus_angle.y
+		turn_angle.y = -((focus_angle.y + facing_angle_change.y) - (focus_angle_lim.y * sign(focus_angle.y)))
 		focus_angle.y += focus_angle_change.y
-		turn_angle.y = -facing_angle_change.y + focus_angle_change.y
 		
 		Camera_Rig.rotate_y(turn_angle.y)
+	else: #Add facing angle change to focus_angle
+		focus_angle.y += facing_angle_change.y
 	
 	###X Focus Angle Limiting
 	facing_angle_change.x = previous_facing_angle.x - facing_angle.x
-	#Turning left at degrees > 180
-	if (facing_angle_change.x > deg2rad(180)):
-		facing_angle_change.x = facing_angle_change.x - deg2rad(360)
-	#Turning right at degrees < -180
-	if (facing_angle_change.x < deg2rad(-180)):
-		facing_angle_change.x = facing_angle_change.x + deg2rad(360)
-		
-	if(focus_angle.x + facing_angle_change.x) < focus_angle_lim.x and (focus_angle.x + facing_angle_change.x) > -focus_angle_lim.x:
-		focus_angle.x += facing_angle_change.x
-	else:
-		focus_angle_change.x = (sign(focus_angle.x) * focus_angle_lim.x) - focus_angle.x
+	facing_angle_change.x = bound_angle(facing_angle_change.x)
+	
+	#If facing angle goes outside focus cone, rotate pivot
+	if(focus_angle.x + facing_angle_change.x) > focus_angle_lim.x or (focus_angle.x + facing_angle_change.x) < -focus_angle_lim.x:
+		focus_angle_change.x = (focus_angle_lim.x * sign(focus_angle.x)) - focus_angle.x
+		turn_angle.x = -((focus_angle.x + facing_angle_change.x) - (focus_angle_lim.x * sign(focus_angle.x)))
 		focus_angle.x += focus_angle_change.x
-		turn_angle.x = -facing_angle_change.x + focus_angle_change.x
-			
+		
 		Pivot.rotate_y(turn_angle.x)
+	else: #Add facing angle change to focus_angle
+		focus_angle.x += facing_angle_change.x
 	
 	###Focus Input Handling (Actual rotation based on input)
 	if input_change.length() > 0:
 		var angle_change = Vector2()
 		
-		angle_change.y = deg2rad(-input_change.x) * look_speed
+		angle_change.y = deg2rad(-input_change.x)
 		if focus_angle.y + angle_change.y < focus_angle_lim.y and focus_angle.y + angle_change.y > -focus_angle_lim.y:
 			Camera_Rig.rotate_y(angle_change.y)
 			focus_angle.y += angle_change.y
@@ -206,7 +219,7 @@ func rotate_camera_angle_limited(input_change):
 			Camera_Rig.rotate_y((focus_angle_lim.y * sign(focus_angle.y)) - focus_angle.y)
 			focus_angle.y += ((focus_angle_lim.y * sign(focus_angle.y)) - focus_angle.y)
 		
-		angle_change.x = deg2rad(input_change.y) * look_speed
+		angle_change.x = deg2rad(input_change.y)
 		if focus_angle.x + angle_change.x < focus_angle_lim.x and focus_angle.x + angle_change.x > -focus_angle_lim.x:
 			Pivot.rotate_x(angle_change.x)
 			focus_angle.x += angle_change.x
@@ -332,35 +345,25 @@ func center_camera():
 		
 		##Y focus angle correction
 		focus_angle.y = target_angle.y - facing_angle.y
-		#Focus angle y > 180
-		if (focus_angle.y > deg2rad(180)):
-			focus_angle.y = focus_angle.y - deg2rad(360)
-		#Focus angle y < -180
-		if (focus_angle.y < deg2rad(-180)):
-			focus_angle.y = focus_angle.y + deg2rad(360)
+		focus_angle.y = bound_angle(focus_angle.y)
 		
 		##X focus angle correction
 		focus_angle.x = target_angle.x - facing_angle.x
-		#Focus angle y > 180
-		if (focus_angle.x > deg2rad(180)):
-			focus_angle.x = focus_angle.x - deg2rad(360)
-		#Focus angle y < -180
-		if (focus_angle.x < deg2rad(-180)):
-			focus_angle.x = focus_angle.x + deg2rad(360)
+		focus_angle.x = bound_angle(focus_angle.x)
 		
-			#Check if rotated past focus_angle_lim and correct if so
-			if focus_angle.y > focus_angle_lim.y or focus_angle.y < -focus_angle_lim.y:
-				Camera_Rig.rotate_y(-(focus_angle.y - (focus_angle_lim.y * sign(focus_angle.y))))
-				focus_angle.y -= focus_angle.y - (focus_angle_lim.y * sign(focus_angle.y))
-				targetting = false
-				reset_recenter()
-				emit_signal("break_target")
-			if focus_angle.x > focus_angle_lim.x or focus_angle.x < -focus_angle_lim.x:
-				Pivot.rotate_x(-(focus_angle.x - (focus_angle_lim.x * sign(focus_angle.x))))
-				focus_angle.x -= focus_angle.x - (focus_angle_lim.x * sign(focus_angle.x))
-				targetting = false
-				reset_recenter()
-				emit_signal("break_target")
+		#Check if rotated past focus_angle_lim and correct if so
+		if focus_angle.y > focus_angle_lim.y or focus_angle.y < -focus_angle_lim.y:
+			Camera_Rig.rotate_y(-(focus_angle.y - (focus_angle_lim.y * sign(focus_angle.y))))
+			focus_angle.y -= focus_angle.y - (focus_angle_lim.y * sign(focus_angle.y))
+			targetting = false
+			reset_recenter()
+			emit_signal("break_target")
+		if focus_angle.x > focus_angle_lim.x or focus_angle.x < -focus_angle_lim.x:
+			Pivot.rotate_x(-(focus_angle.x - (focus_angle_lim.x * sign(focus_angle.x))))
+			focus_angle.x -= focus_angle.x - (focus_angle_lim.x * sign(focus_angle.x))
+			targetting = false
+			reset_recenter()
+			emit_signal("break_target")
 	
 	#Update previous facing angle and focus direction
 	previous_facing_angle.y = calculate_global_y_rotation(get_node_direction(Player.get_node("Rig")))

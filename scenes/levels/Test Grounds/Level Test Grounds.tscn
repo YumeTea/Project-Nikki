@@ -17,7 +17,6 @@
 
 [node name="Test Grounds" parent="." instance=ExtResource( 5 )]
 collision_layer = 262145
-collision_mask = 262150
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource( 6 )

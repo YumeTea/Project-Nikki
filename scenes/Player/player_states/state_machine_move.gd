@@ -14,6 +14,7 @@ var initialized_values = {
 	
 	"ledge_height": 0.0,
 	"ledge_grab_transform": Transform(),
+	"wall_normal": Vector3(),
 	
 	"targetting": false,
 	"focus_object": null,
@@ -67,7 +68,7 @@ func _change_state(state_name): #state_machine.gd does the generalized work
 		states_map[state_name].initialize(current_state.initialized_values) #initialize velocity for certain states out of walk state
 	
 	##Special new state handling
-	if state_name in ["fall"] and current_state in [$Jump, $Fall, $Swim]:
+	if state_name in ["fall"] and current_state in [$Jump, $Fall, $Ledge_Hang, $Swim]:
 		states_stack.pop_front()
 	if state_name in ["swim"] and current_state in [$Jump, $Fall, $Swim]:
 		states_stack.pop_front()

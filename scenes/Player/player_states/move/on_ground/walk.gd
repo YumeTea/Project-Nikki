@@ -95,7 +95,7 @@ func walk_first_person(delta):
 	
 	if rotate_to_focus:
 		walk_rotate_to_focus(delta) #for entering first person
-	elif !centering_view and !strafe_locked and ((next_turn_angle.y < focus_angle_lim.y) and (next_turn_angle.y > -focus_angle_lim.y)):
+	elif !centering_view and !strafe_locked and ((next_turn_angle.y < focus_angle_lim.y - deg2rad(2.0)) and (next_turn_angle.y > -focus_angle_lim.y + deg2rad(2.0))):
 		walk_free(delta)
 	elif centering_view:
 		walk_locked_first_person(delta)
@@ -149,7 +149,7 @@ func walk_free(delta):
 	
 	###Player Rotation
 	if direction:
-		owner.get_node("Rig").rotate_y(turn_angle.y)
+		Rig.rotate_y(turn_angle.y)
 
 
 #Locks rig to target or rig facing angle (assumes locked camera control)
