@@ -290,7 +290,7 @@ func calculate_movement_velocity(delta):
 	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
 
 	###Final Velocity
-	if temp_velocity.length() > 0.1:
+	if temp_velocity.length() > 0.01:
 		velocity.x = temp_velocity.x
 		velocity.z = temp_velocity.z
 	else:
@@ -323,7 +323,7 @@ func calculate_ledge_velocity(delta):
 	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
 
 	###Final Velocity
-	if temp_velocity.length() > 0.1:
+	if temp_velocity.length() > 0.01:
 		velocity.x = temp_velocity.x
 		velocity.z = temp_velocity.z
 	else:
@@ -349,7 +349,7 @@ func calculate_swim_velocity(delta):
 	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
 
 	###Final Velocity
-	if temp_velocity.length() > 0.1:
+	if temp_velocity.length() > 0.01:
 		velocity.x = temp_velocity.x
 		velocity.z = temp_velocity.z
 	else:

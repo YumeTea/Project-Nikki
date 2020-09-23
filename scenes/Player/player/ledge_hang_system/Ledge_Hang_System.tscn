@@ -3,7 +3,7 @@
 [ext_resource path="res://scenes/Player/player/ledge_hang_system/ledge_hang_system.gd" type="Script" id=1]
 
 [sub_resource type="CylinderShape" id=1]
-radius = 0.6
+radius = 0.7
 height = 1.0
 
 [sub_resource type="SphereMesh" id=2]
@@ -32,7 +32,7 @@ collision_mask = 262144
 
 [node name="Raycast_Wall" type="RayCast" parent="Area"]
 enabled = true
-cast_to = Vector3( 0, 0, 0.6 )
+cast_to = Vector3( 0, 0, 0.7 )
 collision_mask = 262144
 
 [node name="Collision_Marker" type="MeshInstance" parent="Area"]
@@ -44,10 +44,10 @@ material/0 = SubResource( 3 )
 [node name="Raycast_Facing_Wall" type="RayCast" parent="."]
 enabled = true
 cast_to = Vector3( 0, 0, 1 )
-collision_mask = 262144
+collision_mask = 2147745792
 
 [node name="Raycast_Facing_Ledge" type="RayCast" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0.6 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0.7 )
 enabled = true
 cast_to = Vector3( 0, -0.2, 0 )
 collision_mask = 262144

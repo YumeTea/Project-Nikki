@@ -52,9 +52,9 @@ func _process(delta):
 				
 				#Calculate grab point differently depending on on ledge or not
 				if !on_ledge:
-					calculate_grab_point(Raycast_Wall)
+					calculate_grab_point(Raycast_Wall, Raycast_Ledge)
 				elif on_ledge:
-					calculate_grab_point(Raycast_Facing_Wall)
+					calculate_grab_point(Raycast_Facing_Wall, Raycast_Facing_Ledge)
 					
 				break
 
@@ -93,7 +93,7 @@ func position_ledge_raycasts(intersection_idx):
 	Raycast_Ledge.force_raycast_update()
 
 
-func calculate_grab_point(Wall_Normal_Raycast):
+func calculate_grab_point(Wall_Normal_Raycast, Ledge_Normal_Raycast):
 	wall_normal = Vector3()
 	ledge_height = 0.0
 	var wall_normal_rotated_up = Vector3()
@@ -101,14 +101,14 @@ func calculate_grab_point(Wall_Normal_Raycast):
 	Wall_Normal_Raycast.force_raycast_update()
 	
 	#Correct for floating point errors on ledge_normal
-	var ledge_normal = Raycast_Ledge.get_collision_normal()
+	var ledge_normal = Ledge_Normal_Raycast.get_collision_normal()
 	ledge_normal.x = stepify(ledge_normal.x, 0.0001)
 	ledge_normal.y = stepify(ledge_normal.y, 0.0001)
 	ledge_normal.z = stepify(ledge_normal.z, 0.0001)
 	
-	if Wall_Normal_Raycast.is_colliding() and Raycast_Ledge.is_colliding() and ledge_normal == Vector3(0,1,0) and !Raycast_Ceiling.is_colliding():
+	if Wall_Normal_Raycast.is_colliding() and Ledge_Normal_Raycast.is_colliding() and ledge_normal == Vector3(0,1,0) and !Raycast_Ceiling.is_colliding():
 		wall_normal = Wall_Normal_Raycast.get_collision_normal()
-		ledge_height = Raycast_Ledge.get_collision_point().y
+		ledge_height = Ledge_Normal_Raycast.get_collision_point().y
 		
 		# take the cross product and dot product
 		var cross = wall_normal.cross(Vector3(0,1,0)).normalized()
@@ -134,7 +134,7 @@ func calculate_grab_point(Wall_Normal_Raycast):
 		grab_point_transform = grab_point_transform.looking_at(grab_point + facing_direction, Vector3(0,1,0))
 		
 		#Move grab point visualizer
-		$Area/Collision_Marker.global_transform.origin = grab_point
+		$Area/Collision_Marker.global_transform.origin = grab_point_transform.origin
 		
 		emit_signal("ledge_grab_point", grab_point_transform, ledge_height, wall_normal)
 

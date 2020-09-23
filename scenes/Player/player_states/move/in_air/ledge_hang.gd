@@ -9,6 +9,7 @@ onready var Raycast_Ceiling = Ledge_Grab_System.get_node("Raycast_Ceiling")
 
 
 var ledge_move_speed = 2.0
+var ledge_hang_position_offset = Vector3(0,0,0.1)
 
 
 func initialize(init_values_dic):
@@ -66,6 +67,7 @@ func update(delta):
 	rotate_to_ledge(delta)
 	
 	if !Raycast_Facing_Wall.is_colliding():
+		print("Racast_Facing_Wall lost contact")
 		emit_signal("finished", "fall")
 
 
@@ -101,7 +103,17 @@ func rotate_to_ledge(delta):
 	velocity = velocity.rotated(Vector3(0,1,0), turn_angle.y)
 	
 	if !is_equal_approx(turn_angle.y, 0.0):
-		translate_to_ledge()
+		Rig.rotate_y(turn_angle.y)
+		velocity.rotated(Vector3(0,1,0), turn_angle.y)
+		
+		#Translate player to grab position
+		var wall_normal_horizontal = -Raycast_Facing_Wall.get_collision_normal()
+		wall_normal_horizontal = Vector3(wall_normal_horizontal.x, 0.0, wall_normal_horizontal.z).normalized()
+		
+		owner.global_transform.origin.x = ledge_grab_transform.origin.x
+		owner.global_transform.origin.z = ledge_grab_transform.origin.z
+		owner.global_transform.origin += (Raycast_Facing_Wall.get_collision_normal() * (Player_Collision.shape.radius + ledge_hang_position_offset.z))
+		
 	
 	Raycast_Ledge.force_raycast_update()
 	Raycast_Facing_Ledge.force_raycast_update()
@@ -116,7 +128,7 @@ func translate_to_ledge():
 	#Modify grab point transform to account for player collision size
 	ledge_grab_transform.origin.y = ledge_hang_height
 	wall_normal = Vector3(wall_normal.x, 0.0, wall_normal.z).normalized()
-	ledge_grab_transform.origin += wall_normal * Player.get_node("CollisionShape").shape.radius
+	ledge_grab_transform.origin += wall_normal * (Player_Collision.shape.radius + ledge_hang_position_offset.z)
 	
 	Player.global_transform.origin = ledge_grab_transform.origin
 	
