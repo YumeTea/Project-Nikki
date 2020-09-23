@@ -19,6 +19,7 @@ signal inventory_loaded(inventory)
 signal entered_area(area_type, surface_height)
 signal exited_area(area_type)
 
+
 #Save Data Variables
 onready var DATA_PATH = "res://data/temp/player_data.tres"
 var saved_values = {

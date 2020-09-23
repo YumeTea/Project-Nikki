@@ -30,6 +30,8 @@ func enter():
 #Cleans up state, reinitializes values like timers
 func exit():
 	disconnect_player_signals()
+	
+	.exit()
 
 
 #Creates output based on the input event passed in

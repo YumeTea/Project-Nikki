@@ -8,7 +8,6 @@ Frame after animation finished could translate skeleton back to default
 
 
 #Node Storage
-onready var Player_Collision = owner.get_node("CollisionShape")
 onready var Raycast_Wall = Ledge_Grab_System.get_node("Area/Raycast_Wall")
 onready var Raycast_Ledge = Ledge_Grab_System.get_node("Area/Raycast_Ledge")
 onready var Raycast_Facing_Wall = Ledge_Grab_System.get_node("Raycast_Facing_Wall")
@@ -46,6 +45,7 @@ func enter():
 		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Ledge_Climb")
 	else:
 		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Ledge_Climb")
+	
 	.enter()
 
 
@@ -54,7 +54,13 @@ func exit():
 	###Place player object relative to collision transform and reset translated collision and target pos
 	translate_player_to_collision()
 	
+	skeleton.set_bone_pose(skeleton.find_bone("controller"), Transform())
+	skeleton.set_bone_pose(skeleton.find_bone("bone"), Transform())
+	
+	snap_vector = snap_vector_default
+	
 	disconnect_player_signals()
+	
 	.exit()
 
 
@@ -119,7 +125,6 @@ func translate_up_forward(object, object_offset_default, translate_offset : Vect
 
 func translate_player_to_collision():
 	owner.global_transform.origin = Player_Collision.global_transform.origin - collisionshape_offset_default
-	
 	Player_Collision.transform.origin = collisionshape_offset_default
 	owner.get_node("target_pos").transform.origin = target_pos_offset_default
 

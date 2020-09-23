@@ -13,10 +13,12 @@ signal center_view(turn_angle)
 ###Node Storage
 onready var world = get_tree().current_scene
 onready var Player = owner
+onready var Camera_Rig_Position = owner.get_node("Rig/Skeleton/Camera_Rig_Pos")
 onready var camera = owner.get_node("Camera_Rig/Pivot/Cam_Position") #should get camera position a different way
 onready var Pivot = owner.get_node("Camera_Rig/Pivot")
 onready var Rig = owner.get_node("Rig")
 onready var skeleton = owner.get_node("Rig/Skeleton")
+onready var Player_Collision = owner.get_node("CollisionShape")
 onready var Raycast_Floor = owner.get_node("Rig/Raycast_Floor")
 onready var animation_state_machine_move = owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback")
 #Ledge Grab Nodes
@@ -26,6 +28,9 @@ onready var foot_floor_l = owner.get_node("Rig/Skeleton/Foot_Floor_L")
 onready var foot_floor_r = owner.get_node("Rig/Skeleton/Foot_Floor_R")
 onready var foot_l_cont = owner.get_node("Rig/Skeleton/Foot_IK/Foot_L_Cont")
 onready var foot_r_cont = owner.get_node("Rig/Skeleton/Foot_IK/Foot_R_Cont")
+
+#Default Values
+onready var Camera_Rig_Position_transform_default = Camera_Rig_Position.transform
 
 #Ledge Grab Variables
 var ledge_grab_transform : Transform
@@ -111,6 +116,14 @@ func enter():
 
 
 func exit():
+	#Reset custom pose overrides and stop IK
+	stop_foot_ik(foot_floor_l)
+	stop_foot_ik(foot_floor_r)
+	
+	#Reset changes to camera origin node
+	Camera_Rig_Position.transform = Camera_Rig_Position_transform_default
+	owner.get_node("Camera_Rig").global_transform.origin = Camera_Rig_Position.global_transform.origin
+	
 	.exit()
 
 
@@ -131,8 +144,8 @@ func handle_input(event):
 		rotate_to_focus = true
 		reset_view_change_time()
 	
-#	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(quick_turn)
+	if event.is_action_pressed("debug_input") and event.get_device() == 0:
+		print(owner.get_node("Rig/Skeleton/SkeletonIK_Foot_L").is_running())
 	
 	.handle_input(event)
 
@@ -386,8 +399,8 @@ func run_foot_ik():
 			#Start IK
 			owner.get_node("Rig/Skeleton/SkeletonIK_Foot_L").start()
 			
-			pose_override(skeleton.find_bone("talus_l"))
-			pose_override(skeleton.find_bone("foot_l"))
+			pose_override(skeleton.find_bone("talus_l"), true)
+			pose_override(skeleton.find_bone("foot_l"), true)
 		else:
 			stop_foot_ik(foot_floor_l)
 	else:
@@ -417,8 +430,8 @@ func run_foot_ik():
 			#Start IK
 			owner.get_node("Rig/Skeleton/SkeletonIK_Foot_R").start()
 			
-			pose_override(skeleton.find_bone("talus_r"))
-			pose_override(skeleton.find_bone("foot_r"))
+			pose_override(skeleton.find_bone("talus_r"), true)
+			pose_override(skeleton.find_bone("foot_r"), true)
 		else:
 			stop_foot_ik((foot_floor_r))
 	else:
@@ -429,35 +442,43 @@ func stop_foot_ik(foot_floor_attachment):
 	if foot_floor_attachment == foot_floor_l:
 		owner.get_node("Rig/Skeleton/SkeletonIK_Foot_L").stop()
 		skeleton.clear_bones_global_pose_override()
+		pose_override(skeleton.find_bone("talus_l"), false)
+		pose_override(skeleton.find_bone("foot_l"), false)
 	
 	if foot_floor_attachment == foot_floor_r:
 		owner.get_node("Rig/Skeleton/SkeletonIK_Foot_R").stop()
 		skeleton.clear_bones_global_pose_override()
+		pose_override(skeleton.find_bone("talus_r"), false)
+		pose_override(skeleton.find_bone("foot_r"), false)
 
 
-func pose_override(bone_idx):
-	var current_pose = skeleton.get_bone_pose(bone_idx)
-	var zeroed_pose = current_pose.looking_at(Vector3(0,0,1), Vector3(0,1,0))
-	
-	#Find difference between flat foot pose and current anim pose
-	var override_pose = Transform()
-	#Origin
-	override_pose.origin = zeroed_pose.origin - current_pose.origin
-	
-	#X
-	override_pose.basis.x = zeroed_pose.basis.x - current_pose.basis.x
-	override_pose.basis.x.x = 1.0
-	
-	#Y
-	override_pose.basis.y = zeroed_pose.basis.y - current_pose.basis.y
-	override_pose.basis.y.y = 1.0
-	
-	#Z
-	override_pose.basis.z = zeroed_pose.basis.z - current_pose.basis.z 
-	override_pose.basis.z.z = 1.0
-	
-	#Set overriding custom pose
-	skeleton.set_bone_custom_pose(bone_idx, override_pose)
+func pose_override(bone_idx, on_bool : bool):
+	if on_bool:
+		var current_pose = skeleton.get_bone_pose(bone_idx)
+		var zeroed_pose = current_pose.looking_at(Vector3(0,0,1), Vector3(0,1,0))
+		
+		#Find difference between flat foot pose and current anim pose
+		var override_pose = Transform()
+		#Origin
+		override_pose.origin = zeroed_pose.origin - current_pose.origin
+		
+		#X
+		override_pose.basis.x = zeroed_pose.basis.x - current_pose.basis.x
+		override_pose.basis.x.x = 1.0
+		
+		#Y
+		override_pose.basis.y = zeroed_pose.basis.y - current_pose.basis.y
+		override_pose.basis.y.y = 1.0
+		
+		#Z
+		override_pose.basis.z = zeroed_pose.basis.z - current_pose.basis.z 
+		override_pose.basis.z.z = 1.0
+		
+		#Set overriding custom pose
+		skeleton.set_bone_custom_pose(bone_idx, override_pose)
+	else:
+		#Reset custom pose
+		skeleton.set_bone_custom_pose(bone_idx, Transform())
 
 
 func adjust_to_ground():
@@ -494,6 +515,20 @@ func adjust_to_ground():
 		
 		#Move collision
 		owner.get_node("CollisionShape").transform.origin.y = offset
+
+
+#Returns true if ground snap vector is touching something
+func snap_vector_is_colliding():
+	var from_point = Player_Collision.global_transform.origin
+	from_point.y -= Player_Collision.transform.origin.y
+	
+	var to_point = from_point + snap_vector
+	
+	var obstruction = raycast_query(from_point, to_point, self)
+	if obstruction.empty():
+		return false
+	else:
+		return true
 
 
 func reset_recenter():

@@ -19,6 +19,7 @@ signal focus_target(focus_target_node)
 
 
 #Node Storage
+onready var Camera_Rig_Position = owner.get_node("Rig/Skeleton/Camera_Rig_Pos")
 onready var Camera_Position = $Pivot/Cam_Position
 
 var focus_starting_angle = Vector2(deg2rad(15), deg2rad(0))
@@ -50,6 +51,10 @@ func _ready():
 	
 	emit_signal("camera_moved", Camera_Position.global_transform)
 	emit_signal("enter_new_view", starting_view_mode)
+
+
+func _process(delta):
+	global_transform.origin = Camera_Rig_Position.global_transform.origin
 
 
 func get_node_direction(node):

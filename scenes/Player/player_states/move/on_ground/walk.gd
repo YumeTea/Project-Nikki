@@ -25,7 +25,8 @@ func enter():
 		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Walk")
 	else:
 		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Walk")
-
+	
+	.enter()
 
 #Cleans up state, reinitializes values like timers
 func exit():
@@ -35,6 +36,8 @@ func exit():
 	remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
 	
 	disconnect_player_signals()
+	
+	.exit()
 
 
 #Creates output based on the input event passed in

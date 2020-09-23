@@ -6,6 +6,11 @@ Possible issue with fall damage after landing in water
 
 func enter():
 	reset_recenter()
+	
+	.enter()
+
+func exit():
+	.exit()
 
 
 #Creates output based on the input event passed in

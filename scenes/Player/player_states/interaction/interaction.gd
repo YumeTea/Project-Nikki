@@ -156,6 +156,13 @@ func align_up(node_basis, normal):
 	return result
 
 
+#Returns collision data if raycast touches something
+func raycast_query(from, to, exclude):
+	var space_state = owner.get_world().direct_space_state
+	var result = space_state.intersect_ray(from, to, [self, exclude])
+	return result
+
+
 func add_active_tween(property_string):
 	if !active_tweens.has(property_string):
 		active_tweens.append(property_string)

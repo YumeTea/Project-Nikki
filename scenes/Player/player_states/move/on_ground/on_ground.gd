@@ -1,6 +1,14 @@
 extends "res://scenes/Player/player_states/move/motion.gd"
 
 
+func enter():
+	.enter()
+
+
+func exit():
+	.exit()
+
+
 #Creates output based on the input event passed in
 func handle_input(event):
 	if event.is_action_pressed("jump")  and event.get_device() == 0:
@@ -16,7 +24,7 @@ func update(delta):
 		if Player.global_transform.origin.y < (surface_height - player_height):
 			emit_signal("finished", "swim")
 	
-	if owner.is_on_floor() == false:
+	if owner.is_on_floor() == false and !snap_vector_is_colliding():
 		emit_signal("finished", "fall")
 	
 	.update(delta)

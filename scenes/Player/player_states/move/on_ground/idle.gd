@@ -20,7 +20,8 @@ func enter():
 		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Idle")
 	else:
 		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Idle")
-
+	
+	.enter()
 
 #Cleans up state, reinitializes values like timers
 func exit():
@@ -28,6 +29,8 @@ func exit():
 	remove_active_tween("parameters/StateMachineMove/Idle/BlendSpace1D/blend_position")
 	
 	disconnect_player_signals()
+	
+	.exit()
 
 
 #Creates output based on the input event passed in
@@ -48,6 +51,7 @@ func update(delta):
 		idle_first_person(delta)
 	
 	.update(delta)
+
 
 func on_animation_finished(_anim_name):
 	pass

@@ -17,6 +17,8 @@ func enter():
 		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Swim")
 	else:
 		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Swim")
+	
+	.enter()
 
 
 #Cleans up state, reinitializes values like timers
@@ -24,6 +26,8 @@ func exit():
 	#Clear active tweens
 	
 	disconnect_player_signals()
+	
+	.exit()
 
 
 #Creates output based on the input event passed in
