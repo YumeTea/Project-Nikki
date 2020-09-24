@@ -27,10 +27,10 @@ shape = SubResource( 1 )
 [node name="Cam_Position_Default" type="Spatial" parent="Pivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.5 )
 
+[node name="Cam_Position_Target" type="Position3D" parent="Pivot"]
+
 [node name="Head_Target" type="Position3D" parent="Pivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10 )
-
-[node name="Cam_Position_Target" type="Position3D" parent="Pivot"]
 
 [node name="State_Machine" type="Node" parent="."]
 script = ExtResource( 3 )

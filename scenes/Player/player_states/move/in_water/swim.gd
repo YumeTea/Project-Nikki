@@ -1,6 +1,10 @@
 extends "res://scenes/Player/player_states/move/in_water/in_water.gd"
 
 
+"Camera view skews on entering water in first person"
+"Rig rotation is off in first person"
+
+
 func initialize(init_values_dic):
 	for value in init_values_dic:
 		self[value] = init_values_dic[value]
@@ -9,6 +13,8 @@ func initialize(init_values_dic):
 #Initializes state, changes animation, etc
 func enter():
 	surfaced_height = surface_height - player_height
+	speed = speed_swim
+	quick_turn = true
 	snap_vector = Vector3(0,0,0)
 	
 	connect_player_signals()
@@ -50,6 +56,10 @@ func update(delta):
 	.update(delta)
 
 
+func on_animation_started(_anim_name):
+	return
+
+
 func on_animation_finished(_anim_name):
 	pass
 
@@ -71,15 +81,20 @@ func swim_first_person(delta):
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	direction_angle.y = calculate_global_y_rotation(direction)
 	
+	###Check if next_turn_angle is within focus_angle_lim
 	var next_turn_angle = Vector2()
-	next_turn_angle.y = direction_angle.y - camera_angle_global.y
+
+	if direction.length() > 0.0:
+		next_turn_angle.y = direction_angle.y - camera_angle_global.y
+	else:
+		next_turn_angle.y = 0.0
 	
 	###Turn angle bounding
 	next_turn_angle.y = bound_angle(next_turn_angle.y)
 	
 	if rotate_to_focus:
 		swim_rotate_to_focus(delta) #for entering first person
-	elif !centering_view and !strafe_locked and ((next_turn_angle.y < focus_angle_lim.y) and (next_turn_angle.y > -focus_angle_lim.y)):
+	elif !centering_view and !strafe_locked and ((next_turn_angle.y < focus_angle_lim.y - deg2rad(2.0)) and (next_turn_angle.y > -focus_angle_lim.y + deg2rad(2.0))):
 		swim_free(delta)
 	elif centering_view:
 		swim_locked_first_person(delta)
@@ -231,12 +246,11 @@ func swim_locked_first_person(delta):
 #Locks rig to focus angle
 func swim_strafe(delta):
 	direction = get_input_direction()
-	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
+	facing_angle.y = Rig.get_global_transform().basis.get_euler().y
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	
-	direction_angle.y = calculate_global_y_rotation(direction)
-	
 	calculate_swim_velocity(delta)
+	
 	if !direction:
 		quick_turn = true
 	
@@ -252,10 +266,10 @@ func swim_strafe(delta):
 	#Turn radius control right
 	if turn_angle.y > (deg2rad(turn_radius)):
 		turn_angle.y = (deg2rad(turn_radius))
-
-
+	
 	###Player Rotation
 	owner.get_node("Rig").rotate_y(turn_angle.y)
+
 
 #Used to enter third person while moving
 func swim_rotate_to_focus(delta):
@@ -269,8 +283,8 @@ func swim_rotate_to_focus(delta):
 	
 	turn_angle.y = camera_angle_global.y - facing_angle.y
 	turn_angle.y = bound_angle(turn_angle.y)
-	turn_angle.y = turn_angle.y/centering_time_left
-	
+	if view_change_time_left > 0:
+		turn_angle.y = turn_angle.y/view_change_time_left
 	
 	###Player Rotation
 	owner.get_node("Rig").rotate_y(turn_angle.y)
@@ -282,6 +296,5 @@ func swim_rotate_to_focus(delta):
 	if centering_time_left <= 0:
 		centered = true
 		rotate_to_focus = false
-		emit_signal("entered_new_view", view_mode)
 
 

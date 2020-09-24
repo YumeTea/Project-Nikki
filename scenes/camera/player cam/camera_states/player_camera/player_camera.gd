@@ -236,9 +236,9 @@ func calculate_local_x_rotation(direction):
 
 
 func calculate_focus_angle():
-	var camera_angle_global : Vector2
-	var facing_angle : Vector2
-	var angle : Vector2
+	var camera_angle_global = Vector2()
+	var facing_angle = Vector2()
+	var angle = Vector2()
 	
 	#X
 	camera_angle_global.x = calculate_local_x_rotation((get_node_direction(Pivot)))

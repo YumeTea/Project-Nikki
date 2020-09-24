@@ -1,16 +1,29 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://shaders/cel_shading/cel_shader.shader" type="Shader" id=1]
+[ext_resource path="res://shaders/cel_shading/cel_shader_gradient.tres" type="Gradient" id=2]
+[ext_resource path="res://shaders/cel_shading/outline_shader_clip.shader" type="Shader" id=3]
 
 [sub_resource type="BoxShape" id=1]
 
 [sub_resource type="CubeMesh" id=2]
 
 [sub_resource type="ShaderMaterial" id=3]
+render_priority = 1
+shader = ExtResource( 3 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=4]
+gradient = ExtResource( 2 )
+
+[sub_resource type="ShaderMaterial" id=5]
+next_pass = SubResource( 3 )
 shader = ExtResource( 1 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
-shader_param/shadow_color = Color( 0.36, 0.36, 0.36, 1 )
+shader_param/transparent = false
 shader_param/shaded = true
+shader_param/light_ramp = SubResource( 4 )
 
 [node name="Target" type="RigidBody" groups=[
 "actors",
@@ -26,6 +39,6 @@ shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="CollisionShape"]
 mesh = SubResource( 2 )
-material/0 = SubResource( 3 )
+material/0 = SubResource( 5 )
 
 [node name="target_pos" type="Position3D" parent="."]

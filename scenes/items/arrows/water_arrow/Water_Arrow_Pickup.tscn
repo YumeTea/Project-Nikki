@@ -1,18 +1,222 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://models/objects/items_player/arrows/water_arrow/water_arrow_model.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/items/arrows/water_arrow/water_arrow_pickup.gd" type="Script" id=2]
+[ext_resource path="res://shaders/cel_shading/cel_shader_gradient.tres" type="Gradient" id=3]
+[ext_resource path="res://models/objects/items_player/arrows/water_arrow/Arrow Palette.png" type="Texture" id=4]
+[ext_resource path="res://shaders/cel_shading/outline_shader_clip.shader" type="Shader" id=5]
 
-[sub_resource type="SphereShape" id=1]
+[sub_resource type="Shader" id=2]
+code = "shader_type spatial;
+render_mode depth_draw_opaque;
+
+//Currently, shader sets diffuse value to brightest light hitting pixel
+
+uniform vec4 albedo : hint_color = vec4(1.0);
+uniform sampler2D texturemap : hint_albedo;
+uniform sampler2D light_ramp : hint_black;
+
+uniform vec4 highlight_color : hint_color = vec4(0.0, 0.0, 0.0, 1.0);
+
+uniform bool highlighted = false;
+uniform bool transparent = false;
+uniform bool shaded = true;
+
+
+//uniform vec4 shadow_color : hint_color = vec4(0.36, 0.36, 0.36, 1.0);
+
+
+void vertex() {
+	COLOR.a = albedo.a;
+}
+
+void fragment() {
+	//Assign texture as albedo if no albedo set in inspector
+	ALBEDO = texture(texturemap, UV).rgb * albedo.rgb;
+	
+	if (highlighted == true)
+		EMISSION = highlight_color.rgb;
+	else
+		EMISSION = vec3(0.0, 0.55, 1.0);
+	
+//	if (transparent == true) {
+//		TRANSMISSION = vec3(0.0, 0.0, 0.0);
+//		ALPHA = albedo.a;
+//		ALPHA_SCISSOR = 0.0;
+//	}
+//	else {
+//		TRANSMISSION = vec3(1.0, 1.0, 1.0);
+//		ALPHA = 1.0;
+//		ALPHA_SCISSOR = 1.0
+//	}
+}
+
+
+void light() {
+	float NdotL = dot(NORMAL, LIGHT);
+
+	NdotL = (NdotL + 1.0) / 2.0; //squeeze value of NdotL between 0 and 1
+
+	float light_factor = (length(ATTENUATION) + NdotL) / 2.0; //combine NdotL and length of attenuation, then squeeze between 0 and 1
+
+	float light_value = texture(light_ramp, vec2(light_factor, 0)).r; //use NdotL as U value to get light value from light ramp
+
+	//If unshaded, light value is treated as pure black (only ambient light affects pixel)
+	if (shaded == false)
+		light_value = 0.0;
+
+	vec3 lit_color = ALBEDO * LIGHT_COLOR * light_value;
+	vec3 shadowed_color = vec3(0.0);
+
+	//Determine shade color
+	vec3 out_color = max(lit_color, shadowed_color);
+
+	//Only overwrite with out_color if brighter than DIFFUSE_LIGHT
+	if (length(DIFFUSE_LIGHT / ALBEDO) < length(out_color / ALBEDO))
+		DIFFUSE_LIGHT = out_color;
+	else
+		DIFFUSE_LIGHT = DIFFUSE_LIGHT;
+}
+
+
+
+
+
+
+
+
+
+
+"
+
+[sub_resource type="GradientTexture" id=3]
+gradient = ExtResource( 3 )
+
+[sub_resource type="ShaderMaterial" id=9]
+shader = SubResource( 2 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/highlight_color = Color( 0.00784314, 0.282353, 0.368627, 1 )
+shader_param/highlighted = false
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 4 )
+shader_param/light_ramp = SubResource( 3 )
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = ExtResource( 5 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="Shader" id=8]
+code = "shader_type spatial;
+render_mode depth_draw_opaque;
+
+//Currently, shader sets diffuse value to brightest light hitting pixel
+
+uniform vec4 albedo : hint_color = vec4(1.0);
+uniform sampler2D texturemap : hint_albedo;
+uniform sampler2D light_ramp : hint_black;
+
+uniform vec4 highlight_color : hint_color = vec4(0.0, 0.0, 0.0, 1.0);
+
+uniform bool highlighted = false;
+uniform bool transparent = false;
+uniform bool shaded = true;
+
+
+//uniform vec4 shadow_color : hint_color = vec4(0.36, 0.36, 0.36, 1.0);
+
+
+void vertex() {
+	COLOR.a = albedo.a;
+}
+
+void fragment() {
+	//Assign texture as albedo if no albedo set in inspector
+	ALBEDO = texture(texturemap, UV).rgb * albedo.rgb;
+	
+	if (highlighted == true)
+		EMISSION = highlight_color.rgb;
+	
+//	if (transparent == true) {
+//		TRANSMISSION = vec3(0.0, 0.0, 0.0);
+//		ALPHA = albedo.a;
+//		ALPHA_SCISSOR = 0.0;
+//	}
+//	else {
+//		TRANSMISSION = vec3(1.0, 1.0, 1.0);
+//		ALPHA = 1.0;
+//		ALPHA_SCISSOR = 1.0
+//	}
+}
+
+
+void light() {
+	float NdotL = dot(NORMAL, LIGHT);
+
+	NdotL = (NdotL + 1.0) / 2.0; //squeeze value of NdotL between 0 and 1
+
+	float light_factor = (length(ATTENUATION) + NdotL) / 2.0; //combine NdotL and length of attenuation, then squeeze between 0 and 1
+
+	float light_value = texture(light_ramp, vec2(light_factor, 0)).r; //use NdotL as U value to get light value from light ramp
+
+	//If unshaded, light value is treated as pure black (only ambient light affects pixel)
+	if (shaded == false)
+		light_value = 0.0;
+
+	vec3 lit_color = ALBEDO * LIGHT_COLOR * light_value;
+	vec3 shadowed_color = vec3(0.0);
+
+	//Determine shade color
+	vec3 out_color = max(lit_color, shadowed_color);
+
+	//Only overwrite with out_color if brighter than DIFFUSE_LIGHT
+	if (length(DIFFUSE_LIGHT / ALBEDO) < length(out_color / ALBEDO))
+		DIFFUSE_LIGHT = out_color;
+	else
+		DIFFUSE_LIGHT = DIFFUSE_LIGHT;
+}
+
+
+
+
+
+
+
+
+
+
+"
+
+[sub_resource type="GradientTexture" id=1]
+gradient = ExtResource( 3 )
+
+[sub_resource type="ShaderMaterial" id=10]
+render_priority = 1
+next_pass = SubResource( 5 )
+shader = SubResource( 8 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/highlight_color = Color( 0.00784314, 0.282353, 0.368627, 1 )
+shader_param/highlighted = false
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 4 )
+shader_param/light_ramp = SubResource( 1 )
+
+[sub_resource type="SphereShape" id=7]
 
 [node name="Water_Arrow_Pickup" type="Area" groups=[
-"collectible",
+"interactable",
 ]]
+collision_layer = 4
+collision_mask = 0
 script = ExtResource( 2 )
+item_name = "Water Arrow"
 
 [node name="Arrow_Mesh" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, -0.98995, -0.98995 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.4 )
+material/0 = SubResource( 9 )
+material/1 = SubResource( 10 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-shape = SubResource( 1 )
-[connection signal="body_entered" from="." to="." method="_on_Water_Arrow_Pickup_body_entered"]
+shape = SubResource( 7 )

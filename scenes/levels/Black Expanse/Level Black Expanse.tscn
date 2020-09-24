@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scenes/levels/Black Expanse/Level Black Expanse.gd" type="Script" id=1]
 [ext_resource path="res://scenes/objects/event_triggers/Gate.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://scenes/objects/Test Objects/Target_Tests/RigidBody Target.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/objects/event_triggers/Loading Zone.tscn" type="PackedScene" id=6]
 [ext_resource path="res://shaders/shader_tests/ShaderTest.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/objects/event_triggers/Void Plane.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/objects/environment/Lamp.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scenes/characters/Test Enemy/Test Enemy.tscn" type="PackedScene" id=10]
 
@@ -53,4 +54,7 @@ transform = Transform( 3, 0, 0, 0, 5.1, 0, 0, 0, 0.2, 0, 5.18299, 42 )
 
 [node name="Gate01" parent="Triggers" instance=ExtResource( 2 )]
 transform = Transform( -1, 0, -6.11146e-06, 0, 1, 0, 6.11146e-06, 0, -1, 0, 1.5, 0 )
+
+[node name="Void Plane" parent="Triggers" instance=ExtResource( 8 )]
+transform = Transform( 1000, 0, 0, 0, 2, 0, 0, 0, 1000, 0, -100, 0 )
 [connection signal="body_entered" from="Triggers/Loading Zone" to="." method="_on_Loading_Zone_body_entered"]

@@ -1,11 +1,9 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://models/levels/Black Expanse/Black Expanse 1.002.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://shaders/cel_shading/outline_shader_clip.shader" type="Shader" id=2]
 [ext_resource path="res://shaders/cel_shading/cel_shader.shader" type="Shader" id=3]
 [ext_resource path="res://models/objects/black expanse objects/Hill.tscn" type="PackedScene" id=4]
-[ext_resource path="res://scenes/level geometry/Test Grounds/materials/Ground.material" type="Material" id=5]
-[ext_resource path="res://scenes/level geometry/Test Grounds/materials/Grass.material" type="Material" id=6]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
@@ -61,8 +59,6 @@ shape = SubResource( 6 )
 
 [node name="Hill 01" parent="." instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, -23 )
-material/0 = ExtResource( 5 )
-material/1 = ExtResource( 6 )
 
 [node name="Hill 02" parent="." instance=ExtResource( 4 )]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 19.2518, 0, -15.7995 )

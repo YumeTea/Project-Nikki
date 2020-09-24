@@ -8,3 +8,6 @@ ambient_light_energy = 1.67
 fog_enabled = true
 fog_color = Color( 0.24, 0.42, 0.6, 1 )
 fog_depth_end = 416.0
+glow_enabled = true
+glow_blend_mode = 0
+glow_bicubic_upscale = true

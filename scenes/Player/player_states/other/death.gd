@@ -27,6 +27,10 @@ func update(_delta):
 	return
 
 
+func on_animation_started(_anim_name):
+	return
+
+
 func on_animation_finished(_anim_name):
 	return
 

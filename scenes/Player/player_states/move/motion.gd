@@ -1,6 +1,9 @@
 extends "res://scenes/Player/player_states/interaction/interaction.gd"
 
 
+"Velocity rotation is off sometimes"
+
+
 #Variable Signals
 signal position_changed(current_position)
 signal velocity_changed(current_velocity)
@@ -144,8 +147,8 @@ func handle_input(event):
 		rotate_to_focus = true
 		reset_view_change_time()
 	
-	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-		print(owner.get_node("Rig/Skeleton/SkeletonIK_Foot_L").is_running())
+#	if event.is_action_pressed("debug_input") and event.get_device() == 0:
+#		print(owner.get_node("Rig/Skeleton/SkeletonIK_Foot_L").is_running())
 	
 	.handle_input(event)
 
@@ -275,20 +278,20 @@ func calculate_movement_velocity(delta):
 	###Velocity Calculation
 	var temp_velocity = velocity
 	temp_velocity.y = 0.0
-
+	
 	###Target Velocity
 	var target_velocity = direction * speed
-
+	
 	###Determine the type of acceleration
 	var acceleration
 	if direction.dot(temp_velocity) > 0 or temp_velocity == Vector3(0,0,0):
 		acceleration = ACCEL
 	else:
 		acceleration = DEACCEL
-
+	
 	#Calculate a portion of the distance to go
 	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
-
+	
 	###Final Velocity
 	if temp_velocity.length() > 0.01:
 		velocity.x = temp_velocity.x
@@ -301,6 +304,31 @@ func calculate_movement_velocity(delta):
 
 
 func calculate_aerial_velocity(delta):
+	###Velocity Calculation
+	var temp_velocity = velocity
+	temp_velocity.y = 0.0
+	
+	###Target Velocity
+	var target_velocity = temp_velocity + (direction * speed)
+	#Limit target velocity in both the positive and negative direction
+	if abs(target_velocity.length()) > speed_default:
+		target_velocity = target_velocity.normalized() * speed_default
+	
+	###Determine the type of acceleration
+	var acceleration
+	acceleration = ACCEL
+	
+	#Calculate a portion of the distance to go
+	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
+	
+	###Final Velocity
+	if temp_velocity.length() > 0.01:
+		velocity.x = temp_velocity.x
+		velocity.z = temp_velocity.z
+	else:
+		velocity.x = 0.0
+		velocity.z = 0.0
+	
 	velocity.y += weight * gravity * delta
 
 
@@ -380,7 +408,7 @@ func run_foot_ik():
 		var normal_dot_up = Vector3(0,1,0).dot(foot_floor_l.get_node("Foot_L_Raycast").get_collision_normal())
 		
 		#Check if floor angle is valid for foot placement
-		if normal_dot_up > (90 - foot_angle_lim) / 90:
+		if normal_dot_up > (90.0 - foot_angle_lim) / 90.0:
 			##Calculate new foot controller global transform
 			#Origin
 			var foot_transform = foot_l_cont.get_global_transform()

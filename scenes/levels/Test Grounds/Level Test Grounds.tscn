@@ -1,5 +1,6 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
+[ext_resource path="res://scenes/creatures/Bone_Swan.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/objects/event_triggers/Void Plane.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/objects/Test Objects/Target_Tests/KinematicBody Target.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/objects/event_triggers/Loading Zone.tscn" type="PackedScene" id=4]
@@ -53,13 +54,19 @@ transform = Transform( -3.93403e-07, 0, 1, 0, 1, 0, -1, 0, -3.93403e-07, 50.6767
 ]]
 
 [node name="Water_Arrow_Pickup" parent="Collectibles" instance=ExtResource( 11 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30.5682, 3.20326, 109.293 )
+transform = Transform( -4.37114e-08, -0.939693, 0.34202, 0, 0.34202, 0.939693, -1, 4.10753e-08, -1.49502e-08, 32.9533, 2.36052, 113.094 )
 
 [node name="Water_Arrow_Pickup2" parent="Collectibles" instance=ExtResource( 11 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30.5682, 3.20326, 111.293 )
+transform = Transform( -4.37114e-08, -0.939693, 0.34202, 0, 0.34202, 0.939693, -1, 4.10753e-08, -1.49502e-08, 32.9533, 2.36052, 114.2 )
 
 [node name="Water_Arrow_Pickup3" parent="Collectibles" instance=ExtResource( 11 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30.5682, 3.20326, 113.293 )
+transform = Transform( -4.37114e-08, -0.939693, 0.34202, 0, 0.34202, 0.939693, -1, 4.10753e-08, -1.49502e-08, 32.9533, 2.36052, 115.244 )
+
+[node name="Water_Arrow_Pickup4" parent="Collectibles" instance=ExtResource( 11 )]
+transform = Transform( -4.37114e-08, -0.939693, 0.34202, 0, 0.34202, 0.939693, -1, 4.10753e-08, -1.49502e-08, 32.9533, 2.36052, 116.422 )
+
+[node name="Water_Arrow_Pickup5" parent="Collectibles" instance=ExtResource( 11 )]
+transform = Transform( -4.37114e-08, -0.939693, 0.34202, 0, 0.34202, 0.939693, -1, 4.10753e-08, -1.49502e-08, 32.9533, 2.36052, 117.515 )
 
 [node name="Triggers" type="Node" parent="." groups=[
 "group_node",
@@ -103,3 +110,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 60.6355, 1, 28.823 )
 
 [node name="Water" parent="Environment_Objects" instance=ExtResource( 8 )]
 transform = Transform( 62.9406, 0, 0, 0, 7.56718, 0, 0, 0, 62.9406, -90.2851, -7.23387, -37.5462 )
+
+[node name="Spatial" parent="Environment_Objects" instance=ExtResource( 1 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -114.491, 53.7245, 154.662 )

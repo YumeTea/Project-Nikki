@@ -1,12 +1,11 @@
 extends Area
 
+export var item_name : String #should be item in item database
 
-func _process(_delta):
-	rotation.y += deg2rad(1)
+var mesh_nodepath = "Arrow_Mesh"
 
 
-func _on_Water_Arrow_Pickup_body_entered(body):
-	if body == Global.get_Player():
-		Global.get_Player().inventory.add_item("Water Arrow", 1)
-		queue_free()
+func interact():
+	Global.get_Player().inventory.add_item(item_name, 1)
+	queue_free()
 

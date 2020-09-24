@@ -8,6 +8,7 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
+	speed = speed_aerial
 	connect_player_signals()
 	
 	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
@@ -31,13 +32,23 @@ func handle_input(event):
 
 #Acts as the _process method would
 func update(delta):
-	calculate_aerial_velocity(delta)
+	aerial_move(delta)
 	.update(delta)
 	
 	if owner.is_on_floor():
 		emit_signal("finished", "previous")
 
 
+func on_animation_started(_anim_name):
+	return
+
+
 func on_animation_finished(_anim_name):
 	return
+
+
+func aerial_move(delta):
+	direction = get_input_direction()
+	
+	calculate_aerial_velocity(delta)
 

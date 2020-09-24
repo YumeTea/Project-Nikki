@@ -13,7 +13,8 @@
 [ext_resource path="res://scenes/Player/player/Player.tscn" type="PackedScene" id=12]
 [ext_resource path="res://shaders/cel_shading/eye_shader.shader" type="Shader" id=13]
 [ext_resource path="res://scenes/objects/interactive/Torch_Lamp.tscn" type="PackedScene" id=14]
-[ext_resource path="res://shaders/cel_shading/shader_test_scene/cel_shader_gradient.tres" type="Gradient" id=15]
+[ext_resource path="res://shaders/cel_shading/cel_shader_gradient.tres" type="Gradient" id=15]
+
 
 
 [sub_resource type="BoxShape" id=1]

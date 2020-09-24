@@ -41,7 +41,10 @@ func handle_input(event):
 
 #Acts as the _process method would
 func update(delta):
-	calculate_aerial_velocity(delta)
+	if has_jumped:
+		aerial_move(delta)
+	else:
+		velocity.y = weight * gravity * delta
 	.update(delta)
 	
 	if owner.is_on_floor() and has_jumped:
@@ -50,13 +53,23 @@ func update(delta):
 		emit_signal("finished", "fall")
 
 
+func on_animation_started(_anim_name):
+	return
+
 
 func on_animation_finished(_anim_name):
 	return
 
 
+func aerial_move(delta):
+	direction = get_input_direction()
+	
+	calculate_aerial_velocity(delta)
+
+
 func jump():
 	if !has_jumped:
+		speed = speed_aerial
 		velocity.y = jump_strength
 		has_jumped = true
 

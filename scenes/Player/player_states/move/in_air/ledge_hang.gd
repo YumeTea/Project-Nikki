@@ -1,6 +1,11 @@
 extends "res://scenes/Player/player_states/move/motion.gd"
 
 
+"""
+Issues moving through tight concave corners
+"""
+
+
 onready var Raycast_Wall = Ledge_Grab_System.get_node("Area/Raycast_Wall")
 onready var Raycast_Ledge = Ledge_Grab_System.get_node("Area/Raycast_Ledge")
 onready var Raycast_Facing_Wall = Ledge_Grab_System.get_node("Raycast_Facing_Wall")
@@ -10,6 +15,8 @@ onready var Raycast_Ceiling = Ledge_Grab_System.get_node("Raycast_Ceiling")
 
 var ledge_move_speed = 2.0
 var ledge_hang_position_offset = Vector3(0,0,0.1)
+
+var rotate_cooldown = false
 
 
 func initialize(init_values_dic):
@@ -66,9 +73,13 @@ func update(delta):
 	
 	rotate_to_ledge(delta)
 	
-	if !Raycast_Facing_Wall.is_colliding():
+	if !Raycast_Facing_Wall.is_colliding() or !Raycast_Facing_Ledge.is_colliding():
 		print("Racast_Facing_Wall lost contact")
 		emit_signal("finished", "fall")
+
+
+func on_animation_started(_anim_name):
+	return
 
 
 func on_animation_finished(_anim_name):
@@ -100,9 +111,7 @@ func rotate_to_ledge(delta):
 	turn_angle.y = wall_facing_angle_global - facing_angle.y
 	turn_angle.y = bound_angle(turn_angle.y)
 	
-	velocity = velocity.rotated(Vector3(0,1,0), turn_angle.y)
-	
-	if !is_equal_approx(turn_angle.y, 0.0):
+	if !is_equal_approx(turn_angle.y, 0.0) and !rotate_cooldown:
 		Rig.rotate_y(turn_angle.y)
 		velocity.rotated(Vector3(0,1,0), turn_angle.y)
 		
@@ -114,10 +123,9 @@ func rotate_to_ledge(delta):
 		owner.global_transform.origin.z = ledge_grab_transform.origin.z
 		owner.global_transform.origin += (Raycast_Facing_Wall.get_collision_normal() * (Player_Collision.shape.radius + ledge_hang_position_offset.z))
 		
-	
-	Raycast_Ledge.force_raycast_update()
-	Raycast_Facing_Ledge.force_raycast_update()
-
+		rotate_cooldown = true
+	else:
+		rotate_cooldown = false
 
 #Currently does not interpolate, just snaps player to ledge
 #Moves player to ledge hang position on entering ledge_hang state

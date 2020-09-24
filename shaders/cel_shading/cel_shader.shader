@@ -7,6 +7,9 @@ uniform vec4 albedo : hint_color = vec4(1.0);
 uniform sampler2D texturemap : hint_albedo;
 uniform sampler2D light_ramp : hint_black;
 
+uniform vec4 highlight_color : hint_color = vec4(0.0, 0.0, 0.0, 1.0);
+
+uniform bool highlighted = false;
 uniform bool transparent = false;
 uniform bool shaded = true;
 
@@ -21,6 +24,9 @@ void vertex() {
 void fragment() {
 	//Assign texture as albedo if no albedo set in inspector
 	ALBEDO = texture(texturemap, UV).rgb * albedo.rgb;
+	
+	if (highlighted == true)
+		EMISSION = highlight_color.rgb;
 	
 //	if (transparent == true) {
 //		TRANSMISSION = vec3(0.0, 0.0, 0.0);

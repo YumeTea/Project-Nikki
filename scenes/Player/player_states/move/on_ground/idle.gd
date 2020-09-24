@@ -53,6 +53,10 @@ func update(delta):
 	.update(delta)
 
 
+func on_animation_started(_anim_name):
+	return
+
+
 func on_animation_finished(_anim_name):
 	pass
 

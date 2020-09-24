@@ -16,6 +16,7 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
+	speed = speed_default
 	quick_turn = true #quick turn must be true at start
 	is_falling = false
 	centered = false
@@ -70,6 +71,10 @@ func update(delta):
 	.update(delta)
 
 
+func on_animation_started(_anim_name):
+	return
+
+
 func on_animation_finished(_anim_name):
 	return
 
@@ -91,10 +96,15 @@ func walk_first_person(delta):
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	direction_angle.y = calculate_global_y_rotation(direction)
 	
+	###Check if next_turn_angle is within focus_angle_lim
 	var next_turn_angle = Vector2()
-	next_turn_angle.y = direction_angle.y - camera_angle_global.y
+
+	if direction.length() > 0.0:
+		next_turn_angle.y = direction_angle.y - camera_angle_global.y
+	else:
+		next_turn_angle.y = 0.0
 	
-	###Turn angle bounding
+	#Turn angle bounding
 	next_turn_angle.y = bound_angle(next_turn_angle.y)
 	
 	if rotate_to_focus:
@@ -111,7 +121,7 @@ func walk_first_person(delta):
 
 func walk_free(delta):
 	direction = get_input_direction()
-	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
+	facing_angle.y = Rig.get_global_transform().basis.get_euler().y
 	var input_direction_angle = calculate_global_y_rotation(direction)
 	
 	if !direction:
@@ -255,6 +265,7 @@ func walk_strafe(delta):
 	direction_angle.y = calculate_global_y_rotation(direction)
 	
 	calculate_movement_velocity(delta)
+	
 	if !direction:
 		quick_turn = true
 	
@@ -270,10 +281,11 @@ func walk_strafe(delta):
 	#Turn radius control right
 	if turn_angle.y > (deg2rad(turn_radius)):
 		turn_angle.y = (deg2rad(turn_radius))
-
-
+	
+	
 	###Player Rotation
 	owner.get_node("Rig").rotate_y(turn_angle.y)
+
 
 #Used to enter third person while moving
 func walk_rotate_to_focus(delta):

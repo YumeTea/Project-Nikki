@@ -52,9 +52,14 @@ var camera_position
 var camera_direction #where camera would be if attached to player camera rig
 var target_position
 var target_direction
-var min_cam_target_dotp = 0.65 #angle = 90 - (90 * max_cam_target_dotp)
+var min_cam_dot_target = 0.65 #angle = 90 - (90 * max_cam_target_dotp)
 var main_target
 var targetting = false
+
+#Interactables Variables
+var nearby_interactables = []
+var closest_interactable
+var min_cam_dot_interactable = 0.6
 
 #Inventory Variables
 const inventory_resource = preload("res://scripts/custom_resources/inventory_resource.gd")
@@ -88,10 +93,17 @@ func _ready():
 func _input(event):
 	if event.is_action_pressed("lock_target") and event.get_device() == 0:
 		lock_target()
+	if event.is_action_pressed("interact") and event.get_device() == 0:
+		if closest_interactable:
+			closest_interactable.interact()
+			
+#	if event.is_action_pressed("debug_input") and event.get_device() == 0:
+#		print(closest_interactable)
 
 
 func _physics_process(_delta):
 	emit_signal("facing_angle_changed", $Rig.get_global_transform().basis.get_euler())
+	check_interactables_visibility()
 	check_targets_visibility()
 	if targetting:
 		if main_target == null:
@@ -116,10 +128,10 @@ func check_targets_visibility():
 	for target in targettable_objects:
 		target_position = target.get_global_transform().origin
 		target_direction = camera_position.direction_to(target_position)
-		var camera_dotp_target = camera_direction.dot(target_direction)
+		var camera_dot_target = camera_direction.dot(target_direction)
 		
 		#Check if target is inside character's "view cone"
-		if camera_dotp_target > min_cam_target_dotp: #if target is in view cone
+		if camera_dot_target > min_cam_dot_target: #if target is in view cone
 			var obstruction = raycast_query(camera_position, target_position, target)
 			if obstruction.empty(): #if raycast query didn't hit anything
 				if target in visible_targets:
@@ -148,6 +160,29 @@ func check_targets_visibility():
 				erase_target_reticle(target)
 			visible_targets.erase(target)
 			emit_signal("targets_changed", visible_targets)
+
+
+func check_interactables_visibility():
+	var interactable_position
+	var interactable_direction
+	var closest_interactable_dot = -1.0
+	
+	for interactable in nearby_interactables:
+		interactable_position = interactable.global_transform.origin
+		interactable_direction = camera_position.direction_to(interactable_position)
+		var camera_dot_interactable = camera_direction.dot(interactable_direction)
+		
+		#Check if target is inside character's "view cone"
+		if camera_dot_interactable > min_cam_dot_interactable: #if target is in view cone
+			var obstruction = raycast_query(camera_position, interactable_position, interactable)
+			if obstruction.empty(): #if raycast query didn't hit anything
+				if camera_dot_interactable > closest_interactable_dot:
+					closest_interactable = interactable
+					highlight_interactable(interactable, true)
+			else:
+				if interactable == closest_interactable: #if camera line of sight to target blocked, stop targetting
+					closest_interactable = null
+					highlight_interactable(interactable, false)
 
 
 func raycast_query(from, to, exclude):
@@ -207,6 +242,18 @@ func highlight_target_reticle(focus_target, is_targetting):
 				reticle.set_frame(0)
 
 
+func highlight_interactable(object : Node, highlight : bool):
+	var mesh = object.get_node(object.mesh_nodepath)
+	
+	if highlight:
+		for material in mesh.get_surface_material_count():
+			mesh.get_surface_material(material).set_shader_param("highlighted", true)
+	else:
+		for material in mesh.get_surface_material_count():
+			print("disabling highlight")
+			mesh.get_surface_material(material).set_shader_param("highlighted", false)
+
+
 func hit_effect(_effect_type):
 	return
 
@@ -238,6 +285,7 @@ func _on_position_changed(position):
 func _on_velocity_changed(velocity):
 	var current_velocity = velocity
 	emit_signal("velocity_changed", current_velocity)
+
 
 func _on_started_falling(height):
 	if is_falling == false:
@@ -283,6 +331,19 @@ func _on_Targetting_Area_body_exited(body):
 		emit_signal("targets_changed", visible_targets)
 
 
+func _on_Interact_System_area_entered(area):
+	if area in get_tree().get_nodes_in_group("interactable"):
+		nearby_interactables.push_front(area)
+
+
+func _on_Interact_System_area_exited(area):
+	if area in get_tree().get_nodes_in_group("interactable"):
+		if area == closest_interactable:
+			highlight_interactable(closest_interactable, false)
+			closest_interactable = null
+		nearby_interactables.erase(area)
+
+
 func _on_Camera_State_Machine_entered_new_view(view_mode):
 	if view_mode == "first_person":
 		$Rig/Skeleton/Head.set_layer_mask_bit(0, false)
@@ -304,5 +365,7 @@ func _on_Camera_Rig_camera_moved(camera_transform):
 
 func _on_Camera_Rig_break_target():
 	lock_target()
+
+
 
 

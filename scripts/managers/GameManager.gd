@@ -36,6 +36,9 @@ var void_player = false
 #Player Flags
 var player_voided = false
 
+###DEBUG###
+var initialize_player = true
+
 
 func _ready():
 	SceneManager.connect("scene_entered", self, "_on_SceneManager_scene_entered")
@@ -43,7 +46,11 @@ func _ready():
 	
 	
 	SaveManager.clear_temp_data()
-	SceneManager.change_scene(initial_scene, initial_gate)
+	
+	###DEBUG LINES###
+	spawn_player = true
+	SceneManager.current_scene = initial_scene
+#	SceneManager.change_scene(initial_scene, initial_gate)
 
 
 func _process(_delta):
@@ -52,6 +59,11 @@ func _process(_delta):
 	
 	if player_voided:
 		void_player()
+	
+	###DEBUG###
+	if initialize_player:
+		initialize_player()
+		initialize_player = false
 
 
 func initialize_player():
@@ -62,8 +74,8 @@ func initialize_player():
 	
 	#Load player values when initializing
 	var existing_player = SaveManager.load_object_data(Global.get_Player())
-
-	if !existing_player:
+	
+	if !existing_player or initialize_player:
 		initialize_equipment()
 	
 	emit_signal("player_initialized", Global.get_Player())

@@ -1,4 +1,4 @@
-[gd_scene load_steps=131 format=2]
+[gd_scene load_steps=132 format=2]
 
 [ext_resource path="res://scenes/Player/player_states/move/on_ground/idle.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Player/player/player_controller.gd" type="Script" id=2]
@@ -43,7 +43,7 @@
 [ext_resource path="res://models/characters/Nikki/textures/Shirt Texture.png" type="Texture" id=41]
 [ext_resource path="res://models/characters/Nikki/textures/Sock Texture.png" type="Texture" id=42]
 [ext_resource path="res://models/characters/Nikki/textures/Shorts Texture.png" type="Texture" id=43]
-[ext_resource path="res://shaders/cel_shading/shader_test_scene/cel_shader_gradient.tres" type="Gradient" id=44]
+[ext_resource path="res://shaders/cel_shading/cel_shader_gradient.tres" type="Gradient" id=44]
 [ext_resource path="res://scenes/Player/player_states/move/in_water/swim.gd" type="Script" id=45]
 [ext_resource path="res://scenes/Player/player/bow_ik/bow_ik_magnet.gd" type="Script" id=46]
 [ext_resource path="res://models/characters/Nikki/model/anim/Bow_Walk.anim" type="Animation" id=47]
@@ -52,6 +52,7 @@
 [ext_resource path="res://scenes/Player/player/ledge_climb.gd" type="Script" id=50]
 [ext_resource path="res://models/characters/Nikki/model/anim/Ledge_Climb.anim" type="Animation" id=51]
 [ext_resource path="res://models/characters/Nikki/model/anim/Bow_Stance.anim" type="Animation" id=52]
+[ext_resource path="res://scenes/Player/player/item_pickup_system/Interact_System.tscn" type="PackedScene" id=53]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Jump"
@@ -916,35 +917,37 @@ xfade_time = 0.08
 [sub_resource type="AnimationNodeStateMachineTransition" id=41]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=42]
+xfade_time = 0.05
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=43]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=44]
+xfade_time = 0.1
 
 [sub_resource type="AnimationNodeStateMachine" id=45]
 states/Fall/node = SubResource( 9 )
 states/Fall/position = Vector2( 457, -79 )
 states/Idle/node = SubResource( 13 )
-states/Idle/position = Vector2( -40.221, 79 )
+states/Idle/position = Vector2( -70.221, 79 )
 states/Jump/node = SubResource( 14 )
 states/Jump/position = Vector2( 457, -378 )
 states/Land/node = SubResource( 15 )
 states/Land/position = Vector2( 457, 1.368 )
 states/Ledge_Climb/node = SubResource( 16 )
-states/Ledge_Climb/position = Vector2( 225.779, -62.252 )
+states/Ledge_Climb/position = Vector2( 236.779, -79 )
 states/Ledge_Hang/node = SubResource( 17 )
-states/Ledge_Hang/position = Vector2( 358.779, -167.252 )
+states/Ledge_Hang/position = Vector2( 353.779, -167.252 )
 states/Swim/node = SubResource( 18 )
 states/Swim/position = Vector2( 457, 199.368 )
 states/Walk/node = SubResource( 24 )
 states/Walk/position = Vector2( 989.779, 79 )
 transitions = [ "Walk", "Fall", SubResource( 25 ), "Walk", "Idle", SubResource( 26 ), "Idle", "Walk", SubResource( 27 ), "Idle", "Fall", SubResource( 28 ), "Jump", "Fall", SubResource( 29 ), "Idle", "Jump", SubResource( 30 ), "Walk", "Jump", SubResource( 31 ), "Land", "Idle", SubResource( 32 ), "Land", "Walk", SubResource( 33 ), "Fall", "Land", SubResource( 34 ), "Swim", "Idle", SubResource( 35 ), "Swim", "Walk", SubResource( 36 ), "Swim", "Fall", SubResource( 37 ), "Jump", "Swim", SubResource( 38 ), "Fall", "Swim", SubResource( 39 ), "Idle", "Swim", SubResource( 40 ), "Walk", "Swim", SubResource( 41 ), "Fall", "Ledge_Hang", SubResource( 42 ), "Ledge_Hang", "Ledge_Climb", SubResource( 43 ), "Ledge_Hang", "Fall", SubResource( 44 ) ]
-graph_offset = Vector2( -115.221, -339.441 )
+graph_offset = Vector2( -254.221, -367.441 )
 
 [sub_resource type="AnimationNodeTimeScale" id=46]
 
 [sub_resource type="AnimationNodeBlendTree" id=47]
-graph_offset = Vector2( -1093, 45 )
+graph_offset = Vector2( -1079, 6 )
 nodes/MovexAction/node = SubResource( 2 )
 nodes/MovexAction/position = Vector2( -140, 120 )
 nodes/MovexLeftHand/node = SubResource( 3 )
@@ -981,6 +984,8 @@ render_priority = 1
 next_pass = SubResource( 51 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/highlight_color = Color( 0, 0, 0, 1 )
+shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 41 )
@@ -1000,6 +1005,8 @@ render_priority = 1
 next_pass = SubResource( 54 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/highlight_color = Color( 0, 0, 0, 1 )
+shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 39 )
@@ -1040,6 +1047,8 @@ render_priority = 1
 next_pass = SubResource( 60 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/highlight_color = Color( 0, 0, 0, 1 )
+shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 42 )
@@ -1059,6 +1068,8 @@ render_priority = 1
 next_pass = SubResource( 64 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/highlight_color = Color( 0, 0, 0, 1 )
+shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 43 )
@@ -1078,6 +1089,8 @@ render_priority = 1
 next_pass = SubResource( 67 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/highlight_color = Color( 0, 0, 0, 1 )
+shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 40 )
@@ -1225,12 +1238,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.89, 0 )
 [node name="Rig" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.11, 0 )
 
-[node name="Skeleton" parent="Rig" index="0"]
-bones/42/bound_children = [ NodePath("Hand_R") ]
-bones/70/bound_children = [ NodePath("Hand_L") ]
-bones/95/bound_children = [ NodePath("Foot_Floor_R") ]
-bones/99/bound_children = [ NodePath("Foot_Floor_L") ]
-
 [node name="Body Simplified" parent="Rig/Skeleton" index="0"]
 material/0 = SubResource( 53 )
 material/1 = SubResource( 56 )
@@ -1304,7 +1311,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.3, 3.2 )
 script = ExtResource( 33 )
 
 [node name="Hand_L" type="BoneAttachment" parent="Rig/Skeleton" index="5"]
-transform = Transform( -0.000266045, 0.00877598, 0.999961, 0.699866, -0.714246, 0.00645477, 0.714275, 0.69984, -0.00595216, 1.14951, 3.35655, 0.425119 )
+transform = Transform( -0.0393619, 0.730879, 0.681371, 0.0369263, -0.68037, 0.731938, 0.998543, 0.0539704, -0.000208249, 2.16054, 3.49606, -0.161456 )
 bone_name = "hand_l"
 
 [node name="Bow_Position" type="Position3D" parent="Rig/Skeleton/Hand_L"]
@@ -1314,7 +1321,7 @@ transform = Transform( 0.999998, -2.6077e-08, 2.7474e-08, 3.72529e-08, 0.999998,
 visible = false
 
 [node name="Hand_R" type="BoneAttachment" parent="Rig/Skeleton" index="6"]
-transform = Transform( -0.000265747, -0.00877591, -0.999961, -0.699865, -0.714246, 0.006455, -0.714275, 0.69984, -0.00595234, -1.14951, 3.2988, 0.0688174 )
+transform = Transform( -0.0393618, -0.730879, -0.68137, -0.0369249, -0.680369, 0.731939, -0.998542, 0.0539695, -0.000207265, -2.16054, 3.49607, -0.161459 )
 bone_name = "hand_r"
 
 [node name="Arrow_Position" type="Position3D" parent="Rig/Skeleton/Hand_R"]
@@ -1324,7 +1331,7 @@ transform = Transform( -6.51926e-08, 1, 1.63913e-07, -2.04891e-08, 5.96046e-08, 
 visible = false
 
 [node name="Foot_Floor_L" type="BoneAttachment" parent="Rig/Skeleton" index="7"]
-transform = Transform( -0.999349, -0.0360769, -1.09499e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.244769, 0.238872, 0.490536 )
+transform = Transform( -0.999349, -0.0360769, -1.09496e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.24332, 0.205547, -0.140259 )
 bone_name = "foot_floor_ik_l"
 
 [node name="Foot_L_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_L"]
@@ -1333,7 +1340,7 @@ enabled = true
 cast_to = Vector3( 0, -1.34, 0 )
 
 [node name="Foot_Floor_R" type="BoneAttachment" parent="Rig/Skeleton" index="8"]
-transform = Transform( -0.999349, 0.0360769, 1.09499e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.247151, 0.305649, -0.618716 )
+transform = Transform( -0.999349, 0.0360769, 1.09496e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.24332, 0.205547, -0.140259 )
 bone_name = "foot_floor_ik_r"
 
 [node name="Foot_R_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_R"]
@@ -1404,6 +1411,10 @@ collision_mask = 4
 [node name="CollisionShape" type="CollisionShape" parent="Targetting_Area"]
 shape = SubResource( 75 )
 
+[node name="Interact_System" parent="." instance=ExtResource( 53 )]
+input_ray_pickable = false
+collision_layer = 0
+
 [node name="target_pos" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.89, 0 )
 
@@ -1413,7 +1424,6 @@ layer = 0
 [node name="UI_In_Game" parent="UI_Layer" instance=ExtResource( 7 )]
 
 [node name="Debug Value Display" parent="UI_Layer" instance=ExtResource( 4 )]
-visible = false
 
 [node name="Timer" type="Timer" parent="."]
 
@@ -1449,5 +1459,7 @@ material/0 = SubResource( 78 )
 [connection signal="camera_moved" from="Camera_Rig" to="." method="_on_Camera_Rig_camera_moved"]
 [connection signal="body_entered" from="Targetting_Area" to="." method="_on_Targetting_Area_body_entered"]
 [connection signal="body_exited" from="Targetting_Area" to="." method="_on_Targetting_Area_body_exited"]
+[connection signal="area_entered" from="Interact_System" to="." method="_on_Interact_System_area_entered"]
+[connection signal="area_exited" from="Interact_System" to="." method="_on_Interact_System_area_exited"]
 
 [editable path="Rig"]

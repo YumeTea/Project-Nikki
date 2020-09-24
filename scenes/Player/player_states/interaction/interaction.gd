@@ -45,7 +45,7 @@ var camera_angle_global = Vector2()
 ##Move Constants
 const speed_default = 18
 const speed_bow_walk = 7
-const speed_aerial = 8
+const speed_aerial = 3
 const speed_swim = 8
 
 const surface_speed = 4
