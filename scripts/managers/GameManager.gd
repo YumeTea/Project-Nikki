@@ -37,19 +37,23 @@ var void_player = false
 var player_voided = false
 
 ###DEBUG###
-var initialize_player = true
+var initialize_player
 
 
 func _ready():
+	#Connect to SceneManager signals
 	SceneManager.connect("scene_entered", self, "_on_SceneManager_scene_entered")
 	SceneManager.connect("scene_exited", self, "_on_SceneManager_scene_exited")
 	
-	
+	#Clear temp data files if they exist before initializing world or loading saved temp files
 	SaveManager.clear_temp_data()
 	
 	###DEBUG LINES###
+	#Set values to initialize player due to loading level scene directly
+	initialize_player = true
 	spawn_player = true
 	SceneManager.current_scene = initial_scene
+	#Change to starting scene
 #	SceneManager.change_scene(initial_scene, initial_gate)
 
 
@@ -117,7 +121,7 @@ func spawn_player(gate_idx):
 
 func void_player():
 		if void_player == false:
-#			#Save player values on voiding
+			#Save player values on voiding
 			SaveManager.save_object_data(Global.get_Player())
 			
 			Global.get_Free_Cam().get_node("Overlay/AnimationPlayer").play("Fade_Out")

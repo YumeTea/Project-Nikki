@@ -22,6 +22,7 @@ func _ready():
 
 
 func _process(delta):
+	#Run change_scene function while transiting between scenes
 	if transiting:
 		change_scene(next_scene, next_gate)
 

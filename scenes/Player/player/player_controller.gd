@@ -48,17 +48,18 @@ var player_position
 #Targetting Variables
 var targettable_objects = []
 var visible_targets = []
+var closest_target = null
+var main_target = null
 var camera_position
 var camera_direction #where camera would be if attached to player camera rig
 var target_position
 var target_direction
 var min_cam_dot_target = 0.65 #angle = 90 - (90 * max_cam_target_dotp)
-var main_target
 var targetting = false
 
 #Interactables Variables
 var nearby_interactables = []
-var closest_interactable
+var closest_interactable = null
 var min_cam_dot_interactable = 0.6
 
 #Inventory Variables
@@ -102,14 +103,9 @@ func _input(event):
 
 
 func _physics_process(_delta):
-	emit_signal("facing_angle_changed", $Rig.get_global_transform().basis.get_euler())
+	emit_signal("facing_angle_changed", $Rig.global_transform.basis.get_euler())
 	check_interactables_visibility()
 	check_targets_visibility()
-	if targetting:
-		if main_target == null:
-			targetting = false
-		emit_signal("focus_target", main_target)
-	highlight_target_reticle(main_target, targetting)
 
 
 func take_damage(value):
@@ -122,97 +118,69 @@ func fall_damage():
 	return fall_damage
 
 
+func hit_effect(_effect_type):
+	return
+
+
 #Uses camera position and camera direction to determine if a target is visible and 
 #viable to target
 func check_targets_visibility():
+	var closest_target_new = null
+	var closest_cam_dot_target = -1.0
+	
 	for target in targettable_objects:
 		target_position = target.get_global_transform().origin
 		target_direction = camera_position.direction_to(target_position)
-		var camera_dot_target = camera_direction.dot(target_direction)
+		var cam_dot_target = camera_direction.dot(target_direction)
 		
 		#Check if target is inside character's "view cone"
-		if camera_dot_target > min_cam_dot_target: #if target is in view cone
+		#Determine target closest to view center
+		if cam_dot_target > min_cam_dot_target: #if target is in view cone
 			var obstruction = raycast_query(camera_position, target_position, target)
 			if obstruction.empty(): #if raycast query didn't hit anything
+				#If target is closer to center than current closest, replace current closest target
+				if cam_dot_target > closest_cam_dot_target:
+					closest_target_new = target
+					closest_cam_dot_target = cam_dot_target
+				
 				if target in visible_targets:
-					pass
+					continue
 				else:
 					visible_targets.push_front(target)
-					draw_target_reticle(target)
-					emit_signal("targets_changed", visible_targets)
 			else:
-				if target == main_target: #if camera line of sight to target blocked, stop targetting
-					targetting = false
-					main_target = null
-					emit_signal("focus_target", main_target)
 				visible_targets.erase(target)
-				erase_target_reticle(target)
-				emit_signal("targets_changed", visible_targets)
 		else:
-			if target == main_target:
-				var obstruction = raycast_query(camera_position, target_position, target)
-				if obstruction:
-					if target == main_target:
-						targetting = false
-						main_target = null
-						emit_signal("focus_target", main_target)
-			else:
-				erase_target_reticle(target)
 			visible_targets.erase(target)
-			emit_signal("targets_changed", visible_targets)
-
-
-func check_interactables_visibility():
-	var interactable_position
-	var interactable_direction
-	var closest_interactable_dot = -1.0
 	
-	for interactable in nearby_interactables:
-		interactable_position = interactable.global_transform.origin
-		interactable_direction = camera_position.direction_to(interactable_position)
-		var camera_dot_interactable = camera_direction.dot(interactable_direction)
-		
-		#Check if target is inside character's "view cone"
-		if camera_dot_interactable > min_cam_dot_interactable: #if target is in view cone
-			var obstruction = raycast_query(camera_position, interactable_position, interactable)
-			if obstruction.empty(): #if raycast query didn't hit anything
-				if camera_dot_interactable > closest_interactable_dot:
-					closest_interactable = interactable
-					highlight_interactable(interactable, true)
-			else:
-				if interactable == closest_interactable: #if camera line of sight to target blocked, stop targetting
-					closest_interactable = null
-					highlight_interactable(interactable, false)
-
-
-func raycast_query(from, to, exclude):
-	var space_state = get_world().direct_space_state
-	var result = space_state.intersect_ray(from, to, [self, exclude])
-	return result
-
-
-func get_main_target(target_array): #if array is empty, returns null
-	var centering = 0 #stores how close target is to center camera view
-	var target_main
-	for target in target_array:
-		var target_direction = camera_position.direction_to(target.get_global_transform().origin)
-		if centering < camera_direction.dot(target_direction):
-			centering = camera_direction.dot(target_direction)
-			target_main = target
-	return target_main
+	#Update closest target
+	closest_target = closest_target_new
+	
+	#Draw target reticles
+	for target in targettable_objects:
+		if target in visible_targets:
+			draw_target_reticle(target)
+		else:
+			erase_target_reticle(target)
+			if target == main_target:
+				targetting = false
+				main_target = null
+				emit_signal("focus_target", main_target)
+	
+	emit_signal("targets_changed", visible_targets)
 
 
 func lock_target():
 	var focus_target = main_target
+	
 	if !targetting:
-		main_target = get_main_target(visible_targets)
+		main_target = closest_target
 		targetting = true
-		emit_signal("focus_target", main_target)
+		highlight_target_reticle(main_target, targetting)
 	else:
 		main_target = null
 		targetting = false
-		emit_signal("focus_target", main_target)
-	highlight_target_reticle(focus_target, targetting)
+		highlight_target_reticle(focus_target, targetting)
+	emit_signal("focus_target", main_target)
 
 
 func draw_target_reticle(target):
@@ -226,10 +194,8 @@ func draw_target_reticle(target):
 
 func erase_target_reticle(target):
 	if target:
-		for child in target.get_children():
-			var child_name = child.get_name()
-			if child_name == "Reticle":
-				target.get_node("Reticle").queue_free()
+		if target.has_node("Reticle"):
+			target.get_node("Reticle").queue_free()
 
 
 func highlight_target_reticle(focus_target, is_targetting):
@@ -242,10 +208,44 @@ func highlight_target_reticle(focus_target, is_targetting):
 				reticle.set_frame(0)
 
 
+func check_interactables_visibility():
+	var closest_interactable_new = null
+	var interactable_position
+	var interactable_direction
+	var closest_cam_dot_interactable = -1.0
+	
+	###Determine closest interactable object
+	for interactable in nearby_interactables:
+		interactable_position = interactable.global_transform.origin
+		interactable_direction = camera_position.direction_to(interactable_position)
+		var camera_dot_interactable = camera_direction.dot(interactable_direction)
+		
+		#Check if target is inside character's "view cone"
+		if camera_dot_interactable > min_cam_dot_interactable: #if target is in view cone
+			var obstruction = raycast_query(camera_position, interactable_position, interactable)
+			if obstruction.empty(): #if raycast query didn't hit anything
+				if camera_dot_interactable > closest_cam_dot_interactable:
+					closest_cam_dot_interactable = camera_dot_interactable
+					closest_interactable_new = interactable
+			else:
+				if interactable == closest_interactable: #if camera line of sight to target blocked, stop targetting
+					closest_interactable_new = null
+	
+	###Unhighlight previous interactable and highlight new one if they are not null
+	if closest_interactable:
+		highlight_interactable(closest_interactable, false)
+	
+	closest_interactable = closest_interactable_new
+	
+	if closest_interactable:
+		highlight_interactable(closest_interactable, true)
+
+
 func highlight_interactable(object : Node, highlight : bool):
 	var mesh = object.get_node(object.mesh_nodepath)
 	
 	if highlight:
+		#Activate highlight param for each material
 		for material in mesh.get_surface_material_count():
 			mesh.get_surface_material(material).set_shader_param("highlighted", true)
 	else:
@@ -254,8 +254,10 @@ func highlight_interactable(object : Node, highlight : bool):
 			mesh.get_surface_material(material).set_shader_param("highlighted", false)
 
 
-func hit_effect(_effect_type):
-	return
+func raycast_query(from, to, exclude):
+	var space_state = get_world().direct_space_state
+	var result = space_state.intersect_ray(from, to, [self, exclude])
+	return result
 
 
 func save_data(save_file : Resource):

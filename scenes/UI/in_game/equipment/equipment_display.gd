@@ -39,14 +39,16 @@ func update_arrow_display(equipped_items_dict):
 		
 		Arrow_Count.text = str(equipped_items_dict["Arrow"].quantity)
 		Arrow_Name.text = equipped_items_dict["Arrow"].item_reference.name
+		
+		#Item view rotation
+		if equipped_items["Arrow"] != equipped_items_dict["Arrow"]:
+			#Begin item rotation and timer
+			Arrow_Rotater.get_node("Tween").stop_all()
+			Arrow_Rotater.rotate = true
+			Arrow_Rotater.get_node("Timer").start(3.5)
 	else:
 		Arrow_Count.text = ""
 		Arrow_Name.text = ""
-	
-	#Begin item rotation and timer
-	Arrow_Rotater.get_node("Tween").stop_all()
-	Arrow_Rotater.rotate = true
-	Arrow_Rotater.get_node("Timer").start(3.5)
 
 
 
