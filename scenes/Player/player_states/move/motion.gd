@@ -362,20 +362,20 @@ func calculate_ledge_velocity(delta):
 func calculate_swim_velocity(delta):
 	var temp_velocity = velocity
 	temp_velocity.y = 0
-
+	
 	###Target Velocity
 	var target_velocity = direction * speed_swim
-
+	
 	###Determine the type of acceleration
 	var acceleration
 	if direction.dot(temp_velocity) > 0 or temp_velocity == Vector3(0,0,0):
 		acceleration = ACCEL
 	else:
 		acceleration = DEACCEL
-
+	
 	#Calculate a portion of the distance to go
 	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
-
+	
 	###Final Velocity
 	if temp_velocity.length() > 0.01:
 		velocity.x = temp_velocity.x
@@ -513,7 +513,7 @@ func adjust_to_ground():
 	var floor_raycast = owner.get_node("Rig/Raycast_Floor")
 	var velocity_y_modifier = clamp(velocity.y, -offset_max_velocity_y, offset_max_velocity_y) / offset_max_velocity_y
 	var offset
-	var offset_current = owner.get_node("CollisionShape").transform.origin.y
+	var offset_current = Player_Collision.transform.origin.y
 	
 	if floor_raycast.is_colliding():
 		var floor_normal = floor_raycast.get_collision_normal()
@@ -527,7 +527,7 @@ func adjust_to_ground():
 			offset = offset_current + (collider_offset_change_limit * sign(offset - offset_current))
 		
 		#Move collision
-		owner.get_node("CollisionShape").transform.origin.y = offset
+		Player_Collision.transform.origin.y = offset
 		
 		#Calc how much collision moved and move player object y by opposite amount
 		var offset_change = offset_current - offset
@@ -542,7 +542,7 @@ func adjust_to_ground():
 			offset = offset_current + (collider_offset_change_limit * sign(offset - offset_current))
 		
 		#Move collision
-		owner.get_node("CollisionShape").transform.origin.y = offset
+		Player_Collision.transform.origin.y = offset
 
 
 #Returns true if ground snap vector is touching something
@@ -698,6 +698,7 @@ func _on_environment_area_entered(area_type, surface_h):
 	if area_type == "Water":
 		in_water = true
 		surface_height = surface_h
+		surfaced_height = surface_height - player_height
 
 
 func _on_environment_area_exited(area_type):

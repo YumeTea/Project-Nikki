@@ -96,7 +96,7 @@ func clear_temp_data():
 	var directory : Directory = Directory.new()
 	
 	if directory.open(TEMP_DATA_FOLDER) == OK:
-		directory.list_dir_begin()
+		directory.list_dir_begin(true)
 		var file_name = directory.get_next()
 		while file_name != "":
 			directory.remove(file_name)

@@ -12,7 +12,7 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	surfaced_height = surface_height - player_height
+#	surfaced_height = surface_height - player_height
 	speed = speed_swim
 	quick_turn = true
 	snap_vector = Vector3(0,0,0)

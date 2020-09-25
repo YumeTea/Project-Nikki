@@ -109,7 +109,16 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -73.2494, 1.1, 0.872762 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 60.6355, 1, 28.823 )
 
 [node name="Water" parent="Environment_Objects" instance=ExtResource( 8 )]
-transform = Transform( 62.9406, 0, 0, 0, 7.56718, 0, 0, 0, 62.9406, -90.2851, -7.23387, -37.5462 )
+transform = Transform( 62.941, 0, 0, 0, 15, 0, 0, 0, 62.941, -90.2851, -14.3769, -37.5462 )
+
+[node name="Water2" parent="Environment_Objects" instance=ExtResource( 8 )]
+transform = Transform( 8, 0, 0, 0, 9, 0, 0, 0, 33, -26.14, -21.5157, -13.0101 )
+
+[node name="Water3" parent="Environment_Objects" instance=ExtResource( 8 )]
+transform = Transform( -6.11959e-07, 0, 40, 0, 9, 0, -14, 0, -1.74846e-06, 13.4913, -21.5157, 5.65902 )
+
+[node name="Water4" parent="Environment_Objects" instance=ExtResource( 8 )]
+transform = Transform( -1.09278e-06, 0, 28, 0, 15, 0, -25, 0, -1.22392e-06, 80.3427, -14.6575, 13.7652 )
 
 [node name="Bone_Swan" parent="Environment_Objects" instance=ExtResource( 1 )]
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -114.491, 53.7245, 154.662 )

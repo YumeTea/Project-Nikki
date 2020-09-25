@@ -27,6 +27,7 @@ var initialized_values = {
 	"can_void": true,
 	
 	"surface_height": 0.0,
+	"surfaced_height": 0.0,
 	
 	"view_mode": "third_person",
 	"centered": false,

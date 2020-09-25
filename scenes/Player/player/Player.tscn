@@ -11,29 +11,29 @@
 [ext_resource path="res://scenes/Player/player_states/move/on_ground/walk.gd" type="Script" id=9]
 [ext_resource path="res://scenes/Player/player/animationtree.gd" type="Script" id=10]
 [ext_resource path="res://scenes/Player/player_states/move/in_air/fall.gd" type="Script" id=11]
-[ext_resource path="res://models/characters/Nikki/model/anim/Walk.anim" type="Animation" id=12]
-[ext_resource path="res://models/characters/Nikki/model/anim/Run.anim" type="Animation" id=13]
+[ext_resource path="res://models/characters/Nikki/model/anims/Walk.anim" type="Animation" id=12]
+[ext_resource path="res://models/characters/Nikki/model/anims/Run.anim" type="Animation" id=13]
 [ext_resource path="res://scenes/Player/attributes/health.gd" type="Script" id=14]
 [ext_resource path="res://scenes/Player/player_states/other/death.gd" type="Script" id=15]
 [ext_resource path="res://scenes/Player/player_states/move/void_move.gd" type="Script" id=16]
 [ext_resource path="res://scenes/Player/player_states/action/bow.gd" type="Script" id=17]
 [ext_resource path="res://scenes/Player/attacks/magic/projectiles/magic_orb/cast_glow.material" type="Material" id=18]
 [ext_resource path="res://scenes/Player/attacks/magic/projectiles/magic_orb/Casting_Magic_Orb.anim" type="Animation" id=19]
-[ext_resource path="res://models/characters/Nikki/model/anim/None.anim" type="Animation" id=20]
-[ext_resource path="res://models/characters/Nikki/model/anim/Idle.anim" type="Animation" id=21]
+[ext_resource path="res://models/characters/Nikki/model/anims/None.anim" type="Animation" id=20]
+[ext_resource path="res://models/characters/Nikki/model/anims/Idle.anim" type="Animation" id=21]
 [ext_resource path="res://scenes/Player/player_states/action/void_action.gd" type="Script" id=22]
 [ext_resource path="res://scenes/Player/player_states/state_machine_action.gd" type="Script" id=23]
 [ext_resource path="res://scenes/Player/player_states/action/none.gd" type="Script" id=24]
 [ext_resource path="res://scenes/Player/player_states/action/cast.gd" type="Script" id=25]
-[ext_resource path="res://models/characters/Nikki/model/anim/Bow_Hold.anim" type="Animation" id=26]
-[ext_resource path="res://models/characters/Nikki/model/anim/Land.anim" type="Animation" id=27]
-[ext_resource path="res://models/characters/Nikki/model/anim/Ledge_Hang.anim" type="Animation" id=28]
-[ext_resource path="res://models/characters/Nikki/model/anim/Fall.anim" type="Animation" id=29]
+[ext_resource path="res://models/characters/Nikki/model/anims/Bow_Hold.anim" type="Animation" id=26]
+[ext_resource path="res://models/characters/Nikki/model/anims/Land.anim" type="Animation" id=27]
+[ext_resource path="res://models/characters/Nikki/model/anims/Ledge_Hang.anim" type="Animation" id=28]
+[ext_resource path="res://models/characters/Nikki/model/anims/Fall.anim" type="Animation" id=29]
 [ext_resource path="res://models/objects/items_player/bows/Keeper_Bow/Keeper_Bow.tscn" type="PackedScene" id=30]
 [ext_resource path="res://scenes/Player/attacks/arrows/water_arrow/water_arrow.tscn" type="PackedScene" id=31]
 [ext_resource path="res://scripts/tools/ik_magnet.gd" type="Script" id=32]
 [ext_resource path="res://scenes/Player/player/foot_ik/foot_ik_magnet.gd" type="Script" id=33]
-[ext_resource path="res://models/characters/Nikki/model/anim/Draw_Arrow.anim" type="Animation" id=34]
+[ext_resource path="res://models/characters/Nikki/model/anims/Draw_Arrow.anim" type="Animation" id=34]
 [ext_resource path="res://shaders/cel_shading/outline_shader_clip.shader" type="Shader" id=35]
 [ext_resource path="res://models/characters/Nikki/textures/Eye Palette.png" type="Texture" id=36]
 [ext_resource path="res://shaders/cel_shading/eye_shader.shader" type="Shader" id=37]
@@ -46,12 +46,12 @@
 [ext_resource path="res://shaders/cel_shading/cel_shader_gradient.tres" type="Gradient" id=44]
 [ext_resource path="res://scenes/Player/player_states/move/in_water/swim.gd" type="Script" id=45]
 [ext_resource path="res://scenes/Player/player/bow_ik/bow_ik_magnet.gd" type="Script" id=46]
-[ext_resource path="res://models/characters/Nikki/model/anim/Bow_Walk.anim" type="Animation" id=47]
+[ext_resource path="res://models/characters/Nikki/model/anims/Bow_Walk.anim" type="Animation" id=47]
 [ext_resource path="res://scenes/Player/player_states/move/in_air/ledge_hang.gd" type="Script" id=48]
 [ext_resource path="res://scenes/Player/player/ledge_hang_system/Ledge_Hang_System.tscn" type="PackedScene" id=49]
 [ext_resource path="res://scenes/Player/player/ledge_climb.gd" type="Script" id=50]
-[ext_resource path="res://models/characters/Nikki/model/anim/Ledge_Climb.anim" type="Animation" id=51]
-[ext_resource path="res://models/characters/Nikki/model/anim/Bow_Stance.anim" type="Animation" id=52]
+[ext_resource path="res://models/characters/Nikki/model/anims/Ledge_Climb.anim" type="Animation" id=51]
+[ext_resource path="res://models/characters/Nikki/model/anims/Bow_Stance.anim" type="Animation" id=52]
 [ext_resource path="res://scenes/Player/player/item_pickup_system/Interact_System.tscn" type="PackedScene" id=53]
 
 [sub_resource type="Animation" id=1]
@@ -1316,7 +1316,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.3, 3.2 )
 script = ExtResource( 33 )
 
 [node name="Hand_L" type="BoneAttachment" parent="Rig/Skeleton" index="5"]
-transform = Transform( -0.0393619, 0.730879, 0.681371, 0.0369263, -0.68037, 0.731938, 0.998543, 0.0539704, -0.000208249, 2.16054, 3.49606, -0.161456 )
+transform = Transform( 0.00364733, -0.0636321, 0.997966, 0.053847, -0.996514, -0.0637362, 0.998543, 0.053969, -0.000207841, 1.07404, 3.01368, 0.0384459 )
 bone_name = "hand_l"
 
 [node name="Bow_Position" type="Position3D" parent="Rig/Skeleton/Hand_L"]
@@ -1326,7 +1326,7 @@ transform = Transform( 0.999998, -2.6077e-08, 2.7474e-08, 3.72529e-08, 0.999998,
 visible = false
 
 [node name="Hand_R" type="BoneAttachment" parent="Rig/Skeleton" index="6"]
-transform = Transform( -0.0393618, -0.730879, -0.68137, -0.0369249, -0.680369, 0.731939, -0.998542, 0.0539695, -0.000207265, -2.16054, 3.49607, -0.161459 )
+transform = Transform( -0.0393614, -0.730879, -0.68137, -0.0369249, -0.68037, 0.731939, -0.998542, 0.0539693, -0.000207532, -2.16054, 3.49607, -0.161459 )
 bone_name = "hand_r"
 
 [node name="Arrow_Position" type="Position3D" parent="Rig/Skeleton/Hand_R"]
@@ -1336,7 +1336,7 @@ transform = Transform( -6.51926e-08, 1, 1.63913e-07, -2.04891e-08, 5.96046e-08, 
 visible = false
 
 [node name="Foot_Floor_L" type="BoneAttachment" parent="Rig/Skeleton" index="7"]
-transform = Transform( -0.999349, -0.0360769, -1.09496e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.24332, 0.205547, -0.140259 )
+transform = Transform( -0.999349, -0.0360769, -1.09539e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.24332, 0.205547, -0.140259 )
 bone_name = "foot_floor_ik_l"
 
 [node name="Foot_L_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_L"]
@@ -1345,7 +1345,7 @@ enabled = true
 cast_to = Vector3( 0, -1.34, 0 )
 
 [node name="Foot_Floor_R" type="BoneAttachment" parent="Rig/Skeleton" index="8"]
-transform = Transform( -0.999349, 0.0360769, 1.09496e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.24332, 0.205547, -0.140259 )
+transform = Transform( -0.999349, 0.0360769, 1.09539e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.24332, 0.205547, -0.140259 )
 bone_name = "foot_floor_ik_r"
 
 [node name="Foot_R_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_R"]
@@ -1429,6 +1429,7 @@ layer = 0
 [node name="UI_In_Game" parent="UI_Layer" instance=ExtResource( 7 )]
 
 [node name="Debug Value Display" parent="UI_Layer" instance=ExtResource( 4 )]
+visible = false
 
 [node name="Timer" type="Timer" parent="."]
 
@@ -1456,8 +1457,8 @@ material/0 = SubResource( 78 )
 [connection signal="max_health_changed" from="Attributes/Health" to="UI_Layer/UI_In_Game" method="_on_Health_max_health_changed"]
 [connection signal="move_state_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_changed"]
 [connection signal="move_state_stack_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_stack_changed"]
-[connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]
 [connection signal="action_state_changed" from="State_Machine_Action" to="State_Machine_Move" method="_on_State_Machine_Action_action_state_changed"]
+[connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]
 [connection signal="action_state_stack_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_stack_changed"]
 [connection signal="break_target" from="Camera_Rig" to="." method="_on_Camera_Rig_break_target"]
 [connection signal="camera_direction_changed" from="Camera_Rig" to="." method="_on_Camera_Rig_camera_direction_changed"]
