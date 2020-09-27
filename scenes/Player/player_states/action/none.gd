@@ -77,7 +77,7 @@ func on_animation_finished(_anim_name):
 
 
 func set_left_hand_anim():
-	if equipped_bow and ((state_move in ground_states) or (state_move in air_states)):
+	if equipped_bow and ((state_move in ground_states) or (state_move in air_states) or (state_move in swim_states)):
 		if !owner.get_node("AnimationTree").get("parameters/StateMachineLeftHand/playback").is_playing():
 			owner.get_node("AnimationTree").get("parameters/StateMachineLeftHand/playback").start("Bow_Hold")
 		owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 1.0)

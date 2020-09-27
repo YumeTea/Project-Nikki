@@ -3,6 +3,7 @@ extends "res://scenes/Player/player_states/move/motion.gd"
 
 """
 Issues moving through tight concave corners
+Ledge Raycast should be longer
 """
 
 

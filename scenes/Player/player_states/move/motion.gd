@@ -74,6 +74,7 @@ var direction = Vector3(0,0,0)
 var direction_angle = Vector2(0,0)
 var velocity = Vector3(0,0,0)
 var velocity_horizontal : float
+var acceleration_horizontal : float
 const gravity = -9.8
 const weight = 5
 
@@ -168,6 +169,7 @@ func update(delta):
 	
 	###Motion Value Assignments
 	position = Player.global_transform.origin
+	acceleration_horizontal = Vector2(velocity.x, velocity.z).length() - velocity_horizontal
 	velocity_horizontal = Vector2(velocity.x, velocity.z).length()
 	height = position.y
 	

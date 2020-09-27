@@ -67,6 +67,7 @@ func post_import(scene):
 	for anim in scene.get_node("AnimationPlayer").get_animation_list():
 		var anim_resource = scene.get_node("AnimationPlayer").get_animation(anim)
 		anim_resource.step = 0.0166666 #change FPS to 60
+		anim_resource.loop = true
 		
 		var save_path = anim_folder.plus_file("%s.anim" % anim_resource.resource_name)
 

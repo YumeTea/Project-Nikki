@@ -250,7 +250,6 @@ func highlight_interactable(object : Node, highlight : bool):
 			mesh.get_surface_material(material).set_shader_param("highlighted", true)
 	else:
 		for material in mesh.get_surface_material_count():
-			print("disabling highlight")
 			mesh.get_surface_material(material).set_shader_param("highlighted", false)
 
 

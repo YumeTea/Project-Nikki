@@ -24,6 +24,9 @@ var air_states = [
 	"Jump",
 	"Fall"
 ]
+var swim_states = [
+	"Swim"
+]
 var rig_locked_states = [
 	"Ledge_Hang"
 ]

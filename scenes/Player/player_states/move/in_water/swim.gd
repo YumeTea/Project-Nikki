@@ -1,8 +1,12 @@
 extends "res://scenes/Player/player_states/move/in_water/in_water.gd"
 
 
-"Camera view skews on entering water in first person"
-"Rig rotation is off in first person"
+"Camera view skews on entering water in first person sometimes"
+
+
+#Animation Variables
+var swim_anim_speed_max = 1.5
+const blend_lower_lim = 5.0 #Velocity where idle changes to all swim_forward
 
 
 func initialize(init_values_dic):
@@ -30,6 +34,7 @@ func enter():
 #Cleans up state, reinitializes values like timers
 func exit():
 	#Clear active tweens
+	remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
 	
 	disconnect_player_signals()
 	
@@ -38,6 +43,12 @@ func exit():
 
 #Creates output based on the input event passed in
 func handle_input(event):
+	if event.is_action_pressed("debug_[") and event.get_device() == 0:
+		swim_anim_speed_max -= 0.1
+		print("swim time_scale max: " + str(swim_anim_speed_max))
+	if event.is_action_pressed("debug_]") and event.get_device() == 0:
+		swim_anim_speed_max += 0.1
+		print("swim time_scale max: " + str(swim_anim_speed_max))
 	.handle_input(event)
 
 
@@ -72,7 +83,7 @@ func swim_third_person(delta):
 	elif strafe_locked:
 		swim_strafe(delta)
 	
-#	blend_move_anim()
+	blend_move_anim()
 
 
 func swim_first_person(delta):
@@ -101,7 +112,7 @@ func swim_first_person(delta):
 	else:
 		swim_strafe(delta) #if trying to turn to where neck is over focus angle lim, strafe swim instead
 	
-#	blend_move_anim()
+	blend_move_anim()
 
 
 func swim_free(delta):
@@ -296,5 +307,64 @@ func swim_rotate_to_focus(delta):
 	if centering_time_left <= 0:
 		centered = true
 		rotate_to_focus = false
+
+
+func blend_move_anim():
+	var time_scale
+	var tween_time = 0.5
+	
+	
+	move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position")
+	
+	###Blend position tweening
+	#Going from Idle to Swim_Forward
+	if direction.length() > 0.0 and !is_equal_approx(move_blend_position, 1.0) and !active_tweens.has("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position"):
+		var seconds = (1.0 - move_blend_position) * tween_time
+		#Transition to Swim
+		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Swim/BlendSpace1D/blend_position", move_blend_position, 1.0, seconds, Tween.TRANS_LINEAR)
+		owner.get_node("Tween").start()
+		
+		add_active_tween("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position")
+	#Going from Swim_Forward to Idle
+	elif direction.length() == 0.0 and acceleration_horizontal < 0.0 and !is_equal_approx(move_blend_position, 0.0):
+		if active_tweens.has("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position"):
+			owner.get_node("Tween").stop(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Swim/BlendSpace1D/blend_position")
+		
+		var seconds = (move_blend_position) * tween_time
+		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Swim/BlendSpace1D/blend_position", move_blend_position, 0.0, seconds, Tween.TRANS_LINEAR)
+		owner.get_node("Tween").start()
+		
+		if !active_tweens.has("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position"):
+			add_active_tween("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position")
+	else:
+		remove_active_tween("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position")
+	
+	blend_swim_anim(move_blend_position)
+
+
+func blend_swim_anim(current_blend_position):
+	var time_scale
+	var swim_time_scale
+	
+	
+	#Swim_Idle time scale
+	if is_equal_approx(current_blend_position, 0.0):
+		current_blend_position = 0.0
+		
+		swim_time_scale = 1.0
+		
+		time_scale = swim_time_scale
+	#Swim_Forward time scale
+	elif current_blend_position > 0.0:
+		swim_time_scale = (velocity_horizontal / speed_swim) * swim_anim_speed_max
+		
+		time_scale = swim_time_scale
+	
+	#Set blend position and time_scale in anim nodes
+	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position", current_blend_position)
+	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Swim/TimeScale/scale", time_scale)
+
+
+
 
 
