@@ -3,21 +3,32 @@ extends "res://scenes/Player/player_states/move/motion.gd"
 
 """
 Issues moving through tight concave corners
-Ledge Raycast should be longer
 """
 
-
+#Node Storage
 onready var Raycast_Wall = Ledge_Grab_System.get_node("Area/Raycast_Wall")
 onready var Raycast_Ledge = Ledge_Grab_System.get_node("Area/Raycast_Ledge")
 onready var Raycast_Facing_Wall = Ledge_Grab_System.get_node("Raycast_Facing_Wall")
 onready var Raycast_Facing_Ledge = Ledge_Grab_System.get_node("Raycast_Facing_Ledge")
 onready var Raycast_Ceiling = Ledge_Grab_System.get_node("Raycast_Ceiling")
 
+#Translate Variables
+var ledge_grab_transform_init : Transform
+var ledge_height_init : float
+var wall_normal_init : Vector3
 
+#Translate Frame Timer Variables
+const translate_time = 10
+var translate_time_left = 0
+
+#Ledge Hang Variables
 var ledge_move_speed = 2.0
-var ledge_hang_position_offset = Vector3(0,0,0.1)
+var ledge_hang_position_offset = Vector3(0.0,0.0,0.1)
 
-var rotate_cooldown = false
+#Ledge Hang bools
+var on_ledge : bool
+var at_ledge : bool
+var rotate_cooldown :bool
 
 
 func initialize(init_values_dic):
@@ -27,11 +38,17 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
+	on_ledge = false
+	at_ledge = false
+	rotate_cooldown = false
+	#Initial Translation Assignments
+	ledge_grab_transform_init = ledge_grab_transform
+	ledge_height_init = ledge_height
+	wall_normal_init = wall_normal
+	translate_time_left = translate_time
+	#Initial Physics Values
 	velocity = Vector3(0,0,0)
 	speed = ledge_move_speed
-	
-	#Translate player to ledge
-	translate_to_ledge()
 	
 	connect_player_signals()
 	
@@ -45,7 +62,7 @@ func enter():
 #Cleans up state, reinitializes values like timers
 func exit():
 	speed = speed_default
-	Ledge_Grab_System.get_node("Timer").start(0.134)
+	Ledge_Grab_System.get_node("Timer").start(0.267)
 	
 	disconnect_player_signals()
 	
@@ -58,25 +75,30 @@ func handle_input(event):
 	facing_direction = get_node_direction(Rig)
 	var facing_dot_direction = facing_direction.dot(direction)
 	
-	
 	if event.is_action_pressed("jump") and event.get_device() == 0:
 		if facing_dot_direction < -0.333:
 			emit_signal("finished", "fall")
-		else:
+		elif at_ledge:
 			emit_signal("finished", "ledge_climb")
 	.handle_input(event)
 
 
 #Acts as the _process method would
 func update(delta):
-	ledge_move(delta)
+	if !on_ledge:
+		translate_to_ledge(ledge_grab_transform_init, ledge_height_init, wall_normal_init)
+	elif on_ledge:
+		ledge_move(delta)
+		
+		rotate_to_ledge(delta)
+		
+		if at_ledge and (!Raycast_Facing_Wall.is_colliding() or !Raycast_Facing_Ledge.is_colliding()):
+			print(!Raycast_Facing_Wall.is_colliding())
+			print(!Raycast_Facing_Ledge.is_colliding())
+			print("Racast_Facing_Wall lost contact")
+			emit_signal("finished", "fall")
+	
 	.update(delta)
-	
-	rotate_to_ledge(delta)
-	
-	if !Raycast_Facing_Wall.is_colliding() or !Raycast_Facing_Ledge.is_colliding():
-		print("Racast_Facing_Wall lost contact")
-		emit_signal("finished", "fall")
 
 
 func on_animation_started(_anim_name):
@@ -89,22 +111,23 @@ func on_animation_finished(_anim_name):
 
 func ledge_move(delta):
 	direction = get_input_direction()
-	facing_angle.y = Rig.global_transform.basis.get_euler().y
+	var wall_facing_angle_global = calculate_global_y_rotation(-Raycast_Facing_Wall.get_collision_normal())
 	var input_direction_angle
 	
 	#Calc angle of input relative to player facing direction
-	input_direction_angle = calculate_global_y_rotation(direction) - facing_angle.y
+	input_direction_angle = calculate_global_y_rotation(direction) - wall_facing_angle_global
 	
 	#Get pure left/right input amount
 	var direction_horizontal = Vector3(0,0,direction.length()).rotated(Vector3(0,1,0), input_direction_angle)
 	direction_horizontal = direction_horizontal.x
 	
 	#Align direction to left/right of player rig facing angle
-	direction = Vector3(0,0,direction_horizontal).rotated(Vector3(0,1,0), facing_angle.y + (PI / 2.0))
+	direction = Vector3(0,0,direction_horizontal).rotated(Vector3(0,1,0), wall_facing_angle_global + (PI / 2.0))
 	
-	calculate_ledge_velocity(delta)
+	velocity = calculate_ledge_velocity(delta)
 
 
+#Will need to account for changes in grab point height as well
 func rotate_to_ledge(delta):
 	var wall_facing_angle_global = calculate_global_y_rotation(-Raycast_Facing_Wall.get_collision_normal())
 	facing_angle.y = Rig.global_transform.basis.get_euler().y
@@ -112,46 +135,72 @@ func rotate_to_ledge(delta):
 	turn_angle.y = wall_facing_angle_global - facing_angle.y
 	turn_angle.y = bound_angle(turn_angle.y)
 	
-	if !is_equal_approx(turn_angle.y, 0.0) and !rotate_cooldown:
-		Rig.rotate_y(turn_angle.y)
-		velocity.rotated(Vector3(0,1,0), turn_angle.y)
+	if (!is_equal_approx(turn_angle.y, 0.0) and at_ledge) or translate_time_left > 0:
+		if at_ledge:
+			translate_time_left = translate_time
+			at_ledge = false #false while rotating to ledge; can't climb up
+			
+			#Rotate movement velocity to be parallel to wall
+			velocity = velocity.rotated(Vector3.UP, turn_angle.y)
 		
-		#Translate player to grab position
-		var wall_normal_horizontal = -Raycast_Facing_Wall.get_collision_normal()
-		wall_normal_horizontal = Vector3(wall_normal_horizontal.x, 0.0, wall_normal_horizontal.z).normalized()
+		#Rotate player around wall raycast collision point
+		var angle = turn_angle.y / translate_time_left
+		var rotation_point = Raycast_Facing_Wall.get_collision_point()
 		
-		owner.global_transform.origin.x = ledge_grab_transform.origin.x
-		owner.global_transform.origin.z = ledge_grab_transform.origin.z
-		owner.global_transform.origin += (Raycast_Facing_Wall.get_collision_normal() * (Player_Collision.shape.radius + ledge_hang_position_offset.z))
+		var transform = Player.global_transform
+		transform.origin -= rotation_point
+		transform = transform.rotated(Vector3.UP, angle)
+		transform.origin += rotation_point
 		
-		rotate_cooldown = true
+		Player.global_transform.origin = transform.origin
+		Rig.rotate_y(angle)
+		
+		#Decrement translate frame timer
+		translate_time_left -= 1
+		
+		#Move rig to exact grab point once translation is complete
+		if translate_time_left <= 0:
+			owner.global_transform.origin.x = ledge_grab_transform.origin.x
+			owner.global_transform.origin.z = ledge_grab_transform.origin.z
+			owner.global_transform.origin += (Raycast_Facing_Wall.get_collision_normal() * (Player_Collision.shape.radius + ledge_hang_position_offset.z))
 	else:
-		rotate_cooldown = false
+		at_ledge = true #check this in same frame??
+
 
 #Currently does not interpolate, just snaps player to ledge
 #Moves player to ledge hang position on entering ledge_hang state
-func translate_to_ledge():
-	###Translate Character Object to Ledge
-	ledge_hang_height = ledge_height - Ledge_Grab_System.default_offset
+func translate_to_ledge(ledge_grab_transform, ledge_height, wall_normal):
+	if translate_time_left > 0:
+		###Translate Character Object to Ledge
+		ledge_hang_height = ledge_height - Ledge_Grab_System.default_offset
+		
+		#Modify grab point transform to account for player collision size
+		ledge_grab_transform.origin.y = ledge_hang_height
+		wall_normal = Vector3(wall_normal.x, 0.0, wall_normal.z).normalized()
+		ledge_grab_transform.origin += wall_normal * (Player_Collision.shape.radius + ledge_hang_position_offset.z)
+		
+		var distance = ledge_grab_transform.origin - Player.global_transform.origin
+		distance /= translate_time_left
+		
+		#Move Player to grab point origin
+		Player.global_transform.origin += distance
+		
+		###Center Character Rig
+		var wall_face_angle : Vector3
+		wall_face_angle.y = calculate_global_y_rotation(-wall_normal) #this normal was made horizontal abouve
+		facing_angle.y = calculate_global_y_rotation(get_node_direction(Player.get_node("Rig")))
+		
+		turn_angle.y = wall_face_angle.y - facing_angle.y
+		turn_angle.y = bound_angle(turn_angle.y)
+		turn_angle.y /= translate_time_left
+		
+		Rig.rotate_y(turn_angle.y)
+		
+		#Decrement Frame Timer
+		translate_time_left -= 1
 	
-	#Modify grab point transform to account for player collision size
-	ledge_grab_transform.origin.y = ledge_hang_height
-	wall_normal = Vector3(wall_normal.x, 0.0, wall_normal.z).normalized()
-	ledge_grab_transform.origin += wall_normal * (Player_Collision.shape.radius + ledge_hang_position_offset.z)
-	
-	Player.global_transform.origin = ledge_grab_transform.origin
-	
-	###Center Character Rig
-	var wall_face_angle : Vector3
-	wall_face_angle.y = calculate_global_y_rotation(-wall_normal) #this normal was made horizontal abouve
-	facing_angle.y = calculate_global_y_rotation(get_node_direction(Player.get_node("Rig")))
-	
-	turn_angle.y = wall_face_angle.y - facing_angle.y
-	turn_angle.y = bound_angle(turn_angle.y)
-	
-	Rig.rotate_y(turn_angle.y)
-
-
-
+	if translate_time_left <= 0:
+		on_ledge = true
+		at_ledge = true
 
 

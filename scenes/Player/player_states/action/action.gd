@@ -9,12 +9,6 @@ onready var Rig = owner.get_node("Rig/Skeleton")
 #Initialized Values Storage
 var initialized_values = {}
 
-#Equipment Storage
-var equipped_items = null
-var equipped_weapon = null
-var equipped_bow = null
-var equipped_magic = null
-
 #Player Flags
 var can_void = true
 
@@ -56,6 +50,9 @@ func update(delta):
 	.update(delta)
 
 
+func on_animation_started(_anim_name):
+	return
+
 func on_animation_finished(_anim_name):
 	return
 
@@ -71,22 +68,25 @@ func cycle_equipment():
 		equipped_bow = equipped_items["Bow"]
 
 
+###ACTION ANIMS###
+
+
 #Starts anim and calls function to animate blend amount
 func start_anim_1d_action(anim_name, action_blend_pos, fade_time):
-	anim_fade_in_1d_action(fade_time, action_blend_pos)
+	anim_fade_in_1d_action(action_blend_pos, fade_time)
 	owner.get_node("AnimationTree").set("parameters/TimeScaleAction/scale", 1.0)
 	owner.get_node("AnimationTree").get("parameters/StateMachineAction/playback").start(anim_name)
 
 
 #Animates blend amount for StateMachineAction
-func anim_fade_in_1d_action(fade_time, action_blend_pos):
+func anim_fade_in_1d_action(action_blend_pos, fade_time):
 	var current_blend_pos = owner.get_node("AnimationTree").get("parameters/MovexAction/blend_amount")
-	
+
 	#Check if blend amount is already being animated and interrupt it
 	if active_tweens.has("parameters/MovexAction/blend_amount"):
 		owner.get_node("Tween").stop(owner.get_node("AnimationTree"), "parameters/MovexAction/blend_amount")
 		remove_active_tween("parameters/MovexAction/blend_amount")
-	
+
 	#Start blending fade in if not already doing so
 	if current_blend_pos != action_blend_pos and !active_tweens.has("parameters/MovexAction/blend_amount"):
 		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/MovexAction/blend_amount", current_blend_pos, action_blend_pos, fade_time, Tween.TRANS_LINEAR)
@@ -96,16 +96,55 @@ func anim_fade_in_1d_action(fade_time, action_blend_pos):
 
 func anim_fade_out_1d_action(fade_time):
 	var current_blend_pos = owner.get_node("AnimationTree").get("parameters/MovexAction/blend_amount")
-	
+
 	#Check if blend amount is already being animated and interrupt it
 	if active_tweens.has("parameters/MovexAction/blend_amount"):
 		owner.get_node("Tween").stop_all()
 		remove_active_tween("parameters/MovexAction/blend_amount")
-	
+
 	#Set tween values for blend fade out
 	owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/MovexAction/blend_amount", current_blend_pos, 0.0, fade_time, Tween.TRANS_LINEAR)
 	owner.get_node("Tween").start()
 	add_active_tween("parameters/MovexAction/blend_amount")
+
+
+###RIGHT ARM ANIMS###
+
+
+#Starts anim and calls function to animate blend amount
+func start_anim_1d_right_arm(anim_name, right_arm_blend_pos, fade_time):
+	anim_fade_in_1d_right_arm(right_arm_blend_pos, fade_time)
+	owner.get_node("AnimationTree").get("parameters/StateMachineRightArm/playback").start(anim_name)
+
+
+#Animates blend amount for StateMachineRightArm
+func anim_fade_in_1d_right_arm(right_arm_blend_pos, fade_time):
+	var current_blend_pos = owner.get_node("AnimationTree").get("parameters/MovexRightArm/blend_amount")
+	
+	#Check if blend amount is already being animated and interrupt it
+	if active_tweens.has("parameters/MovexRightArm/blend_amount"):
+		owner.get_node("Tween").stop(owner.get_node("AnimationTree"), "parameters/MovexRightArm/blend_amount")
+		remove_active_tween("parameters/MovexRightArm/blend_amount")
+	
+	#Start blending fade in if not already doing so
+	if current_blend_pos != right_arm_blend_pos and !active_tweens.has("parameters/MovexRightArm/blend_amount"):
+		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/MovexRightArm/blend_amount", current_blend_pos, right_arm_blend_pos, fade_time, Tween.TRANS_LINEAR)
+		owner.get_node("Tween").start()
+		add_active_tween("parameters/MovexRightArm/blend_amount")
+
+
+func anim_fade_out_1d_right_arm(fade_time):
+	var current_blend_pos = owner.get_node("AnimationTree").get("parameters/MovexRightArm/blend_amount")
+	
+	#Check if blend amount is already being animated and interrupt it
+	if active_tweens.has("parameters/MovexRightArm/blend_amount"):
+		owner.get_node("Tween").stop_all()
+		remove_active_tween("parameters/MovexRightArm/blend_amount")
+	
+	#Set tween values for blend fade out
+	owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/MovexRightArm/blend_amount", current_blend_pos, 0.0, fade_time, Tween.TRANS_LINEAR)
+	owner.get_node("Tween").start()
+	add_active_tween("parameters/MovexRightArm/blend_amount")
 
 
 func set_initialized_values(init_values_dic):

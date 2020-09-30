@@ -34,7 +34,7 @@ var range_default = 5.5
 func _ready():
 	#Set Despawn Timer
 	timer.set_wait_time(despawn_time)
-	timer.start()
+	timer.start(despawn_time)
 
 
 func _process(delta):

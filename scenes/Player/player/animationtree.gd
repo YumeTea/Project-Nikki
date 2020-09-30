@@ -6,6 +6,7 @@ signal animation_finished(anim_name)
 
 var Animation_Move_State_Machine = get("parameters/StateMachineMove/playback")
 var Animation_Action_State_Machine = get("parameters/StateMachineAction/playback")
+var Animation_Right_Arm_State_Machine =  get("parameters/StateMachineRightArm/playback")
 
 
 func move_animation_started():
@@ -25,6 +26,16 @@ func action_animation_started():
 
 func action_animation_finished():
 	var anim_name = Animation_Action_State_Machine.get_current_node()
+	emit_signal("animation_finished", anim_name)
+
+
+func right_arm_animation_started():
+	var anim_name = Animation_Right_Arm_State_Machine.get_current_node()
+	emit_signal("animation_started", anim_name)
+
+
+func right_arm_animation_finished():
+	var anim_name = Animation_Right_Arm_State_Machine.get_current_node()
 	emit_signal("animation_finished", anim_name)
 
 

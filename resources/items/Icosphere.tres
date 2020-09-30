@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://scripts/custom_resources/item_resource.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+name = "Icosphere"
+index = 1
+removable = true
+stackable = true
+max_stack_size = 18
+type = "Item"
+item_scene = "res://scenes/Player/attacks/items/icosphere/Icosphere.tscn"
+model_scene = "res://models/objects/items_player/items/icosphere/Icosphere_model.tscn"

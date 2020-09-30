@@ -5,6 +5,7 @@ extends "res://scripts/State Machine/states/state.gd"
 """
 
 #Interaction Signals
+signal input_move_direction_changed(input_direction)
 signal lock_target
 
 ###Node Storage
@@ -17,7 +18,6 @@ var view_mode
 var state_move
 var state_action
 var ground_states = [
-	"Idle",
 	"Walk",
 ]
 var air_states = [
@@ -26,6 +26,10 @@ var air_states = [
 ]
 var swim_states = [
 	"Swim"
+]
+var strafe_locked_states = [
+	"Bow",
+	"Throw_Item",
 ]
 var rig_locked_states = [
 	"Ledge_Hang"
@@ -36,6 +40,13 @@ var active_tweens = []
 
 ###Player Variables
 onready var player_height = owner.get_node("CollisionShape").shape.height
+
+#Equipment Storage
+var equipped_items = null
+var equipped_weapon = null
+var equipped_bow = null
+var equipped_magic = null
+var equipped_item = null
 
 #View Variables
 var facing_direction = Vector3()

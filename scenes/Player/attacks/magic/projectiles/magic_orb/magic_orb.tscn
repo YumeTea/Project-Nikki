@@ -31,4 +31,5 @@ omni_attenuation = 0.000622343
 omni_shadow_mode = 0
 
 [node name="Timer" type="Timer" parent="."]
+one_shot = true
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

@@ -19,6 +19,7 @@ onready var collider_shape = owner.get_node("CollisionShape").shape
 onready var collisionshape_offset_default = Player_Collision.transform.origin
 onready var target_pos_offset_default = owner.get_node("target_pos").transform.origin
 
+#Space Query Variables
 var space_rid
 var space_state
 var query_shape
@@ -86,7 +87,7 @@ func on_animation_started(_anim_name):
 
 func on_animation_finished(anim_name):
 	if anim_name == "Ledge_Climb":
-		emit_signal("finished", "idle")
+		emit_signal("finished", "walk")
 
 
 func check_object_collisions():

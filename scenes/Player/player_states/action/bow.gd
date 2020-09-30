@@ -14,8 +14,8 @@ const bow_blend_pos = 1.0
 const xfade_in_time = 0.25
 const xfade_out_time = 0.25
 
-var equipped_arrow
 var arrow
+var equipped_arrow
 var drawing_arrow
 var arrow_ready
 var arrow_drawn

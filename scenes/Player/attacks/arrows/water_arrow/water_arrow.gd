@@ -30,7 +30,7 @@ func _ready():
 	set_physics_process(false)
 	$CollisionRayCast.add_exception(self)
 	timer.set_wait_time(despawn_time)
-#	timer.start()
+	timer.start(despawn_time)
 
 
 func start(position_init, direction_init):

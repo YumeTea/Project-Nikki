@@ -82,10 +82,6 @@ func handle_input(event):
 		reset_recenter()
 		reset_interpolate()
 	
-#	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		view_change_time_left = 1
-#		emit_signal("finished", "first_person")
-	
 	.handle_input(event)
 
 
@@ -209,7 +205,7 @@ func rotate_camera(input_change):
 		focus_angle.y += focus_angle_change.y
 		turn_angle.y = -facing_angle_change.y + focus_angle_change.y
 	
-		owner.rotate_y(turn_angle.y)
+		Camera_Rig.rotate_y(turn_angle.y)
 	
 	###X Focus Angle Limiting
 	facing_angle_change.x = previous_facing_angle.x - facing_angle.x
@@ -222,9 +218,9 @@ func rotate_camera(input_change):
 		focus_angle.x += focus_angle_change.x
 		turn_angle.x = -facing_angle_change.x + focus_angle_change.x
 	
-		Pivot.rotate_y(turn_angle.x)
+		Pivot.rotate_x(turn_angle.x)
 	
-	###Focus Input Handling (Acutual rotation based on input)
+	###Focus Input Handling (Actual rotation based on input)
 	if input_change.length() > 0:
 		var angle_change = Vector2()
 	

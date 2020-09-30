@@ -44,7 +44,6 @@ var initialized_values = {
 
 func _ready():
 	states_map = {
-	"idle": $Idle,
 	"walk": $Walk,
 	"jump": $Jump,
 	"fall": $Fall,
@@ -73,7 +72,7 @@ func _change_state(state_name): #state_machine.gd does the generalized work
 		states_map[state_name].initialize(current_state.initialized_values) #initialize velocity for certain states out of walk state
 	
 	##Special new state handling
-	if state_name in ["idle"] and current_state in [$Ledge_Climb]:
+	if state_name in ["walk"] and current_state in [$Ledge_Climb]:
 		states_stack.pop_front()
 	if state_name in ["fall"] and current_state in [$Jump, $Fall, $Ledge_Hang, $Ledge_Climb, $Swim]:
 		states_stack.pop_front()

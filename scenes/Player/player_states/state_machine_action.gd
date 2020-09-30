@@ -18,6 +18,7 @@ var initialized_values = {
 	
 	"equipped_items": null,
 	"equipped_bow": null,
+	"equipped_item": null,
 }
 
 func _ready():
@@ -25,6 +26,7 @@ func _ready():
 	"none": $None,
 	"bow": $Bow,
 	"cast": $Cast,
+	"throw_item": $Throw_Item,
 	"death": $Death,
 	"void": $Void
 }

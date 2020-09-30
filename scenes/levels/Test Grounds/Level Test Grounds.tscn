@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://scenes/creatures/Bone_Swan.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/objects/event_triggers/Void Plane.tscn" type="PackedScene" id=2]
@@ -11,6 +11,11 @@
 [ext_resource path="res://scenes/objects/environment/Lamp.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scenes/characters/Test Enemy/Test Enemy.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/items/arrows/water_arrow/Water_Arrow_Pickup.tscn" type="PackedScene" id=11]
+
+[sub_resource type="CubeMesh" id=1]
+
+[sub_resource type="ConcavePolygonShape" id=2]
+data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
 
 [node name="Level Test Grounds" type="Spatial" groups=[
 "world",
@@ -122,3 +127,13 @@ transform = Transform( -1.09278e-06, 0, 28, 0, 15, 0, -25, 0, -1.22392e-06, 80.3
 
 [node name="Bone_Swan" parent="Environment_Objects" instance=ExtResource( 1 )]
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -114.491, 53.7245, 154.662 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Environment_Objects"]
+transform = Transform( 10, 0, 0, 0, 1, 0, 0, 0, 15, 33.4742, 19.1504, 187.25 )
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Environment_Objects/MeshInstance"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Environment_Objects/MeshInstance/StaticBody"]
+shape = SubResource( 2 )

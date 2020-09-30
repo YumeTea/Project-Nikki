@@ -22,7 +22,7 @@ func enter():
 
 #Cleans up state, reinitializes values like timers
 func exit():
-	owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 0.0)
+	owner.get_node("AnimationTree").set("parameters/MovexLeftArm/blend_amount", 0.0)
 	disconnect_player_signals()
 	.exit()
 
@@ -30,6 +30,7 @@ func exit():
 #Creates output based on the input event passed in
 func handle_input(event):
 	#Check for inputs that enter new states first
+	#Ground only actions
 	if state_move in ground_states:
 		if event.is_action_pressed("cast") and event.get_device() == 0:
 			emit_signal("finished", "cast")
@@ -37,11 +38,17 @@ func handle_input(event):
 			if equipped_bow != null:
 				emit_signal("finished", "bow")
 	
+	if !(state_move in ["Ledge_Hang", "Ledge_Climb", "Swim"]):
+		if event.is_action_pressed("use_item") and event.get_device() == 0:
+			if equipped_items["Item"] != null:
+				emit_signal("finished", "throw_item")
+	
 	if event.is_action_pressed("bow_next") and event.get_device() == 0:
 		owner.inventory.next_item("Bow")
 		equipped_items = owner.inventory.equipped_items
 		cycle_equipment()
 	
+	#Switching Arrows
 	if event.is_action_pressed("arrow_next") and event.get_device() == 0:
 		owner.inventory.next_item("Arrow")
 		equipped_items = owner.inventory.equipped_items
@@ -49,8 +56,15 @@ func handle_input(event):
 		owner.inventory.previous_item("Arrow")
 		equipped_items = owner.inventory.equipped_items
 	
-#	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print("MovexAction blend: " + str(owner.get_node("AnimationTree").get("parameters/MovexAction/blend_amount")))
+	#Switching Items
+	if event.is_action_pressed("item_next") and event.get_device() == 0:
+		owner.inventory.next_item("Item")
+		equipped_items = owner.inventory.equipped_items
+	if event.is_action_pressed("item_previous") and event.get_device() == 0:
+		owner.inventory.previous_item("Item")
+		equipped_items = owner.inventory.equipped_items
+	
+	
 	
 	.handle_input(event)
 
@@ -63,7 +77,7 @@ func update(delta):
 					emit_signal("finished", "bow")
 	
 	#Change left arm anim to match held item
-	set_left_hand_anim()
+	set_left_arm_anim()
 	
 	.update(delta)
 
@@ -76,13 +90,13 @@ func on_animation_finished(_anim_name):
 	return
 
 
-func set_left_hand_anim():
+func set_left_arm_anim():
 	if equipped_bow and ((state_move in ground_states) or (state_move in air_states) or (state_move in swim_states)):
-		if !owner.get_node("AnimationTree").get("parameters/StateMachineLeftHand/playback").is_playing():
-			owner.get_node("AnimationTree").get("parameters/StateMachineLeftHand/playback").start("Bow_Hold")
-		owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 1.0)
+		if !owner.get_node("AnimationTree").get("parameters/StateMachineLeftArm/playback").is_playing():
+			owner.get_node("AnimationTree").get("parameters/StateMachineLeftArm/playback").start("Bow_Hold")
+		owner.get_node("AnimationTree").set("parameters/MovexLeftArm/blend_amount", 1.0)
 	else:
-		owner.get_node("AnimationTree").set("parameters/MovexLeftHand/blend_amount", 0.0)
+		owner.get_node("AnimationTree").set("parameters/MovexLeftArm/blend_amount", 0.0)
 
 
 

@@ -2,6 +2,11 @@ extends "res://scenes/Player/player_states/move/on_ground/on_ground.gd"
 
 
 #Animation Variables
+#Idle
+const idle_time_scale_default = 1.0
+const idle_default_blend = 0
+const idle_bow_blend = -0.8
+#Walk
 const walk_anim_speed_max = 1.3
 const run_anim_speed_max = 2.2
 const bow_walk_anim_speed_max = 1.55
@@ -34,7 +39,10 @@ func exit():
 	is_moving = false
 	
 	#Clear active tweens
-	remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
+	remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/1/blend_position")
+	
+	#Set walk anim blend back to idle
+	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position", 0.0)
 	
 	disconnect_player_signals()
 	
@@ -52,7 +60,8 @@ func update(delta):
 	
 	#If stopped or moving backwards with no input, go to idle
 	if (velocity == Vector3(0,0,0) or facing_dot_velocity_horizontal < 0.0) and left_joystick_axis == Vector2(0,0):
-		emit_signal("finished", "idle")
+		is_moving = false
+		is_falling = false
 	
 	#Determine player's speed
 	if state_action == "None" and speed != speed_default:
@@ -315,48 +324,80 @@ func walk_rotate_to_focus(delta):
 		rotate_to_focus = false
 
 
+###ANIMATION FUNCTIONS###
+
+
 func blend_move_anim():
 	var time_scale
-	var bow_walk_time_scale
+	var tween_time = 0.25
 	
-	###Walk/Run Blending
-	#Set move blend position in case coming from idle
-#	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position", move_blend_position)
 	
 	move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
 	
-	#Bow Walk Blend
-	if state_action == "Bow":
-		#Check move position and if move position is already being tweened
-		if move_blend_position != -1.0 and !active_tweens.has("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position"):
-			#Transition to bow walk
-			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Walk/BlendSpace1D/blend_position", move_blend_position, -1.0, 0.25, Tween.TRANS_LINEAR)
-			owner.get_node("Tween").start()
+	###Blend position tweening
+	#Going from Idle to Walk
+	if direction.length() > 0.0 and !is_equal_approx(move_blend_position, 1.0) and !active_tweens.has("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position"):
+		var seconds = (1.0 - move_blend_position) * tween_time
+		#Transition to Walk
+		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Walk/BlendSpace1D/blend_position", move_blend_position, 1.0, seconds, Tween.TRANS_LINEAR)
+		owner.get_node("Tween").start()
+		
+		add_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
+	#Going from Walk to Idle
+	elif (direction.length() == 0.0 and acceleration_horizontal <= 0.0 and !is_equal_approx(move_blend_position, 0.0)):
+		if active_tweens.has("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position"):
+			owner.get_node("Tween").stop(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
+		
+		var seconds = (move_blend_position) * tween_time
+		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Walk/BlendSpace1D/blend_position", move_blend_position, 0.0, seconds, Tween.TRANS_LINEAR)
+		owner.get_node("Tween").start()
+		
+		if !active_tweens.has("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position"):
 			add_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
-		elif move_blend_position == -1.0 and active_tweens.has("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position"):
-			remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
-	
-	#None Walk Blend
 	else:
-		if move_blend_position < 0 and !active_tweens.has("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position"):
-			#Transition to walk
-			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Walk/BlendSpace1D/blend_position", move_blend_position, 0.0, 0.25, Tween.TRANS_LINEAR)
+		remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
+	
+	#Determine time scale blend function based on what anim is playing
+	if move_blend_position > 0.0:
+		blend_walk_anim()
+	else:
+		blend_idle_anim()
+
+
+func blend_idle_anim():
+	var idle_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position")
+	
+	#Bow Idle Blend
+	if state_action == "Bow":
+		if idle_blend_position != idle_bow_blend and !active_tweens.has("parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position"):
+			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position", idle_blend_position, idle_bow_blend, 0.25, Tween.TRANS_LINEAR)
 			owner.get_node("Tween").start()
-			add_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
-		elif move_blend_position >= 0.0:
-			if active_tweens.has("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position"):
-				remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
-			
-	#Run normal walk blending if no special walking
-	blend_walk_anim(move_blend_position)
+			add_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position")
+		elif idle_blend_position == idle_bow_blend and active_tweens.has("parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position"):
+			remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position")
+	
+	#None Idle Blend
+	else:
+		#Animate blend to default idle blend position if coming out of bow state
+		if is_equal_approx(idle_blend_position, idle_bow_blend):
+			owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position", idle_blend_position, 0.0, 0.25, Tween.TRANS_LINEAR)
+			owner.get_node("Tween").start()
+			add_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position")
+		#Clear active tweens if not animating blend position between states
+		elif idle_blend_position > idle_default_blend or is_equal_approx(idle_blend_position, idle_default_blend):
+			remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position")
+	
+	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Walk/TimeScale/scale", idle_time_scale_default)
 
 
-func blend_walk_anim(walk_blend_position):
+func blend_walk_anim():
 	var time_scale
 	var walk_time_scale
 	var run_time_scale
 	var bow_walk_time_scale
 	
+	
+	var walk_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Walk/BlendSpace1D/1/blend_position")
 	
 	if walk_blend_position < 0.0:
 		bow_walk_time_scale = (velocity_horizontal / blend_lower_lim) * bow_walk_anim_speed_max
@@ -369,25 +410,26 @@ func blend_walk_anim(walk_blend_position):
 		
 		if velocity_horizontal < blend_lower_lim:
 			blend_position = 0.0
-			
+		
 			walk_time_scale = (velocity_horizontal / blend_lower_lim) * walk_anim_speed_max
-			
+		
 			time_scale = walk_time_scale
 		elif velocity_horizontal < blend_upper_lim:
 			blend_position = (velocity_horizontal - blend_lower_lim) / (blend_upper_lim - blend_lower_lim)
-			
+		
 			walk_time_scale = (velocity_horizontal / blend_lower_lim) * walk_anim_speed_max
 			run_time_scale = (velocity_horizontal / speed_default) * run_anim_speed_max
-			
+		
 			time_scale = (walk_time_scale - (walk_time_scale * blend_position)) + (run_time_scale * blend_position)
 		else:
 			blend_position = 1.0
-			
+		
 			run_time_scale = (velocity_horizontal / speed_default) * run_anim_speed_max
-			
+		
 			time_scale = run_time_scale
 		
-		owner.get_node("AnimationTree").set("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position", blend_position)
+		#Set walk node blend position and time scale
+		owner.get_node("AnimationTree").set("parameters/StateMachineMove/Walk/BlendSpace1D/1/blend_position", blend_position)
 		owner.get_node("AnimationTree").set("parameters/StateMachineMove/Walk/TimeScale/scale", time_scale)
 
 

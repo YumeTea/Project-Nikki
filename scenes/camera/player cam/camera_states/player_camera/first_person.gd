@@ -203,7 +203,7 @@ func rotate_camera_angle_limited(input_change):
 		turn_angle.x = -((focus_angle.x + facing_angle_change.x) - (focus_angle_lim.x * sign(focus_angle.x)))
 		focus_angle.x += focus_angle_change.x
 		
-		Pivot.rotate_y(turn_angle.x)
+		Pivot.rotate_x(turn_angle.x)
 	else: #Add facing angle change to focus_angle
 		focus_angle.x += facing_angle_change.x
 	

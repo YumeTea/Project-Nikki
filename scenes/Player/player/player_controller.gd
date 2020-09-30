@@ -42,8 +42,11 @@ var fall_height = 0
 var land_height = 0
 var is_falling = false
 
+#Input Variables
+var input_move_direction : Vector3
+
 #Player Variables
-var player_position
+var player_position : Vector3
 
 #Targetting Variables
 var targettable_objects = []
@@ -69,6 +72,8 @@ var inventory = inventory_resource.new()
 
 func _ready():
 	#Connect to player state machine signals
+	for child in $State_Machine_Move.get_children():
+		child.connect("input_move_direction_changed", self, "_on_input_move_direction_changed_changed")
 	for child in $State_Machine_Move.get_children():
 		child.connect("position_changed", self, "_on_position_changed")
 	for child in $State_Machine_Move.get_children():
@@ -276,6 +281,10 @@ func load_data(save_game : Resource):
 		child.set_view_mode(saved_values["view_mode"])
 	
 	emit_signal("inventory_loaded", inventory)
+
+
+func _on_input_move_direction_changed_changed(input_direction):
+	input_move_direction = input_direction
 
 
 func _on_position_changed(position):

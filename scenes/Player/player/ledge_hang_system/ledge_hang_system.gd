@@ -1,6 +1,8 @@
 extends Spatial
 
+
 signal ledge_grab_point(grab_point_transform, ledge_height, wall_normal)
+
 
 #Node Storage
 onready var collider_shape = $Area/CollisionShape.shape
@@ -10,24 +12,29 @@ onready var Raycast_Facing_Wall = $Raycast_Facing_Wall
 onready var Raycast_Facing_Ledge = $Raycast_Facing_Ledge
 onready var Raycast_Ceiling = $Raycast_Ceiling
 
+#Player State Storage
+var state_move
+
 #Transform States
 var default_offset = 7.26 #affects how low player rig hangs below ledge
 var aerial_offset = 7.27
 var swim_offset = 5.58
 
 #Ledge Detection Variables
+var wall_angle_min = deg2rad(90)
+var ledge_angle_max = deg2rad(30)
+
+var grab_point : Vector3
+var facing_direction : Vector3
+var grab_point_transform : Transform
+var ledge_height : float
+var wall_normal : Vector3
+
+#Space Query Variables
 var space_rid
 var space_state
 var query_shape
 var intersections : Array
-var grab_point : Vector3
-var facing_direction : Vector3
-
-var wall_angle_min = deg2rad(90)
-
-var grab_point_transform : Transform
-var ledge_height : float
-var wall_normal : Vector3
 
 #Default Values
 onready var Raycast_Wall_default_cast_to = Raycast_Wall.cast_to
@@ -35,9 +42,6 @@ onready var Raycast_Wall_default_cast_to = Raycast_Wall.cast_to
 #Ledge Detection Bools
 var object_detected = false
 var on_ledge = false
-
-###DEBUG###
-var state_move
 
 
 func _ready():
@@ -48,13 +52,6 @@ func _ready():
 
 
 func _process(delta):
-	###DEBUG TRANSFORM OFFSET###
-	if !(state_move in ["Swim", "Ledge_Hang"]):
-		transform.origin.y = aerial_offset
-	elif !(state_move in ["Ledge_Hang"]):
-		transform.origin.y = swim_offset
-	
-	
 	object_detected = check_object_collisions()
 	
 	if object_detected:
@@ -70,6 +67,9 @@ func _process(delta):
 					calculate_grab_point(Raycast_Facing_Wall, Raycast_Facing_Ledge)
 					
 				break
+	else:
+		Raycast_Ledge.transform.origin.x = 0.0
+		Raycast_Ledge.transform.origin.z = 0.0
 
 
 func check_object_collisions():
@@ -111,44 +111,60 @@ func position_ledge_raycasts(intersection_idx):
 
 
 func calculate_grab_point(Wall_Normal_Raycast, Ledge_Normal_Raycast):
+	var wall_to_ledge_axis
+	var ledge_to_wall_axis
 	wall_normal = Vector3()
 	ledge_height = 0.0
-	var wall_normal_rotated_up = Vector3()
 	
 	Wall_Normal_Raycast.force_raycast_update()
+	Ledge_Normal_Raycast.force_raycast_update()
 	
-	#Correct for floating point errors on ledge_normal
-	var ledge_normal = Ledge_Normal_Raycast.get_collision_normal()
-	ledge_normal.x = stepify(ledge_normal.x, 0.0001)
-	ledge_normal.y = stepify(ledge_normal.y, 0.0001)
-	ledge_normal.z = stepify(ledge_normal.z, 0.0001)
-	
-	if Wall_Normal_Raycast.is_colliding() and Ledge_Normal_Raycast.is_colliding() and ledge_normal == Vector3(0,1,0) and !Raycast_Ceiling.is_colliding():
-		var wall_angle = Wall_Normal_Raycast.get_collision_normal().angle_to(Vector3(0,1,0))
-		var up_dot_ledge
+	if Wall_Normal_Raycast.is_colliding() and Ledge_Normal_Raycast.is_colliding() and !Raycast_Ceiling.is_colliding():
+		#Estimate wall angle(correct for floating point error)
+		var wall_angle = Wall_Normal_Raycast.get_collision_normal().angle_to(Vector3.UP)
+		var ledge_angle = Ledge_Normal_Raycast.get_collision_normal().angle_to(Vector3.UP)
+		wall_angle = stepify(wall_angle, 0.1)
+		ledge_angle = stepify(ledge_angle, 0.1)
 		
-		if wall_angle > wall_angle_min or is_equal_approx(wall_angle, wall_angle_min):
-			###DEBUG###
-			#When valid ledge is found, put ledge detection at default origin
-			transform.origin.y = aerial_offset
+		#Check if ledge surfaces are within limits
+		if wall_angle > wall_angle_min and ledge_angle < ledge_angle_max:
+			###GRAB POINT
+			#Get axes to rotate wall and ledge vector around
+			var cross_wall = Wall_Normal_Raycast.get_collision_normal().cross(Ledge_Normal_Raycast.get_collision_normal()).normalized()
+			var cross_ledge = Ledge_Normal_Raycast.get_collision_normal().cross(Wall_Normal_Raycast.get_collision_normal()).normalized()
 			
+			#Calculate binormals
+			var binormal_wall = Wall_Normal_Raycast.get_collision_normal().rotated(cross_wall, deg2rad(90))
+			var binormal_ledge = Ledge_Normal_Raycast.get_collision_normal().rotated(cross_ledge, deg2rad(90))
+			
+			#Find binormal intersections
+			var o1 = Wall_Normal_Raycast.get_collision_point()
+			var n1 = binormal_wall
+			var o2 = Ledge_Normal_Raycast.get_collision_point()
+			var n2 = binormal_ledge
+			
+			var lambda_wall
+			
+			#Divide by 0 prevention
+			if n2.x == 0.0:
+				lambda_wall = (0.0 + ((o1.y - o2.y) / n2.y))  /  (0.0 - (n1.y / n2.y))
+			elif n2.y == 0.0:
+				lambda_wall = (((-o1.x + o2.x) / n2.x) + 0.0)  /  ((n1.x / n2.x) - 0.0)
+			else:
+				lambda_wall = (((-o1.x + o2.x) / n2.x) + ((o1.y - o2.y) / n2.y))  /  ((n1.x / n2.x) - (n1.y / n2.y))
+			
+			#Find grab point
+			grab_point = o1 + (lambda_wall * n1)
+			
+			###LEDGE HEIGHT
+			#Assign ledge height
+			ledge_height = grab_point.y
+			
+			###WALL NORMAL
+			#Calculate wall normal for ???
 			wall_normal = Wall_Normal_Raycast.get_collision_normal()
-			ledge_height = Ledge_Normal_Raycast.get_collision_point().y
 			
-			# take the cross product and dot product
-			var cross = wall_normal.cross(Vector3(0,1,0)).normalized()
-			var dot = wall_normal.dot(Vector3(0,1,0))
-			
-			#rotate wall normal towards y axis by 90 degrees
-			wall_normal_rotated_up = wall_normal.rotated(cross, deg2rad(90))
-			
-			#calculate grab point offset from wall raycast's collision point
-			var ledge_height_dif = ledge_height - Wall_Normal_Raycast.get_collision_point().y
-			var grab_point_offset = wall_normal_rotated_up * ledge_height_dif
-			
-			#calculate grab point
-			grab_point = Wall_Normal_Raycast.get_collision_point() + grab_point_offset
-			
+			###GRAB TRANSFORM
 			#calculate player facing direction
 			facing_direction = Wall_Normal_Raycast.get_collision_normal()
 			facing_direction.y = 0.0
@@ -156,10 +172,11 @@ func calculate_grab_point(Wall_Normal_Raycast, Ledge_Normal_Raycast):
 			
 			#create grab point transform
 			grab_point_transform.origin = grab_point
-			grab_point_transform = grab_point_transform.looking_at(grab_point + facing_direction, Vector3(0,1,0))
+			grab_point_transform = grab_point_transform.looking_at(grab_point + facing_direction, Vector3.UP)
 			
+			###SIGNAL EMISSION
 			#Move grab point visualizer
-			$Area/Collision_Marker.global_transform.origin = grab_point_transform.origin
+			$Debug_Nodes/Grab_Point.global_transform.origin = grab_point
 			
 			emit_signal("ledge_grab_point", grab_point_transform, ledge_height, wall_normal)
 
@@ -173,6 +190,8 @@ func _on_State_Machine_Move_state_changed(move_state):
 		transform.origin.y = aerial_offset
 	elif !(move_state in ["Ledge_Hang"]):
 		transform.origin.y = swim_offset
+	else:
+		transform.origin.y = aerial_offset
 	
 	if move_state == "Ledge_Hang":
 		on_ledge = true

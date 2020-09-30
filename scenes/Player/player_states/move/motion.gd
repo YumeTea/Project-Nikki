@@ -94,7 +94,7 @@ var snap_vector = snap_vector_default #Used for Move_and_slide_with_snap
 const centering_time = 12 #in frames
 var centering_time_left = 0
 var turn_angle = Vector2()
-var focus_angle_lim = Vector2(deg2rad(74), deg2rad(82))
+var focus_angle_lim = Vector2(deg2rad(57.5), deg2rad(82))
 
 #View Change Variables
 const view_change_time = 10
@@ -209,6 +209,8 @@ func get_input_direction():
 	var direction_normalized = direction.normalized()
 	direction = direction_normalized * direction_length
 	
+	emit_signal("input_move_direction_changed", direction)
+	
 	return direction
 
 
@@ -283,6 +285,9 @@ func calculate_movement_velocity(delta):
 	
 	###Target Velocity
 	var target_velocity = direction * speed
+	#Speed Cap
+	if abs(target_velocity.length()) > speed_default:
+		target_velocity = target_velocity.normalized() * speed_default
 	
 	###Determine the type of acceleration
 	var acceleration
@@ -311,8 +316,8 @@ func calculate_aerial_velocity(delta):
 	temp_velocity.y = 0.0
 	
 	###Target Velocity
-	var target_velocity = temp_velocity + (direction * speed)
-	#Limit target velocity in both the positive and negative direction
+	var target_velocity = temp_velocity + (direction * speed_aerial)
+	#Speed Cap
 	if abs(target_velocity.length()) > speed_default:
 		target_velocity = target_velocity.normalized() * speed_default
 	
@@ -341,6 +346,9 @@ func calculate_ledge_velocity(delta):
 
 	###Target Velocity
 	var target_velocity = direction * speed
+	#Speed Cap
+	if abs(target_velocity.length()) > speed_default:
+		target_velocity = target_velocity.normalized() * speed_default
 
 	###Determine the type of acceleration
 	var acceleration
@@ -353,12 +361,11 @@ func calculate_ledge_velocity(delta):
 	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
 
 	###Final Velocity
-	if temp_velocity.length() > 0.01:
-		velocity.x = temp_velocity.x
-		velocity.z = temp_velocity.z
-	else:
-		velocity.x = 0.0
-		velocity.z = 0.0
+	if temp_velocity.length() <= 0.01:
+		temp_velocity.x = 0.0
+		temp_velocity.z = 0.0
+		
+	return temp_velocity
 
 
 func calculate_swim_velocity(delta):
@@ -367,6 +374,9 @@ func calculate_swim_velocity(delta):
 	
 	###Target Velocity
 	var target_velocity = direction * speed_swim
+	#Speed Cap
+	if abs(target_velocity.length()) > speed_default:
+		target_velocity = target_velocity.normalized() * speed_default
 	
 	###Determine the type of acceleration
 	var acceleration
@@ -639,8 +649,10 @@ func _on_State_Machine_Move_state_changed(move_state):
 
 func _on_State_Machine_Action_state_changed(action_state):
 	#Before changing state
-	if state_action == "Bow":
+	if state_action in strafe_locked_states:
 		strafe_locked = false
+		is_moving = false
+		quick_turn = true
 	
 	#Store new action state
 	state_action = action_state
@@ -650,13 +662,14 @@ func _on_State_Machine_Action_state_changed(action_state):
 		#Removes walk blend tween as active so tween is only started once in walk.gd
 		remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
 	
-	if action_state == "Bow":
+	if action_state in strafe_locked_states:
 		strafe_locked = true
-		speed = speed_bow_walk
+		#Change walk speed if in certain action states
+		if action_state in ["Bow"]:
+			speed = speed_bow_walk
 		
 		#Remove Lower Body active tween so it starts once on entering bow state
 		remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
-
 
 func _on_Camera_Rig_camera_direction_changed(dir):
 	camera_direction = dir
@@ -667,7 +680,7 @@ func _on_Camera_Rig_view_locked(is_view_locked, _time_left):
 		centering_view = is_view_locked
 		strafe_locked = is_view_locked
 		centered = false
-	elif state_action != "Bow":
+	elif !(state_action in strafe_locked_states): #only turn off strafe locked if outside a strafe locked state
 		centering_view = is_view_locked
 		strafe_locked = is_view_locked
 
@@ -710,7 +723,7 @@ func _on_environment_area_exited(area_type):
 
 func _on_GameManager_player_respawned():
 	can_void = true
-	emit_signal("finished", "idle")
+	emit_signal("finished", "walk")
 
 
 func _on_GameManager_player_voided():

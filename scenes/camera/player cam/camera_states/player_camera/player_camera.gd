@@ -1,7 +1,7 @@
 extends "res://scripts/State Machine/states/state.gd"
 
 """
-The move state machine rig rotation is desynced from camera rotation
+The move state machine rig rotation is desynced from camera rotation by ~1 frame
 Facing angle may be better emitted from the player state machine
 """
 
@@ -108,7 +108,9 @@ func handle_input(event):
 
 #Acts as the _process method would
 func update(_delta):
-	return
+	if Player.input_move_direction != Vector3(0,0,0):
+		if state_action == "None" and aiming and Aim_Timer.is_stopped():
+				Aim_Timer.start(1.0)
 
 
 func _on_animation_finished(_anim_name):
@@ -308,19 +310,12 @@ func _on_Nikkiv2_focus_target(target_pos_node):
 func _on_State_Machine_Move_state_changed(move_state):
 	state_move = move_state
 	
-	if move_state != "Idle":
-		if state_action == "None" and aiming and Aim_Timer.is_stopped():
-			Aim_Timer.start(1.0)
-	
 	if move_state == "Ledge_Hang":
 		return
 
 
 func _on_State_Machine_Action_state_changed(action_state):
 	#Before storing new state
-	if state_action == "Bow":
-		if state_move != "Idle":
-			Aim_Timer.start(1.0)
 	
 	#Store new action state
 	state_action = action_state

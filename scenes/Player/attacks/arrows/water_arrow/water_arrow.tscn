@@ -30,6 +30,7 @@ transform = Transform( 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0 )
 shape = SubResource( 1 )
 
 [node name="Timer" type="Timer" parent="."]
+one_shot = true
 [connection signal="body_entered" from="Area" to="." method="_on_Area_body_entered"]
 [connection signal="body_exited" from="Area" to="." method="_on_Area_body_exited"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

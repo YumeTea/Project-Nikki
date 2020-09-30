@@ -90,6 +90,7 @@ func initialize_equipment():
 	Global.get_Player().inventory.add_item("Water Arrow", 12)
 	Global.get_Player().inventory.add_item("Ice Arrow", 10)
 	Global.get_Player().inventory.add_item("Fire Arrow", 10)
+	Global.get_Player().inventory.add_item("Icosphere", 18)
 
 
 func spawn_player(gate_idx):
