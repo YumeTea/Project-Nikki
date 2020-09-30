@@ -22,7 +22,7 @@ var swim_offset = 5.58
 
 #Ledge Detection Variables
 var wall_angle_min = deg2rad(90)
-var ledge_angle_max = deg2rad(30)
+var ledge_angle_max = deg2rad(45)
 
 var grab_point : Vector3
 var facing_direction : Vector3
@@ -161,8 +161,10 @@ func calculate_grab_point(Wall_Normal_Raycast, Ledge_Normal_Raycast):
 			ledge_height = grab_point.y
 			
 			###WALL NORMAL
-			#Calculate wall normal for ???
+			#Calculate horizontal wall normal
 			wall_normal = Wall_Normal_Raycast.get_collision_normal()
+			wall_normal.y = 0.0
+			wall_normal = wall_normal.normalized()
 			
 			###GRAB TRANSFORM
 			#calculate player facing direction
