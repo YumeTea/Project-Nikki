@@ -148,9 +148,6 @@ func handle_input(event):
 		rotate_to_focus = true
 		reset_view_change_time()
 	
-#	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(owner.get_node("Rig/Skeleton/SkeletonIK_Foot_L").is_running())
-	
 	.handle_input(event)
 
 
@@ -671,6 +668,7 @@ func _on_State_Machine_Action_state_changed(action_state):
 		#Remove Lower Body active tween so it starts once on entering bow state
 		remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
 
+
 func _on_Camera_Rig_camera_direction_changed(dir):
 	camera_direction = dir
 
@@ -693,8 +691,7 @@ func _on_Camera_Rig_enter_new_view(string):
 		return
 
 
-func _on_Ledge_Grab_System_ledge_grab_point(transform, height, normal):
-	ledge_height = height
+func _on_Ledge_Grab_System_ledge_grab_point(transform, normal):
 	ledge_grab_transform = transform
 	wall_normal = normal
 	
@@ -702,7 +699,7 @@ func _on_Ledge_Grab_System_ledge_grab_point(transform, height, normal):
 		emit_signal("finished", "ledge_hang")
 
 
-func _on_death(death):
+func _on_Player_death(death):
 	if death:
 		emit_signal("finished", "death")
 

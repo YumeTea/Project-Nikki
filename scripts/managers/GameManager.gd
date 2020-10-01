@@ -110,7 +110,7 @@ func spawn_player(gate_idx):
 					player_node.global_transform = gate.global_transform
 					break
 	
-	#Fade in on free cam and set spawn player to false
+	#Fade in on free cam and set spawn player flag to false
 	if Global.get_Free_Cam():
 		Global.get_Free_Cam().get_node("Overlay/AnimationPlayer").play("Fade_In")
 		spawn_player = false
@@ -121,15 +121,19 @@ func spawn_player(gate_idx):
 
 
 func void_player():
+		#Save player temp values and initialize voiding of player
 		if void_player == false:
 			#Save player values on voiding
 			SaveManager.save_object_data(Global.get_Player())
 			
 			Global.get_Free_Cam().get_node("Overlay/AnimationPlayer").play("Fade_Out")
 			void_player = true
+			player_voided = true
 			emit_signal("player_voided")
+		#Wait for fade out to complete before removing player
 		if Global.get_Free_Cam().get_node("Overlay/AnimationPlayer").is_playing():
 			return
+		#Remove player relevant nodes and set flags to respawn player
 		else:
 			#Free player on voiding
 			Global.get_Player().queue_free()

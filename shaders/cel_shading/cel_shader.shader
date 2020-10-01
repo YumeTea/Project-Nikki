@@ -51,7 +51,7 @@ void light() {
 
 	float light_factor = (length(ATTENUATION) + NdotL) / 2.0; //combine NdotL and length of attenuation, then squeeze between 0 and 1
 
-	float light_value = texture(light_ramp, vec2(light_factor, 0)).r; //use NdotL as U value to get light value from light ramp
+	float light_value = texture(light_ramp, vec2(light_factor, 0.0)).r; //use NdotL as U value to get light value from light ramp
 
 	//If unshaded, light value is treated as pure black (only ambient light affects pixel)
 	if (shaded == false)

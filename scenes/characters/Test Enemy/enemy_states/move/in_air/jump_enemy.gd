@@ -1,4 +1,4 @@
-extends "res://scenes/Player/player_states/move/in_air/in_air.gd"
+extends "res://scenes/characters/Test Enemy/enemy_states/move/in_air/in_air_enemy.gd"
 
 
 #Jump Variables
@@ -19,7 +19,7 @@ func enter():
 	snap_vector = Vector3(0,0,0)
 	is_falling = false
 	has_jumped = false
-	connect_player_signals()
+	connect_enemy_signals()
 	
 	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
 		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Jump")
@@ -30,7 +30,7 @@ func enter():
 
 #Cleans up state, reinitializes values like timers
 func exit():
-	disconnect_player_signals()
+	disconnect_enemy_signals()
 	
 	.exit()
 
@@ -38,6 +38,10 @@ func exit():
 #Creates output based on the input event passed in
 func handle_input(event):
 	.handle_input(event)
+
+
+func handle_ai_input():
+	.handle_ai_input()
 
 
 #Acts as the _process method would
@@ -95,13 +99,6 @@ func jump_velocity(surface_normal):
 	else:
 		var v = Vector3.UP * jump_strength
 		return v
-
-
-
-
-
-
-
 
 
 

@@ -7,8 +7,8 @@ add_child in impact() causes 2 orthonormalize errors
 
 
 onready var timer = $Timer
-onready var impact_burst = null
-var impact_effect #impact animation scene
+onready var impact_burst = preload("res://scenes/Player/attacks/items/icosphere/Flash.tscn")
+var impact_effect
 
 #Physics variables
 var direction = null
@@ -47,7 +47,7 @@ func _physics_process(delta):
 	var collision = move_and_collide(velocity)
 	
 	if collision:
-		impact(collision.collider)
+		impact(collision)
 		
 
 
@@ -73,10 +73,15 @@ func calculate_velocity(delta):
 	return  temp_velocity
 
 
-func impact(collider):
+func impact(collision):
 	#Damage
-	if collider in get_tree().get_nodes_in_group("vulnerable"):
-		collider.take_damage(damage_dealt)
+	if collision.collider in get_tree().get_nodes_in_group("vulnerable"):
+		collision.collider.take_damage(damage_dealt)
+	
+	#Impact effect
+	impact_effect = impact_burst.instance()
+	impact_effect.start(collision.position)
+	owner.add_child(impact_effect)
 	
 	queue_free()
 

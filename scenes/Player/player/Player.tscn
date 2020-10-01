@@ -9,7 +9,7 @@
 [ext_resource path="res://scenes/UI/in_game/UI_In_Game.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/Player/player_states/move/in_air/jump.gd" type="Script" id=8]
 [ext_resource path="res://scenes/Player/player_states/move/on_ground/walk.gd" type="Script" id=9]
-[ext_resource path="res://scenes/Player/player/animationtree.gd" type="Script" id=10]
+[ext_resource path="res://scenes/Player/animation/animationtree.gd" type="Script" id=10]
 [ext_resource path="res://scenes/Player/player_states/move/in_air/fall.gd" type="Script" id=11]
 [ext_resource path="res://models/characters/Nikki/model/anims/Swim_Forward.anim" type="Animation" id=12]
 [ext_resource path="res://models/characters/Nikki/model/anims/Land.anim" type="Animation" id=13]
@@ -969,7 +969,7 @@ states/Throw_Item/position = Vector2( 553, 288 )
 [sub_resource type="AnimationNodeTimeScale" id=47]
 
 [sub_resource type="AnimationNodeBlendTree" id=48]
-graph_offset = Vector2( -1169, -160 )
+graph_offset = Vector2( -1053, 107 )
 nodes/MovexAction/node = SubResource( 2 )
 nodes/MovexAction/position = Vector2( -260, 120 )
 nodes/MovexLeftArm/node = SubResource( 3 )
@@ -1352,7 +1352,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.3, 3.2 )
 script = ExtResource( 33 )
 
 [node name="Hand_L" type="BoneAttachment" parent="Rig/Skeleton" index="5"]
-transform = Transform( -0.0393619, 0.730879, 0.681371, 0.0369263, -0.68037, 0.731938, 0.998543, 0.0539705, -0.000208177, 2.16054, 3.49606, -0.161456 )
+transform = Transform( 0.00364715, -0.0636322, 0.997966, 0.0538469, -0.996514, -0.0637364, 0.998543, 0.0539695, -0.00020808, 1.07404, 3.01368, 0.0384463 )
 bone_name = "hand_l"
 
 [node name="Bow_Position" type="Position3D" parent="Rig/Skeleton/Hand_L"]
@@ -1362,7 +1362,7 @@ transform = Transform( 0.999998, -2.6077e-08, 2.7474e-08, 3.72529e-08, 0.999998,
 visible = false
 
 [node name="Hand_R" type="BoneAttachment" parent="Rig/Skeleton" index="6"]
-transform = Transform( -0.0393619, -0.730879, -0.68137, -0.0369247, -0.680369, 0.731938, -0.998543, 0.0539695, -0.000207365, -2.16054, 3.49607, -0.161459 )
+transform = Transform( -0.0393616, -0.730879, -0.68137, -0.0369247, -0.680369, 0.731938, -0.998542, 0.0539693, -0.000207931, -2.16054, 3.49607, -0.161459 )
 bone_name = "hand_r"
 
 [node name="Arrow_Position" type="Position3D" parent="Rig/Skeleton/Hand_R"]
@@ -1379,7 +1379,7 @@ transform = Transform( 1, 1.62982e-08, -2.42144e-07, -1.62981e-08, 1, 2.6077e-07
 visible = false
 
 [node name="Foot_Floor_L" type="BoneAttachment" parent="Rig/Skeleton" index="7"]
-transform = Transform( -0.999349, -0.0360769, -1.09496e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.24332, 0.205547, -0.140259 )
+transform = Transform( -0.999349, -0.0360769, -1.09539e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.24332, 0.205547, -0.140259 )
 bone_name = "foot_floor_ik_l"
 
 [node name="Foot_L_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_L"]
@@ -1388,7 +1388,7 @@ enabled = true
 cast_to = Vector3( 0, -1.34, 0 )
 
 [node name="Foot_Floor_R" type="BoneAttachment" parent="Rig/Skeleton" index="8"]
-transform = Transform( -0.999349, 0.0360769, 1.09496e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.24332, 0.205547, -0.140259 )
+transform = Transform( -0.999349, 0.0360769, 1.09539e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.24332, 0.205547, -0.140259 )
 bone_name = "foot_floor_ik_r"
 
 [node name="Foot_R_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_R"]
@@ -1431,10 +1431,11 @@ magnet = Vector3( -0.3, 1.3, 3.2 )
 target_node = NodePath("../Foot_IK/Foot_R_Cont/Foot_R_Pos")
 
 [node name="Projectile_Position" type="Position3D" parent="Rig"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.8, 2.95897 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 2 )
 
-[node name="cast_glow" type="MeshInstance" parent="Rig/Projectile_Position"]
-transform = Transform( 0.001, 0, 0, 0, 0.001, 0, 0, 0, 0.001, 0, 0, 0 )
+[node name="Cast_Glow" type="MeshInstance" parent="Rig/Projectile_Position"]
+transform = Transform( 0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 0, 0, 0 )
+visible = false
 mesh = SubResource( 75 )
 material/0 = ExtResource( 18 )
 
@@ -1463,7 +1464,7 @@ shape = SubResource( 77 )
 input_ray_pickable = false
 collision_layer = 0
 
-[node name="target_pos" type="Position3D" parent="."]
+[node name="Target_Pos" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.89, 0 )
 
 [node name="UI_Layer" type="CanvasLayer" parent="."]
@@ -1488,8 +1489,8 @@ transform = Transform( 5, 0, 8.9407e-08, 0, 5, 0, 4.29153e-06, 0, 1, 0, 2.257, 3
 visible = false
 mesh = SubResource( 79 )
 material/0 = SubResource( 80 )
-[connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
 [connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
+[connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
 [connection signal="is_falling" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_is_falling"]
 [connection signal="position_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_position_changed"]
 [connection signal="targets_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_targets_changed"]
@@ -1499,8 +1500,8 @@ material/0 = SubResource( 80 )
 [connection signal="max_health_changed" from="Attributes/Health" to="UI_Layer/UI_In_Game" method="_on_Health_max_health_changed"]
 [connection signal="move_state_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_changed"]
 [connection signal="move_state_stack_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_stack_changed"]
-[connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]
 [connection signal="action_state_changed" from="State_Machine_Action" to="State_Machine_Move" method="_on_State_Machine_Action_action_state_changed"]
+[connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]
 [connection signal="action_state_stack_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_stack_changed"]
 [connection signal="break_target" from="Camera_Rig" to="." method="_on_Camera_Rig_break_target"]
 [connection signal="camera_direction_changed" from="Camera_Rig" to="." method="_on_Camera_Rig_camera_direction_changed"]

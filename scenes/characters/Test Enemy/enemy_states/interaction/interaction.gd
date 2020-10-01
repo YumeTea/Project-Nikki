@@ -5,47 +5,82 @@ extends "res://scripts/State Machine/states/state.gd"
 "   -Jump inputs are still not handled"
 
 
-
-signal position_changed(current_position)
-signal velocity_changed(current_velocity)
-signal facing_direction_changed(facing_direction)
-signal started_falling(fall_height)
-signal landed(landing_height)
-signal center_view
+#Interaction Signals
+signal input_move_direction_changed(input_direction)
 signal lock_target
 
-
-
 ###Node Storage
-onready var head = owner.get_node("Camera_Rig/Pivot") #should get camera position a different way
-var focus_target_pos = null
+var focus_object = null
 
 #AI Input Storage
 var input = {}
 
-#Initialized State Values
-var initialized_values = {}
+#Initialized Values Storage
+var view_mode
 
-#World Interaction Variables
-var fall_height
-var land_height
+#Enemy State Storage
+var state_move
+var state_action
+var ground_states = [
+	"Walk",
+]
+var air_states = [
+	"Jump",
+	"Fall"
+]
+var swim_states = [
+	"Swim"
+]
+var strafe_locked_states = [
+	"Bow",
+	"Throw_Item",
+]
+var rig_locked_states = [
+	"Ledge_Hang"
+]
 
-#Enemy Variables
-var facing_angle #Goes from -pi > 0 > pi
+#Tween Objects Storage
+var active_tweens = []
 
-###Movement Variables
-#Centering Variables
-var centering_time = 6 #in frames
-var centering_time_left = 0
+###Enemy Variables
+onready var enemy_height = owner.get_node("CollisionShape").shape.height
+
+#Equipment Storage
+var equipped_items = null
+var equipped_weapon = null
+var equipped_bow = null
+var equipped_magic = null
+var equipped_item = null
+
+#View Variables
+var facing_direction = Vector3()
+var facing_angle = Vector2() #Goes from -pi > 0 > pi
+var focus_direction = Vector3()
+var focus_angle_global = Vector2()
+var camera_direction = Vector3()
+var camera_angle_global = Vector2()
+
+##Move Constants
+const speed_default = 18
+const speed_bow_walk = 7
+const speed_aerial = 3
+const speed_swim = 8
+
+const surface_speed = 4
+const surface_accel = 48
+
+const ACCEL = 4
+const DEACCEL = 10
+
+const turn_radius = 5 #in degrees
+const quick_turn_radius = 12 #in degrees
+const uturn_radius = 2 	#in degrees
+
+#Move variables
+var speed = speed_default
 
 #Enemy Flags
 var targetting = false
-var movement_locked = false
-var can_void = true
-var is_walking
-var is_falling = false
-var centering = false
-var centered = false
 
 
 #func handle_input(event):
@@ -53,7 +88,7 @@ var centered = false
 #		print(input["input_previous"])
 
 
-func handle_ai_input(_input):
+func handle_ai_input():
 	return
 
 
@@ -65,21 +100,83 @@ func update(_delta):
 func _on_animation_finished(_anim_name):
 	return
 
+func bound_angle(angle):
+	#Angle > 180
+	if (angle > deg2rad(180)):
+		angle = angle - deg2rad(360)
+	#Angle < -180
+	if (angle < deg2rad(-180)):
+		angle = angle + deg2rad(360)
+	
+	return angle
 
-func connect_enemy_signals():
-	owner.connect("ai_input_changed", self, "_on_ai_input_changed")
-	owner.connect("focus_target", self, "_on_focus_target_changed")
-	owner.get_node("State_Machine").connect("initialized_values_dic_set", self, "_on_initialized_values_dic_set")
-	owner.get_node("Attributes/Health").connect("health_depleted", self, "_on_death")
-	owner.get_node("Camera_Rig").connect("view_locked", self, "_on_view_locked")
+
+func get_node_direction(node):
+	var direction = Vector3(0,0,1)
+	var rotate_by = node.get_global_transform().basis.get_euler()
+	direction = direction.rotated(Vector3(1,0,0), rotate_by.x)
+	direction = direction.rotated(Vector3(0,1,0), rotate_by.y)
+	direction = direction.rotated(Vector3(0,0,1), rotate_by.z)
+	
+	return direction
 
 
-func disconnect_enemy_signals():
-	owner.disconnect("ai_input_changed", self, "_on_ai_input_changed")
-	owner.disconnect("focus_target", self, "_on_focus_target_changed")
-	owner.get_node("State_Machine").disconnect("initialized_values_dic_set", self, "_on_initialized_values_dic_set")
-	owner.get_node("Attributes/Health").disconnect("health_depleted", self, "_on_death")
-	owner.get_node("Camera_Rig").disconnect("view_locked", self, "_on_view_locked")
+func get_transform_direction(transform):
+	var direction = Vector3(0,0,1)
+	var rotate_by = transform.basis.get_euler()
+	direction = direction.rotated(Vector3(1,0,0), rotate_by.x)
+	direction = direction.rotated(Vector3(0,1,0), rotate_by.y)
+	direction = direction.rotated(Vector3(0,0,1), rotate_by.z)
+	
+	return direction
+
+
+func calculate_local_x_rotation(direction):
+	var test_direction = Vector3(direction.x, 0, direction.z)
+	var x_rotation
+	
+	if direction.y < 0:
+		x_rotation = test_direction.angle_to(direction)
+	else:
+		x_rotation = -test_direction.angle_to(direction)
+	
+	return x_rotation
+
+
+func calculate_global_y_rotation(direction):
+	var test_direction = Vector2(0,1)
+	var direction_to = Vector2(direction.x, direction.z)
+	var y_rotation = -test_direction.angle_to(direction_to)
+	return y_rotation #Output is PI > y > -PI
+
+
+func align_up(node_basis, normal):
+	var result = Basis()
+
+	result.x = normal.cross(node_basis.z)
+	result.y = normal
+	result.z = node_basis.x.cross(normal)
+
+	result = result.orthonormalized()
+
+	return result
+
+
+#Returns collision data if raycast touches something
+func raycast_query(from, to, exclude):
+	var space_state = owner.get_world().direct_space_state
+	var result = space_state.intersect_ray(from, to, [self, exclude])
+	return result
+
+
+func add_active_tween(property_string):
+	if !active_tweens.has(property_string):
+		active_tweens.append(property_string)
+
+
+func remove_active_tween(property_string):
+	if active_tweens.has(property_string):
+		active_tweens.remove(active_tweens.find(property_string))
 
 
 func press_ai_input(input_name, value):
@@ -115,37 +212,11 @@ func is_ai_action_just_pressed(action, input_dic):
 	return false
 
 
-func _on_ai_input_changed(inputs):
-	input = inputs
-
-
-func _on_focus_target_changed(target_pos_node):
-	if target_pos_node != null:
-		focus_target_pos = target_pos_node
+func _on_focus_target_changed(target):
+	if target != null:
+		focus_object = target
 		targetting = true
 	else:
-		focus_target_pos = target_pos_node
+		focus_object = null
 		targetting = false
-
-
-func _on_view_locked(is_view_locked, time_left):
-	movement_locked = is_view_locked
-	centering_time_left = time_left
-	if !movement_locked:
-		centered = false
-
-
-func _on_initialized_values_dic_set(init_values_dic):
-	initialized_values = init_values_dic
-
-
-func _on_voided(voided):
-	if voided and can_void:
-		emit_signal("finished", "void")
-		can_void = false
-
-
-func _on_death(death):
-	if death:
-		emit_signal("finished", "death")
 

@@ -4,7 +4,7 @@ extends "res://scenes/Player/player_states/interaction/interaction.gd"
 #Node Storage
 onready var world = get_tree().current_scene
 onready var Player = owner
-onready var Rig = owner.get_node("Rig/Skeleton")
+onready var Rig = owner.get_node("Rig")
 
 #Initialized Values Storage
 var initialized_values = {}
@@ -192,8 +192,11 @@ func disconnect_player_signals():
 
 ###PLAYER SIGNAL FUNCTIONS### 
 
-func _on_Player_focus_target_changed(target_pos_node):
-	focus_object = target_pos_node
+func _on_Player_focus_target_changed(target):
+	if target:
+		focus_object = target
+	else:
+		focus_object = null
 
 
 #Equip correct items on character rig once inventory is loaded

@@ -1,6 +1,8 @@
 extends "res://scenes/characters/character scene/character.gd"
 
+
 signal ai_input_changed(input_dic)
+
 
 var input_current = {
 	"left_stick": Vector2(0,0),
@@ -56,7 +58,10 @@ func _physics_process(_delta):
 
 
 func get_move_direction():
-	return
+#	if targetting:
+#		press_ai_input("left_stick", Vector2(0,1))
+#	else:
+	press_ai_input("left_stick", Vector2(0,0))
 
 
 func get_look_direction():
@@ -68,6 +73,7 @@ func get_action_input():
 	if !targetting:
 		seek_target(seek_target_name)
 	else:
+		press_ai_input("action_l2", "center_view")
 		press_ai_input("action_y", "cast")
 
 

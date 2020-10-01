@@ -88,7 +88,7 @@ func _ready():
 		child.connect("entered_new_view", self, "_on_Camera_State_Machine_entered_new_view")
 	
 	#Set cast glow invisible(should think of another way to do this at start)
-	$Rig/Projectile_Position/cast_glow.visible = false
+	$Rig/Projectile_Position/Cast_Glow.visible = false
 	
 	#Send initial values for signal recievers
 	emit_signal("facing_angle_changed", $Rig.get_global_transform().basis.get_euler())

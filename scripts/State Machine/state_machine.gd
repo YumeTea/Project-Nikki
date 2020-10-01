@@ -35,10 +35,6 @@ func _input(event):
 	current_state.handle_input(event)
 
 
-func _ai_input(input):
-	current_state.handle_ai_input(input)
-
-
 func _physics_process(delta):
 	current_state.update(delta)
 

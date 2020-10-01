@@ -15,11 +15,12 @@ func _ready():
 
 
 func take_damage(value):
-	health -= value
-	health = max(0, health) #keeps health from being negative
-	emit_signal("health_changed", health)
-	if health == 0:
-		health_depleted()
+	return
+#	health -= value
+#	health = max(0, health) #keeps health from being negative
+#	emit_signal("health_changed", health)
+#	if health == 0:
+#		health_depleted()
 
 
 func heal(amount):

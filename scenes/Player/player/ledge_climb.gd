@@ -17,7 +17,7 @@ onready var Raycast_Ceiling = Ledge_Grab_System.get_node("Raycast_Ceiling")
 onready var collider_shape = owner.get_node("CollisionShape").shape
 
 onready var collisionshape_offset_default = Player_Collision.transform.origin
-onready var target_pos_offset_default = owner.get_node("target_pos").transform.origin
+onready var target_pos_offset_default = owner.get_node("Target_Pos").transform.origin
 
 #Space Query Variables
 var space_rid

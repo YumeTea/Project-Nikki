@@ -1,25 +1,27 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://scenes/characters/Character Scene/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://models/characters/Test Enemy/Test Enemy Model.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/characters/Test Enemy/test_enemy.gd" type="Script" id=3]
-[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/on_ground/walk.gd" type="Script" id=4]
-[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/in_air/fall.gd" type="Script" id=5]
-[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/in_air/jump.gd" type="Script" id=6]
-[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/on_ground/ground_cast.gd" type="Script" id=7]
-[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/in_air/air_cast.gd" type="Script" id=8]
-[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/on_ground/idle.gd" type="Script" id=9]
-[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/other/death.gd" type="Script" id=10]
-[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/other/void.gd" type="Script" id=11]
-[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/enemy_state_machine.gd" type="Script" id=12]
-[ext_resource path="res://scenes/characters/Test Enemy/resources/animation resources/cast_glow.tres" type="Material" id=13]
-[ext_resource path="res://scenes/characters/Test Enemy/animation/Casting.anim" type="Animation" id=14]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/move/in_air/jump_enemy.gd" type="Script" id=4]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/move/in_air/fall_enemy.gd" type="Script" id=5]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/other/death_enemy.gd" type="Script" id=10]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/move/void_move_enemy.gd" type="Script" id=11]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/enemy_state_machine_move.gd" type="Script" id=12]
+[ext_resource path="res://scenes/Player/attacks/magic/projectiles/magic_orb/Casting_Magic_Orb.anim" type="Animation" id=14]
 [ext_resource path="res://scenes/characters/Test Enemy/animation/cast_glow.material" type="Material" id=15]
 [ext_resource path="res://models/characters/Test Enemy/black_pill_enemy.material" type="Material" id=16]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/enemy_state_machine_action.gd" type="Script" id=17]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/move/on_ground/walk_enemy.gd" type="Script" id=18]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/action/none_enemy.gd" type="Script" id=21]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/action/cast_enemy.gd" type="Script" id=22]
+[ext_resource path="res://scenes/characters/Test Enemy/void_action_enemy.gd" type="Script" id=23]
+[ext_resource path="res://scenes/characters/Test Enemy/animation/animationtree_npc.gd" type="Script" id=24]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Damaged"
 length = 2.2
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath("Rig/Body:material/0")
 tracks/0/interp = 1
@@ -46,7 +48,9 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id=2]
-resource_name = "Perish"
+resource_name = "Idle"
+
+[sub_resource type="Animation" id=3]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:scale")
 tracks/0/interp = 2
@@ -60,9 +64,71 @@ tracks/0/keys = {
 "values": [ Vector3( 1, 1, 1 ), Vector3( 1.1, 0.9, 1.1 ), Vector3( 0.01, 5, 0.01 ) ]
 }
 
-[sub_resource type="SphereMesh" id=3]
+[sub_resource type="Animation" id=4]
+resource_name = "Walk"
 
-[sub_resource type="SphereMesh" id=4]
+[sub_resource type="AnimationNodeBlend2" id=5]
+
+[sub_resource type="AnimationNodeAnimation" id=6]
+animation = "Casting_Magic_Orb"
+
+[sub_resource type="AnimationNodeStateMachine" id=7]
+states/Casting_Magic_Orb/node = SubResource( 6 )
+states/Casting_Magic_Orb/position = Vector2( 520, 242 )
+
+[sub_resource type="AnimationNodeAnimation" id=8]
+animation = "Idle"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id=9]
+blend_point_0/node = SubResource( 8 )
+blend_point_0/pos = 0.0
+
+[sub_resource type="AnimationNodeAnimation" id=10]
+animation = "Walk"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id=11]
+blend_point_0/node = SubResource( 10 )
+blend_point_0/pos = 0.0
+
+[sub_resource type="AnimationNodeBlendSpace1D" id=12]
+blend_point_0/node = SubResource( 9 )
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource( 11 )
+blend_point_1/pos = 1.0
+
+[sub_resource type="AnimationNodeTimeScale" id=13]
+
+[sub_resource type="AnimationNodeBlendTree" id=14]
+graph_offset = Vector2( -575, -69 )
+nodes/BlendSpace1D/node = SubResource( 12 )
+nodes/BlendSpace1D/position = Vector2( -184, 120 )
+nodes/TimeScale/node = SubResource( 13 )
+nodes/TimeScale/position = Vector2( 47, 119 )
+node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
+
+[sub_resource type="AnimationNodeStateMachine" id=15]
+states/Walk/node = SubResource( 14 )
+states/Walk/position = Vector2( 453, 219 )
+
+[sub_resource type="AnimationNodeTimeScale" id=16]
+
+[sub_resource type="AnimationNodeBlendTree" id=17]
+graph_offset = Vector2( -629, 142.5 )
+nodes/MovexAction/node = SubResource( 5 )
+nodes/MovexAction/position = Vector2( 80, 120 )
+nodes/StateMachineAction/node = SubResource( 7 )
+nodes/StateMachineAction/position = Vector2( -384, 283 )
+nodes/StateMachineMove/node = SubResource( 15 )
+nodes/StateMachineMove/position = Vector2( -377, 51 )
+nodes/TimeScaleAction/node = SubResource( 16 )
+nodes/TimeScaleAction/position = Vector2( -121, 281 )
+node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "StateMachineMove", "MovexAction", 1, "TimeScaleAction", "TimeScaleAction", 0, "StateMachineAction" ]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=18]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=19]
+
+[sub_resource type="SphereMesh" id=20]
 
 [node name="Black Pill Enemy" groups=[
 "actor",
@@ -72,68 +138,79 @@ tracks/0/keys = {
 script = ExtResource( 3 )
 
 [node name="AnimationPlayer" parent="." index="0"]
-anims/Casting = ExtResource( 14 )
+anims/Casting_Magic_Orb = ExtResource( 14 )
 anims/Damaged = SubResource( 1 )
-anims/Perish = SubResource( 2 )
+anims/Idle = SubResource( 2 )
+anims/Perish = SubResource( 3 )
+anims/Walk = SubResource( 4 )
 
-[node name="State_Machine" parent="." index="2"]
+[node name="AnimationTree" parent="." index="1"]
+tree_root = SubResource( 17 )
+parameters/StateMachineAction/playback = SubResource( 18 )
+parameters/StateMachineMove/playback = SubResource( 19 )
+parameters/TimeScaleAction/scale = 1.0
+script = ExtResource( 24 )
+
+[node name="State_Machine_Move" parent="." index="4"]
 script = ExtResource( 12 )
-START_STATE = NodePath("Idle")
+START_STATE = NodePath("Walk")
 
-[node name="Idle" type="Node" parent="State_Machine" index="0"]
-script = ExtResource( 9 )
+[node name="Walk" type="Node" parent="State_Machine_Move" index="0"]
+script = ExtResource( 18 )
 
-[node name="Walk" type="Node" parent="State_Machine" index="1"]
+[node name="Jump" type="Node" parent="State_Machine_Move" index="1"]
 script = ExtResource( 4 )
 
-[node name="Jump" type="Node" parent="State_Machine" index="2"]
-script = ExtResource( 6 )
-
-[node name="Fall" type="Node" parent="State_Machine" index="3"]
+[node name="Fall" type="Node" parent="State_Machine_Move" index="2"]
 script = ExtResource( 5 )
 
-[node name="Ground_Cast" type="Node" parent="State_Machine" index="4"]
-script = ExtResource( 7 )
-
-[node name="Air_Cast" type="Node" parent="State_Machine" index="5"]
-script = ExtResource( 8 )
-
-[node name="Death" type="Node" parent="State_Machine" index="6"]
+[node name="Death" type="Node" parent="State_Machine_Move" index="3"]
 script = ExtResource( 10 )
 
-[node name="Void" type="Node" parent="State_Machine" index="7"]
+[node name="Void" type="Node" parent="State_Machine_Move" index="4"]
 script = ExtResource( 11 )
 
-[node name="CollisionShape" parent="." index="4"]
+[node name="State_Machine_Action" parent="." index="5"]
+script = ExtResource( 17 )
+START_STATE = NodePath("None")
+
+[node name="None" type="Node" parent="State_Machine_Action" index="0"]
+script = ExtResource( 21 )
+
+[node name="Cast" type="Node" parent="State_Machine_Action" index="1"]
+script = ExtResource( 22 )
+
+[node name="Death" type="Node" parent="State_Machine_Action" index="2"]
+script = ExtResource( 10 )
+
+[node name="Void" type="Node" parent="State_Machine_Action" index="3"]
+script = ExtResource( 23 )
+
+[node name="CollisionShape" parent="." index="8"]
 transform = Transform( 1, 0, 0, 0, -4.20504e-08, 1, 0, -0.962, -4.37114e-08, 0, 0.0310001, 0 )
 
-[node name="Rig" parent="." index="5" instance=ExtResource( 2 )]
+[node name="Rig" parent="." index="9" instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 0 )
 
 [node name="Body" parent="Rig" index="0"]
 material/0 = ExtResource( 16 )
 
-[node name="projectile_position" type="Position3D" parent="Rig" index="1"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 1.5 )
+[node name="Projectile_Position" type="Position3D" parent="Rig" index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 2 )
 
-[node name="cast_glow" type="MeshInstance" parent="Rig/projectile_position" index="0"]
-transform = Transform( 0.001, 0, 0, 0, 0.001, 0, 0, 0, 0.001, 0, 0, 0 )
+[node name="Cast_Glow" type="MeshInstance" parent="Rig/Projectile_Position" index="0"]
+transform = Transform( 0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 0, 0, 0 )
 visible = false
-mesh = SubResource( 3 )
+mesh = SubResource( 20 )
 material/0 = ExtResource( 15 )
 
-[node name="cast_position" type="Position3D" parent="Camera_Rig/Pivot" index="4"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.6 )
-
-[node name="cast_glow" type="MeshInstance" parent="Camera_Rig/Pivot/cast_position" index="0"]
-transform = Transform( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 )
-visible = false
-mesh = SubResource( 4 )
-material/0 = ExtResource( 13 )
+[node name="Raycast_Floor" type="RayCast" parent="Rig" index="2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
+cast_to = Vector3( 0, -3, 0 )
 [connection signal="ai_input_changed" from="." to="Camera_Rig" method="_on_Character_ai_input_changed"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="health_depleted" from="Attributes/Health" to="." method="_on_Health_health_depleted"]
 
-[editable path="Rig"]
-
 [editable path="Camera_Rig"]
+
+[editable path="Rig"]

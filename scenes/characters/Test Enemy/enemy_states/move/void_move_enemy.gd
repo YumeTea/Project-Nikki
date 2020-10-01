@@ -1,7 +1,4 @@
-extends Node
-
-
-signal finished(next_state_name)
+extends "res://scenes/characters/Test Enemy/enemy_states/move/motion.gd"
 
 
 func initialize(init_values_dic):
@@ -11,12 +8,12 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	return
+	connect_enemy_signals()
 
 
 #Cleans up state, reinitializes values like timers
 func exit():
-	return
+	disconnect_enemy_signals()
 
 
 #Creates output based on the input event passed in
@@ -29,10 +26,11 @@ func handle_ai_input():
 
 
 #Acts as the _process method would
-func update(_delta):
-	return
+func update(delta):
+	calculate_movement_velocity(delta)
+	.update(delta)
 
 
-func _on_animation_finished(_anim_name):
+func on_animation_finished(_anim_name):
 	return
 

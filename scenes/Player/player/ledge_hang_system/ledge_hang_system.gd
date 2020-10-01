@@ -1,7 +1,7 @@
 extends Spatial
 
 
-signal ledge_grab_point(grab_point_transform, ledge_height, wall_normal)
+signal ledge_grab_point(grab_point_transform, wall_normal_horizontal)
 
 
 #Node Storage
@@ -156,11 +156,7 @@ func calculate_grab_point(Wall_Normal_Raycast, Ledge_Normal_Raycast):
 			#Find grab point
 			grab_point = o1 + (lambda_wall * n1)
 			
-			###LEDGE HEIGHT
-			#Assign ledge height
-			ledge_height = grab_point.y
-			
-			###WALL NORMAL
+			###WALL NORMAL HORIZONTAL
 			#Calculate horizontal wall normal
 			wall_normal = Wall_Normal_Raycast.get_collision_normal()
 			wall_normal.y = 0.0
@@ -180,7 +176,7 @@ func calculate_grab_point(Wall_Normal_Raycast, Ledge_Normal_Raycast):
 			#Move grab point visualizer
 			$Debug_Nodes/Grab_Point.global_transform.origin = grab_point
 			
-			emit_signal("ledge_grab_point", grab_point_transform, ledge_height, wall_normal)
+			emit_signal("ledge_grab_point", grab_point_transform, wall_normal)
 
 
 func _on_Timer_timeout():

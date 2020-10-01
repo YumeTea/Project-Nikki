@@ -1,4 +1,4 @@
-extends "res://scenes/Player/player_states/move/motion.gd"
+extends "res://scenes/characters/Test Enemy/enemy_states/move/motion.gd"
 
 
 """
@@ -15,15 +15,15 @@ func exit():
 
 
 #Creates output based on the input event passed in
-func handle_input(event):
-	.handle_input(event)
+func handle_ai_input():
+	.handle_ai_input()
 
 
 func update(delta):
 	.update(delta)
 	
 	if in_water:
-		if Player.global_transform.origin.y < (surface_height - player_height):
+		if Enemy.global_transform.origin.y < (surface_height - enemy_height):
 			emit_signal("finished", "swim")
 	
 	if velocity.y < 0 and is_falling == false:

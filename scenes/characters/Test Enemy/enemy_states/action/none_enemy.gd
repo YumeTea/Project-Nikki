@@ -1,4 +1,4 @@
-extends "res://scenes/characters/Test Enemy/enemy_states/in_air/in_air.gd"
+extends "res://scenes/characters/Test Enemy/enemy_states/action/action.gd"
 
 
 func initialize(init_values_dic):
@@ -8,33 +8,41 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	.enter()
 	connect_enemy_signals()
+	.enter()
 
 
 #Cleans up state, reinitializes values like timers
 func exit():
 	disconnect_enemy_signals()
+	.exit()
 
 
 #Creates output based on the input event passed in
-func handle_input(event):
-	.handle_input(event)
-
-
-func handle_ai_input(input):
-	.handle_ai_input(input)
+func handle_ai_input():
+	#Check for inputs that enter new states first
+	#Ground only actions
+	if state_move in ground_states:
+		if is_ai_action_pressed("cast", input):
+			emit_signal("finished", "cast")
+	
+	.handle_ai_input()
 
 
 #Acts as the _process method would
 func update(delta):
 	.update(delta)
-	if owner.is_on_floor():
-		is_falling = false
-		emit_signal("landed", height)
-		emit_signal("finished", "previous")
 
 
-func _on_animation_finished(_anim_name):
+func on_animation_started(_anim_name):
 	return
+
+
+func on_animation_finished(_anim_name):
+	return
+
+
+
+
+
 

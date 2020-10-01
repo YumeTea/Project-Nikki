@@ -1,4 +1,4 @@
-extends "res://scenes/characters/Test Enemy/enemy_states/motion.gd"
+extends "res://scenes/characters/Test Enemy/enemy_states/move/motion.gd"
 
 
 
@@ -20,7 +20,7 @@ func handle_input(_event):
 	return
 
 
-func handle_ai_input(_input):
+func handle_ai_input():
 	return
 
 
