@@ -77,6 +77,10 @@ var velocity_horizontal : float
 var acceleration_horizontal : float
 const gravity = -9.8
 const weight = 5
+#Walk Variables
+var up_direction = Vector3(0,1,0)
+const floor_angle_max = deg2rad(50)
+var slope_influence = 0.16
 
 #Input Variables
 var left_joystick_axis = Vector2(0,0)
@@ -113,6 +117,9 @@ var rotate_to_focus : bool
 
 #Walking Flags
 var quick_turn = true
+
+#Ledge Hang Flags
+var valid_ledge = false
 
 
 func enter():
@@ -155,8 +162,14 @@ func update(delta):
 	###Set held direction
 	direction = get_input_direction()
 	
+#	if Raycast_Floor.is_colliding():
+#		if direction.angle_to(Raycast_Floor.get_collision_normal()) >= deg2rad(90):
+#			print(direction.normalized().cross(Raycast_Floor.get_collision_normal()).length())
+#		else:
+#			print(-direction.normalized().cross(Raycast_Floor.get_collision_normal()).length())
+	
 	###Player Motion
-	velocity = Player.move_and_slide_with_snap(velocity, snap_vector, Vector3.UP, true, 1, deg2rad(65), false) #Come back/check vars 3,4,5
+	velocity = Player.move_and_slide_with_snap(velocity, snap_vector, up_direction, true, 1, floor_angle_max, false) #Come back/check vars 3,4,5
 	
 	###Player Slope Adjustment
 	adjust_to_ground()
@@ -304,7 +317,38 @@ func calculate_movement_velocity(delta):
 		velocity.x = 0.0
 		velocity.z = 0.0
 	
-	velocity.y += weight * gravity * delta
+	##Gravity
+	var floor_angle = Raycast_Floor.get_collision_normal().angle_to(Vector3.UP)
+	var floor_normal = Raycast_Floor.get_collision_normal()
+	floor_normal.x = stepify(floor_normal.x, 0.001)
+	floor_normal.y = stepify(floor_normal.y, 0.001)
+	floor_normal.z = stepify(floor_normal.z, 0.001)
+	
+	
+	#Up Direction
+	if (owner.is_on_floor() or snap_vector_is_colliding()) and floor_angle <= floor_angle_max: #Special gravity if on slope and slope is within floor_angle_max
+		up_direction = floor_normal #Player will fall toward valid slopes, essentially sticking to them
+	else: #Default gravity on floors over floor_angle_max
+		up_direction = Vector3.UP
+	
+	snap_vector = -up_direction
+	var g = up_direction * gravity
+	velocity += weight * g * delta
+	
+	#Slope Velocity Modifier
+	var slope_modifier
+	
+	if Raycast_Floor.is_colliding() and direction != Vector3(0,0,0):
+		#Uphill
+		if direction.angle_to(floor_normal) >= deg2rad(90):
+			slope_modifier = direction.normalized().cross(floor_normal).length()
+			slope_modifier += (1.0 - slope_modifier) * (1.0 - slope_influence)
+			velocity *= slope_modifier
+		#Downhill
+		else:
+			slope_modifier = direction.normalized().cross(floor_normal).length()
+			slope_modifier = 1.0 + (1.0 - slope_modifier) * (1.0 - slope_influence)
+			velocity += velocity * slope_modifier * delta
 
 
 func calculate_aerial_velocity(delta):
@@ -314,9 +358,13 @@ func calculate_aerial_velocity(delta):
 	
 	###Target Velocity
 	var target_velocity = temp_velocity + (direction * speed_aerial)
-	#Speed Cap
-	if abs(target_velocity.length()) > speed_default:
-		target_velocity = target_velocity.normalized() * speed_default
+	
+	if temp_velocity.dot(direction) >= 0.0:
+		if abs(temp_velocity.length()) > speed_default: #Preserve speed if past max speed
+			target_velocity = temp_velocity
+		elif target_velocity.length() > speed_default: #Speed cap at max speed if under max speed
+			target_velocity = target_velocity.normalized() * speed_default
+	
 	
 	###Determine the type of acceleration
 	var acceleration

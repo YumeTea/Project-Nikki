@@ -28,7 +28,6 @@ var ledge_hang_position_offset = Vector3(0.0,0.0,0.1)
 #Ledge Hang bools
 var on_ledge : bool
 var at_ledge : bool
-var rotate_cooldown :bool
 
 
 func initialize(init_values_dic):
@@ -40,7 +39,6 @@ func initialize(init_values_dic):
 func enter():
 	on_ledge = false
 	at_ledge = false
-	rotate_cooldown = false
 	#Initial Translation Assignments
 	ledge_grab_transform_init = ledge_grab_transform
 	wall_normal_init = wall_normal
@@ -85,11 +83,12 @@ func handle_input(event):
 #Acts as the _process method would
 func update(delta):
 	if !on_ledge:
-		translate_to_ledge(ledge_grab_transform_init, wall_normal_init)
+		translate_to_ledge(ledge_grab_transform, wall_normal)
 	elif on_ledge:
 		ledge_move(delta)
 		
-		rotate_to_ledge(delta)
+		rotate_to_ledge()
+		adjust_hang_height()
 		
 		if at_ledge and (!Raycast_Facing_Wall.is_colliding() or !Raycast_Facing_Ledge.is_colliding()):
 			print(!Raycast_Facing_Wall.is_colliding())
@@ -108,7 +107,6 @@ func on_animation_finished(_anim_name):
 	return
 
 
-#Movement should be along cross product of ledge normal and 
 func ledge_move(delta):
 	direction = get_input_direction()
 	var wall_facing_angle_global = calculate_global_y_rotation(-Raycast_Facing_Wall.get_collision_normal())
@@ -128,14 +126,16 @@ func ledge_move(delta):
 
 
 #Will need to account for changes in grab point height as well
-func rotate_to_ledge(delta):
+func rotate_to_ledge():
 	var wall_facing_angle_global = calculate_global_y_rotation(-Raycast_Facing_Wall.get_collision_normal())
 	facing_angle.y = Rig.global_transform.basis.get_euler().y
 	
 	turn_angle.y = wall_facing_angle_global - facing_angle.y
 	turn_angle.y = bound_angle(turn_angle.y)
 	
-	if (!is_equal_approx(turn_angle.y, 0.0)):
+	if (!is_equal_approx(turn_angle.y, 0.0) and turn_angle.y <= deg2rad(90) and turn_angle.y >= deg2rad(-90)):
+		print("wall_facing_angle:    " + str(rad2deg(wall_facing_angle_global)))
+		print("current_facing_angle: " + str(rad2deg(facing_angle.y)))
 		if at_ledge:
 			at_ledge = false #false while rotating to ledge; can't climb up
 			
@@ -168,7 +168,11 @@ func rotate_to_ledge(delta):
 		at_ledge = true #check this in same frame??
 
 
-#Currently does not interpolate, just snaps player to ledge
+func adjust_hang_height():
+	ledge_hang_height = ledge_grab_transform.origin.y - Ledge_Grab_System.default_offset
+	owner.global_transform.origin.y = ledge_hang_height
+
+
 #Moves player to ledge hang position on entering ledge_hang state
 func translate_to_ledge(ledge_grab_transform, wall_normal):
 	if translate_time_left > 0:

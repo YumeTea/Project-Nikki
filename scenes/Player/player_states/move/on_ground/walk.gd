@@ -89,12 +89,15 @@ func on_animation_finished(_anim_name):
 
 
 func walk_third_person(delta):
-	if !centering_view and !strafe_locked:
-		walk_free(delta)
-	elif centering_view:
-		walk_locked_third_person(delta)
-	elif strafe_locked:
-		walk_strafe(delta)
+	if owner.is_on_floor():
+		if !centering_view and !strafe_locked:
+			walk_free(delta)
+		elif centering_view:
+			walk_locked_third_person(delta)
+		elif strafe_locked:
+			walk_strafe(delta)
+	else:
+		velocity.y += gravity * weight * delta
 	
 	blend_move_anim()
 
@@ -116,14 +119,17 @@ func walk_first_person(delta):
 	#Turn angle bounding
 	next_turn_angle.y = bound_angle(next_turn_angle.y)
 	
-	if rotate_to_focus:
-		walk_rotate_to_focus(delta) #for entering first person
-	elif !centering_view and !strafe_locked and ((next_turn_angle.y < focus_angle_lim.y - deg2rad(2.0)) and (next_turn_angle.y > -focus_angle_lim.y + deg2rad(2.0))):
-		walk_free(delta)
-	elif centering_view:
-		walk_locked_first_person(delta)
+	if owner.is_on_floor():
+		if rotate_to_focus:
+			walk_rotate_to_focus(delta) #for entering first person
+		elif !centering_view and !strafe_locked and ((next_turn_angle.y < focus_angle_lim.y - deg2rad(2.0)) and (next_turn_angle.y > -focus_angle_lim.y + deg2rad(2.0))):
+			walk_free(delta)
+		elif centering_view:
+			walk_locked_first_person(delta)
+		else:
+			walk_strafe(delta) #if trying to turn to where neck is over focus angle lim, strafe walk instead
 	else:
-		walk_strafe(delta) #if trying to turn to where neck is over focus angle lim, strafe walk instead
+		velocity.y += gravity * weight * delta
 	
 	blend_move_anim()
 

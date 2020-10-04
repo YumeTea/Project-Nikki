@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scenes/Player/player/ledge_hang_system/ledge_hang_system.gd" type="Script" id=1]
 
@@ -17,6 +17,34 @@ albedo_color = Color( 0.145098, 0.788235, 0.364706, 1 )
 [sub_resource type="SpatialMaterial" id=5]
 emission_enabled = true
 emission = Color( 0.478431, 0, 1, 1 )
+emission_energy = 1.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="SpatialMaterial" id=6]
+emission_enabled = true
+emission = Color( 0, 0.321569, 1, 1 )
+emission_energy = 1.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="SpatialMaterial" id=7]
+emission_enabled = true
+emission = Color( 0, 0.321569, 1, 1 )
+emission_energy = 1.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="SpatialMaterial" id=8]
+emission_enabled = true
+emission = Color( 0.992157, 1, 0, 1 )
+emission_energy = 1.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="SpatialMaterial" id=9]
+emission_enabled = true
+emission = Color( 0.992157, 1, 0, 1 )
 emission_energy = 1.0
 emission_operator = 0
 emission_on_uv2 = false
@@ -75,4 +103,24 @@ one_shot = true
 transform = Transform( 0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 7.27, -0.042 )
 mesh = SubResource( 4 )
 material/0 = SubResource( 5 )
+
+[node name="Wall_Binormal_1" type="MeshInstance" parent="Debug_Nodes"]
+transform = Transform( 0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 7.27, -0.042 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 6 )
+
+[node name="Wall_Binormal_2" type="MeshInstance" parent="Debug_Nodes"]
+transform = Transform( 0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, 0, 7.27, -0.042 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 7 )
+
+[node name="Ledge_Binormal_1" type="MeshInstance" parent="Debug_Nodes"]
+transform = Transform( 0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 7.27, -0.042 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 8 )
+
+[node name="Ledge_Binormal_2" type="MeshInstance" parent="Debug_Nodes"]
+transform = Transform( 0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, 0, 7.27, -0.042 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 9 )
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

@@ -25,7 +25,15 @@ var input = {
 	"input_previous": input_previous,
 }
 
+#Seeking Variables
+var seeking = false
 var seek_target_name = "Player"
+
+#Pathfinding Variables
+var path = []
+var path_point = 0
+
+onready var nav = get_parent().get_parent().get_node("Navigation")
 
 
 func _ready():
@@ -57,24 +65,8 @@ func _physics_process(_delta):
 		emit_signal("focus_target", main_target)
 
 
-func get_move_direction():
-#	if targetting:
-#		press_ai_input("left_stick", Vector2(0,1))
-#	else:
-	press_ai_input("left_stick", Vector2(0,0))
-
-
-func get_look_direction():
-	if !targetting:
-		press_ai_input("right_stick", Vector2(sin(OS.get_time()["second"]/2), 0))
-
-
-func get_action_input():
-	if !targetting:
-		seek_target(seek_target_name)
-	else:
-		press_ai_input("action_l2", "center_view")
-		press_ai_input("action_y", "cast")
+func hit_effect(_effect_type):
+	return
 
 
 func seek_target(target_name):
@@ -84,25 +76,104 @@ func seek_target(target_name):
 
 
 func lock_target():
+	var focus_target = main_target
+	
 	if !targetting:
-		main_target = get_main_target(visible_targets)
+		main_target = closest_target
 		targetting = true
-		emit_signal("focus_target", main_target)
 	else:
 		main_target = null
 		targetting = false
-		emit_signal("focus_target", main_target)
+	emit_signal("focus_target", main_target)
 
 
-func get_main_target(target_array): #if array is empty, returns null
-	var centering = 0 #stores how close target is to center camera view
-	var target_main
-	for target in target_array:
-		var target_direction = head_position.direction_to(target.get_global_transform().origin)
-		if centering < focus_direction.dot(target_direction):
-			centering = focus_direction.dot(target_direction)
-			target_main = target
-	return target_main
+func calc_target_path():
+	var target_direction
+	var direction
+	
+	if path_point < path.size():
+		target_direction = (path[path_point] - global_transform.origin)
+		target_direction = Vector2(target_direction.x, target_direction.z)
+		#Calc path to next point if within 1 unit of current point
+		if target_direction.length() < 1.0:
+			path_point += 1
+			if (path_point + 1 < path.size()):
+				target_direction = (path[path_point] - global_transform.origin)
+				target_direction = Vector2(target_direction.x, target_direction.z)
+			else:
+				direction = Vector2(0,0)
+				seeking = false
+		
+		var move_angle
+		
+		move_angle = calculate_global_y_rotation(focus_direction) - calculate_global_y_rotation(Vector3(target_direction.x, 0.0, target_direction.y))
+		
+		direction = Vector2(0.0, target_direction.length()).rotated(move_angle)
+		direction = direction.normalized()
+		
+		###DEBUG###
+		if path_point < path.size():
+			$Debug/Path_Point.global_transform.origin = path[path_point]
+	else:
+		direction = Vector2(0,0)
+		seeking = false
+	
+	
+	return direction
+
+
+func move_to(target_node):
+	path = nav.get_simple_path(global_transform.origin, target_node.global_transform.origin)
+	path_point = 0
+
+
+###UTILITY FUNCTIONS###
+
+
+func calculate_global_y_rotation(direction):
+	var test_direction = Vector2(0,1)
+	var direction_to = Vector2(direction.x, direction.z)
+	var y_rotation = -test_direction.angle_to(direction_to)
+	return y_rotation #Output is PI > y > -PI
+
+
+###AI INPUT FUNCTIONS###
+
+
+func get_move_direction():
+	var direction = calc_target_path()
+	press_ai_input("left_stick", direction)
+
+
+func get_look_direction():
+	var direction
+	
+	if !targetting and !seeking:
+		direction = Vector2(sin(OS.get_time()["second"]/2), 0)
+	else:
+		###Calc look direction while going to player position
+		var target_direction = global_transform.origin.direction_to(Global.get_Player().global_transform.origin)
+		target_direction.y = 0.0
+		target_direction = target_direction.normalized()
+		
+		var angle_to_target = calculate_global_y_rotation(target_direction) - calculate_global_y_rotation(focus_direction)
+		
+		if angle_to_target > 0.0:
+			direction = Vector2(-1, 0)
+		elif angle_to_target < 0.0:
+			direction = Vector2(1, 0)
+		else:
+			direction = Vector2(0, 0)
+		
+	press_ai_input("right_stick", direction)
+
+
+func get_action_input():
+	if !targetting:
+		seek_target(seek_target_name)
+	else:
+#		press_ai_input("action_l2", "center_view")
+		press_ai_input("action_y", "cast")
 
 
 func clear_ai_input():
@@ -151,8 +222,7 @@ func is_ai_action_just_pressed(action, input_dic):
 	return false
 
 
-func hit_effect(_effect_type):
-	return
+###SIGNAL FUNCTIONS###
 
 
 func _on_Health_health_depleted(_health_depleted):
@@ -164,3 +234,8 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == "Perish":
 		queue_free()
 
+
+func _on_Timer_timeout():
+	if Global.get_Player() and nav:
+		move_to(Global.get_Player())
+		seeking = true

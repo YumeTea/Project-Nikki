@@ -66,7 +66,7 @@ const surface_speed = 4
 const surface_accel = 48
 
 const ACCEL = 4
-const DEACCEL = 10
+const DEACCEL = 16
 
 const turn_radius = 5 #in degrees
 const quick_turn_radius = 12 #in degrees

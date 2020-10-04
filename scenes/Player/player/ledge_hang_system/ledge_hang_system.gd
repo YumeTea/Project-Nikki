@@ -68,6 +68,7 @@ func _process(delta):
 					
 				break
 	else:
+		Raycast_Wall.cast_to = Raycast_Wall_default_cast_to
 		Raycast_Ledge.transform.origin.x = 0.0
 		Raycast_Ledge.transform.origin.z = 0.0
 
@@ -102,12 +103,17 @@ func get_nearest_intersection():
 func position_ledge_raycasts(intersection_idx):
 	var cast_to = Raycast_Wall.cast_to
 	
-	#Move raycasts into position and update them
-	Raycast_Wall.cast_to = Vector3(intersections[intersection_idx].x, cast_to.y, intersections[intersection_idx].z)
-	Raycast_Ledge.transform.origin.x = intersections[intersection_idx].x
-	Raycast_Ledge.transform.origin.z = intersections[intersection_idx].z
-	Raycast_Wall.force_raycast_update()
-	Raycast_Ledge.force_raycast_update()
+	if abs(intersections[intersection_idx].x) <= collider_shape.radius and abs(intersections[intersection_idx].z) <= collider_shape.radius:
+		#Move raycasts into position and update them
+		Raycast_Wall.cast_to = Vector3(intersections[intersection_idx].x, cast_to.y, intersections[intersection_idx].z)
+		Raycast_Ledge.transform.origin.x = intersections[intersection_idx].x
+		Raycast_Ledge.transform.origin.z = intersections[intersection_idx].z
+		Raycast_Wall.force_raycast_update()
+		Raycast_Ledge.force_raycast_update()
+	else:
+		Raycast_Wall.cast_to = Raycast_Wall_default_cast_to
+		Raycast_Ledge.transform.origin.x = 0.0
+		Raycast_Ledge.transform.origin.z = 0.0
 
 
 func calculate_grab_point(Wall_Normal_Raycast, Ledge_Normal_Raycast):
@@ -130,8 +136,8 @@ func calculate_grab_point(Wall_Normal_Raycast, Ledge_Normal_Raycast):
 		if wall_angle > wall_angle_min and ledge_angle < ledge_angle_max:
 			###GRAB POINT
 			#Get axes to rotate wall and ledge vector around
-			var cross_wall = Wall_Normal_Raycast.get_collision_normal().cross(Ledge_Normal_Raycast.get_collision_normal()).normalized()
-			var cross_ledge = Ledge_Normal_Raycast.get_collision_normal().cross(Wall_Normal_Raycast.get_collision_normal()).normalized()
+			var cross_wall = Wall_Normal_Raycast.get_collision_normal().cross(Ledge_Normal_Raycast.get_collision_point() - Wall_Normal_Raycast.get_collision_point()).normalized()
+			var cross_ledge = Ledge_Normal_Raycast.get_collision_normal().cross(Wall_Normal_Raycast.get_collision_point() - Ledge_Normal_Raycast.get_collision_point()).normalized()
 			
 			#Calculate binormals
 			var binormal_wall = Wall_Normal_Raycast.get_collision_normal().rotated(cross_wall, deg2rad(90))
@@ -144,6 +150,7 @@ func calculate_grab_point(Wall_Normal_Raycast, Ledge_Normal_Raycast):
 			var n2 = binormal_ledge
 			
 			var lambda_wall
+			var lambda_ledge
 			
 			#Divide by 0 prevention
 			if n2.x == 0.0:
@@ -173,8 +180,12 @@ func calculate_grab_point(Wall_Normal_Raycast, Ledge_Normal_Raycast):
 			grab_point_transform = grab_point_transform.looking_at(grab_point + facing_direction, Vector3.UP)
 			
 			###SIGNAL EMISSION
-			#Move grab point visualizer
+			##DEBUG VISUALIZER##
 			$Debug_Nodes/Grab_Point.global_transform.origin = grab_point
+			$Debug_Nodes/Wall_Binormal_1.global_transform.origin = o1
+			$Debug_Nodes/Wall_Binormal_2.global_transform.origin = o1 + n1
+			$Debug_Nodes/Ledge_Binormal_1.global_transform.origin = o2
+			$Debug_Nodes/Ledge_Binormal_2.global_transform.origin = o2 + n2
 			
 			emit_signal("ledge_grab_point", grab_point_transform, wall_normal)
 

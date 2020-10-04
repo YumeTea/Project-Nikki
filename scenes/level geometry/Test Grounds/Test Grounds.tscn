@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://models/objects/test models/Ledge_Test_Concave.mesh" type="ArrayMesh" id=1]
 [ext_resource path="res://models/levels/Test Grounds/Test Grounds v1.3.mesh" type="ArrayMesh" id=2]
@@ -66,6 +66,26 @@ shader_param/light_ramp = SubResource( 13 )
 [sub_resource type="ConcavePolygonShape" id=15]
 data = PoolVector3Array( -0.7071, 0, -0.7071, 0.6888, 0.2641, -0.2808, -1, 0, 0, 0, 0, -1, 0.6888, 0.2641, -0.2808, -0.7071, 0, -0.7071, 0.7071, 0, -0.7071, 0.6888, 0.2641, -0.2808, 0, 0, -1, 1, 0, 0, 0.6888, 0.2641, -0.2808, 0.7071, 0, -0.7071, 0.7071, 0, 0.7071, 0.6888, 0.2641, -0.2808, 1, 0, 0, 0, 0, 1, 0.6888, 0.2641, -0.2808, 0.7071, 0, 0.7071, -0.7071, 0, 0.7071, 0.6888, 0.2641, -0.2808, 0, 0, 1, -1, 0, 0, 0.6888, 0.2641, -0.2808, -0.7071, 0, 0.7071, -0.6374, -0.6282, 0.3388, 0.7071, 0, 0.7071, 1, 0, 0, 0, 0, 1, 0.7071, 0, 0.7071, -0.6374, -0.6282, 0.3388, -0.7071, 0, 0.7071, 0, 0, 1, -0.6374, -0.6282, 0.3388, 1, 0, 0, 0.7071, 0, -0.7071, -0.6374, -0.6282, 0.3388, 0.7071, 0, -0.7071, 0, 0, -1, -0.6374, -0.6282, 0.3388, 0, 0, -1, -0.7071, 0, -0.7071, -0.6374, -0.6282, 0.3388, -0.7071, 0, -0.7071, -1, 0, 0, -0.6374, -0.6282, 0.3388, -1, 0, 0, -0.7071, 0, 0.7071, -0.6374, -0.6282, 0.3388 )
 
+[sub_resource type="CubeMesh" id=16]
+
+[sub_resource type="ConcavePolygonShape" id=17]
+data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
+
+[sub_resource type="ConcavePolygonShape" id=18]
+data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
+
+[sub_resource type="ConcavePolygonShape" id=19]
+data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
+
+[sub_resource type="ConcavePolygonShape" id=20]
+data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
+
+[sub_resource type="ConcavePolygonShape" id=21]
+data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
+
+[sub_resource type="ConcavePolygonShape" id=22]
+data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
+
 [node name="Test Grounds" type="StaticBody"]
 collision_layer = 2147745793
 collision_mask = 262150
@@ -94,11 +114,13 @@ material/3 = ExtResource( 7 )
 [node name="Test_Geometry" type="Node" parent="."]
 
 [node name="Ramp" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( 1, 0, 0, 0, 0.707106, 0.707108, 0, -0.707108, 0.707106, 36.479, 9.968, 102.464 )
+transform = Transform( 1, 0, 0, 0, 0.707106, 0.707108, 0, -0.707108, 0.707106, 36.479, 9.968, 101.742 )
 mesh = SubResource( 2 )
 material/0 = null
 
 [node name="StaticBody" type="StaticBody" parent="Test_Geometry/Ramp"]
+collision_layer = 262145
+collision_mask = 262150
 
 [node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Ramp/StaticBody"]
 shape = SubResource( 3 )
@@ -171,3 +193,123 @@ collision_mask = 262145
 
 [node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Complex_Ledge_Test/StaticBody"]
 shape = SubResource( 15 )
+
+[node name="Nav_Wall" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( 15, 0, 0, 0, 3, 0, 0, 0, 1, 57.0188, 4, 104.511 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall/StaticBody"]
+shape = SubResource( 17 )
+
+[node name="Nav_Wall2" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -3.02394e-05, 0, 1, 0, 3, 0, -10, 0, -3.02394e-06, 70.1933, 4, 113.502 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall2"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall2/StaticBody"]
+shape = SubResource( 18 )
+
+[node name="Nav_Wall3" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -0.000120958, 0, 1, 0, 3, 0, -40, 0, -3.02394e-06, 70.1933, 4, 146.916 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall3"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall3/StaticBody"]
+shape = SubResource( 18 )
+
+[node name="Nav_Wall4" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -3.02394e-05, 0, 1, 0, 3, 0, -10, 0, -3.02394e-06, 81.1295, 4, 130.839 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall4"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall4/StaticBody"]
+shape = SubResource( 19 )
+
+[node name="Nav_Wall6" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -3.02394e-05, 0, 1, 0, 3, 0, -10, 0, -3.02394e-06, 89.6143, 4, 120.033 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall6"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall6/StaticBody"]
+shape = SubResource( 20 )
+
+[node name="Nav_Wall12" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -10, 0, -6.04788e-06, 0, 3, 0, 6.04788e-05, 0, -1, 111.529, 4, 193.972 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall12"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall12/StaticBody"]
+shape = SubResource( 20 )
+
+[node name="Nav_Wall8" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -3.02394e-05, 0, 1, 0, 3, 0, -10, 0, -3.02394e-06, 105.777, 4, 115.211 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall8"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall8/StaticBody"]
+shape = SubResource( 20 )
+
+[node name="Nav_Wall7" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -10, 0, -6.04789e-06, 0, 3, 0, 6.04789e-05, 0, -1, 91.897, 4, 139.843 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall7"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall7/StaticBody"]
+shape = SubResource( 21 )
+
+[node name="Nav_Wall5" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -30, 0, -6.11146e-06, 0, 3, 0, 0.000183344, 0, -1, 101.409, 4, 104.515 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall5"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall5/StaticBody"]
+shape = SubResource( 22 )
+
+[node name="Nav_Wall9" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -0.000141442, 0, 1, 0, 3, 0, -45, 0, -3.14315e-06, 100.945, 4, 183.875 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall9"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall9/StaticBody"]
+shape = SubResource( 22 )
+
+[node name="Nav_Wall11" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -30, 0, -6.11146e-06, 0, 3, 0, 0.000183344, 0, -1, 70.0808, 4, 186.44 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall11"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall11/StaticBody"]
+shape = SubResource( 22 )
+
+[node name="Nav_Wall10" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -0.000141442, 0, 1, 0, 3, 0, -45, 0, -3.14315e-06, 115.459, 4, 150.118 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall10"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall10/StaticBody"]
+shape = SubResource( 22 )

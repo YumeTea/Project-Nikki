@@ -3,7 +3,7 @@ extends "res://scenes/Player/player_states/move/in_air/in_air.gd"
 
 #Jump Variables
 var jump_strength = 20
-var slope_influence = 1.1
+var slope_modifier = 0.05
 
 #Jump Flags
 var has_jumped = false
@@ -16,7 +16,6 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	snap_vector = Vector3(0,0,0)
 	is_falling = false
 	has_jumped = false
 	connect_player_signals()
@@ -71,7 +70,8 @@ func aerial_move(delta):
 func jump():
 	if !has_jumped:
 		speed = speed_aerial
-		velocity += jump_velocity(Rig.get_node("Raycast_Floor").get_collision_normal())
+		snap_vector = Vector3(0,0,0)
+		velocity += jump_velocity(Raycast_Floor.get_collision_normal())
 		has_jumped = true
 
 
@@ -84,13 +84,14 @@ func jump_velocity(surface_normal):
 		cross = surface_normal.cross(Vector3.UP).normalized()
 		dot = surface_normal.dot(Vector3.UP)
 		
-		var angle = (surface_normal.angle_to(Vector3.UP) / slope_influence)
-		print(rad2deg(angle))
+		var angle 
+		
+		angle = (surface_normal.angle_to(Vector3.UP) * (1.0 - slope_modifier))
 		
 		#rotate wall normal towards y axis
-		var surface_normal_rotated_up = surface_normal.rotated(cross, angle)
+		var jump_direction = surface_normal.rotated(cross, angle)
 	
-		var v = surface_normal_rotated_up * jump_strength
+		var v = jump_direction * jump_strength
 		return v
 	else:
 		var v = Vector3.UP * jump_strength

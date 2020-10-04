@@ -37,7 +37,6 @@ func handle_input(event):
 #Acts as the _process method would
 func update(delta):
 	cast_projectile()
-	print(is_casting)
 	if is_casting == false:
 		emit_signal("finished", "none")
 	.update(delta)

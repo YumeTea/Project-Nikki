@@ -38,7 +38,7 @@ func enter():
 	translate_amount = Vector3(0,0,-0.3)
 	
 	translate_up_forward(Player_Collision, collisionshape_offset_default, translate_amount)
-	translate_up_forward(owner.get_node("target_pos"), target_pos_offset_default, translate_amount)
+	translate_up_forward(owner.get_node("Target_Pos"), target_pos_offset_default, translate_amount)
 	
 	connect_player_signals()
 	
@@ -74,7 +74,7 @@ func handle_input(event):
 func update(delta):
 	#Translate player collision and player's target_pos
 	translate_up_forward(Player_Collision, collisionshape_offset_default, translate_amount)
-	translate_up_forward(owner.get_node("target_pos"), target_pos_offset_default, translate_amount)
+	translate_up_forward(owner.get_node("Target_Pos"), target_pos_offset_default, translate_amount)
 	
 	if check_object_collisions() == true:
 		print("intersection detected in ledge_climb")
@@ -127,6 +127,6 @@ func translate_up_forward(object, object_offset_default, translate_offset : Vect
 func translate_player_to_collision():
 	owner.global_transform.origin = Player_Collision.global_transform.origin - collisionshape_offset_default
 	Player_Collision.transform.origin = collisionshape_offset_default
-	owner.get_node("target_pos").transform.origin = target_pos_offset_default
+	owner.get_node("Target_Pos").transform.origin = target_pos_offset_default
 
 

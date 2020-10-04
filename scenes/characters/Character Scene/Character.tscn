@@ -4,71 +4,71 @@
 [ext_resource path="res://scenes/characters/Character Scene/character_health.gd" type="Script" id=2]
 [ext_resource path="res://scenes/characters/character scene/character.gd" type="Script" id=3]
 
-[sub_resource type="AnimationNodeBlend2" id=7]
+[sub_resource type="AnimationNodeBlend2" id=1]
 
-[sub_resource type="AnimationNodeAnimation" id=24]
+[sub_resource type="AnimationNodeAnimation" id=2]
 animation = "Casting_Magic_Orb"
 
-[sub_resource type="AnimationNodeStateMachine" id=9]
-states/Casting_Magic_Orb/node = SubResource( 24 )
+[sub_resource type="AnimationNodeStateMachine" id=3]
+states/Casting_Magic_Orb/node = SubResource( 2 )
 states/Casting_Magic_Orb/position = Vector2( 520, 242 )
 
-[sub_resource type="AnimationNodeAnimation" id=10]
+[sub_resource type="AnimationNodeAnimation" id=4]
 animation = "Idle"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=11]
-blend_point_0/node = SubResource( 10 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=5]
+blend_point_0/node = SubResource( 4 )
 blend_point_0/pos = 0.0
 
-[sub_resource type="AnimationNodeAnimation" id=12]
+[sub_resource type="AnimationNodeAnimation" id=6]
 animation = "Walk"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=13]
-blend_point_0/node = SubResource( 12 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=7]
+blend_point_0/node = SubResource( 6 )
 blend_point_0/pos = 0.0
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=14]
-blend_point_0/node = SubResource( 11 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=8]
+blend_point_0/node = SubResource( 5 )
 blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 13 )
+blend_point_1/node = SubResource( 7 )
 blend_point_1/pos = 1.0
 
-[sub_resource type="AnimationNodeTimeScale" id=15]
+[sub_resource type="AnimationNodeTimeScale" id=9]
 
-[sub_resource type="AnimationNodeBlendTree" id=16]
+[sub_resource type="AnimationNodeBlendTree" id=10]
 graph_offset = Vector2( -575, -69 )
-nodes/BlendSpace1D/node = SubResource( 14 )
+nodes/BlendSpace1D/node = SubResource( 8 )
 nodes/BlendSpace1D/position = Vector2( -184, 120 )
-nodes/TimeScale/node = SubResource( 15 )
+nodes/TimeScale/node = SubResource( 9 )
 nodes/TimeScale/position = Vector2( 47, 119 )
 node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
 
-[sub_resource type="AnimationNodeStateMachine" id=17]
-states/Walk/node = SubResource( 16 )
+[sub_resource type="AnimationNodeStateMachine" id=11]
+states/Walk/node = SubResource( 10 )
 states/Walk/position = Vector2( 453, 219 )
 
-[sub_resource type="AnimationNodeTimeScale" id=18]
+[sub_resource type="AnimationNodeTimeScale" id=12]
 
-[sub_resource type="AnimationNodeBlendTree" id=6]
+[sub_resource type="AnimationNodeBlendTree" id=13]
 graph_offset = Vector2( -660, -100 )
-nodes/MovexAction/node = SubResource( 7 )
+nodes/MovexAction/node = SubResource( 1 )
 nodes/MovexAction/position = Vector2( 80, 120 )
-nodes/StateMachineAction/node = SubResource( 9 )
+nodes/StateMachineAction/node = SubResource( 3 )
 nodes/StateMachineAction/position = Vector2( -384, 283 )
-nodes/StateMachineMove/node = SubResource( 17 )
+nodes/StateMachineMove/node = SubResource( 11 )
 nodes/StateMachineMove/position = Vector2( -377, 51 )
-nodes/TimeScale/node = SubResource( 18 )
+nodes/TimeScale/node = SubResource( 12 )
 nodes/TimeScale/position = Vector2( -121, 281 )
 node_connections = [ "output", 0, "MovexAction", "TimeScale", 0, "StateMachineAction", "MovexAction", 0, "StateMachineMove", "MovexAction", 1, "TimeScale" ]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=19]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=14]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=20]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=15]
 
-[sub_resource type="CapsuleShape" id=4]
+[sub_resource type="CapsuleShape" id=16]
 height = 4.21684
 
-[sub_resource type="SphereShape" id=5]
+[sub_resource type="SphereShape" id=17]
 
 [node name="Character" type="KinematicBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
@@ -79,12 +79,12 @@ script = ExtResource( 3 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 6 )
+tree_root = SubResource( 13 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/MovexAction/blend_amount = 0
-parameters/StateMachineAction/playback = SubResource( 19 )
-parameters/StateMachineMove/playback = SubResource( 20 )
+parameters/StateMachineAction/playback = SubResource( 14 )
+parameters/StateMachineMove/playback = SubResource( 15 )
 parameters/StateMachineMove/Walk/BlendSpace1D/blend_position = 0
 parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position = 0
 parameters/StateMachineMove/Walk/BlendSpace1D/1/blend_position = 0
@@ -109,7 +109,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -0.962379, -4.20669e-08, 0, 0.0310001, 0 )
-shape = SubResource( 4 )
+shape = SubResource( 16 )
 
 [node name="Targetting_Area" type="Area" parent="."]
 transform = Transform( 176, 0, 0, 0, 176, 0, 0, 0, 176, 0, 2, 0 )
@@ -118,7 +118,7 @@ collision_layer = 0
 collision_mask = 6
 
 [node name="CollisionShape" type="CollisionShape" parent="Targetting_Area"]
-shape = SubResource( 5 )
+shape = SubResource( 17 )
 
 [node name="Target_Pos" type="Position3D" parent="."]
 [connection signal="focus_target" from="." to="Camera_Rig" method="_on_Character_focus_target"]
