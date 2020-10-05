@@ -12,6 +12,10 @@ onready var Raycast_Facing_Wall = Ledge_Grab_System.get_node("Raycast_Facing_Wal
 onready var Raycast_Facing_Ledge = Ledge_Grab_System.get_node("Raycast_Facing_Ledge")
 onready var Raycast_Ceiling = Ledge_Grab_System.get_node("Raycast_Ceiling")
 
+#Animation Variables
+#Ledge_Move
+var ledge_move_anim_speed_max = 2.9
+
 #Translate Variables
 var ledge_grab_transform_init : Transform
 var wall_normal_init : Vector3
@@ -21,8 +25,7 @@ const translate_time = 10
 var translate_time_left = 0
 
 #Ledge Hang Variables
-var ledge_move_speed = 2.0
-var turn_radius_ledge = deg2rad(5)
+var turn_radius_ledge = deg2rad(1)
 var ledge_hang_position_offset = Vector3(0.0,0.0,0.1)
 
 #Ledge Hang bools
@@ -45,7 +48,7 @@ func enter():
 	translate_time_left = translate_time
 	#Initial Physics Values
 	velocity = Vector3(0,0,0)
-	speed = ledge_move_speed
+	speed = speed_ledge_move
 	
 	connect_player_signals()
 	
@@ -77,6 +80,15 @@ func handle_input(event):
 			emit_signal("finished", "fall")
 		elif at_ledge:
 			emit_signal("finished", "ledge_climb")
+	
+	if event.is_action_pressed("debug_]") and event.get_device() == 0:
+		ledge_move_anim_speed_max += 0.1
+		print(ledge_move_anim_speed_max)
+	if event.is_action_pressed("debug_[") and event.get_device() == 0:
+		ledge_move_anim_speed_max -= 0.1
+		print(ledge_move_anim_speed_max)
+	
+	
 	.handle_input(event)
 
 
@@ -95,6 +107,8 @@ func update(delta):
 			print(!Raycast_Facing_Ledge.is_colliding())
 			print("Racast_Facing_Wall lost contact")
 			emit_signal("finished", "fall")
+		
+		blend_move_anim()
 	
 	.update(delta)
 
@@ -110,10 +124,7 @@ func on_animation_finished(_anim_name):
 func ledge_move(delta):
 	direction = get_input_direction()
 	var wall_facing_angle_global = calculate_global_y_rotation(-Raycast_Facing_Wall.get_collision_normal())
-	var input_direction_angle
-	
-	#Calc angle of input relative to player facing direction
-	input_direction_angle = calculate_global_y_rotation(direction) - wall_facing_angle_global
+	var input_direction_angle = calculate_global_y_rotation(direction) - wall_facing_angle_global
 	
 	#Get pure left/right input amount
 	var direction_horizontal = Vector3(0,0,direction.length()).rotated(Vector3.UP, input_direction_angle)
@@ -134,8 +145,6 @@ func rotate_to_ledge():
 	turn_angle.y = bound_angle(turn_angle.y)
 	
 	if (!is_equal_approx(turn_angle.y, 0.0) and turn_angle.y <= deg2rad(90) and turn_angle.y >= deg2rad(-90)):
-		print("wall_facing_angle:    " + str(rad2deg(wall_facing_angle_global)))
-		print("current_facing_angle: " + str(rad2deg(facing_angle.y)))
 		if at_ledge:
 			at_ledge = false #false while rotating to ledge; can't climb up
 			
@@ -207,5 +216,98 @@ func translate_to_ledge(ledge_grab_transform, wall_normal):
 	if translate_time_left <= 0:
 		on_ledge = true
 		at_ledge = true
+
+
+func blend_move_anim():
+	var time_scale
+	var tween_time = 0.15
+	
+	move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position")
+	
+	###Blend position tweening
+	#Going from Ledge_Idle to Ledge_Move
+	if direction.length() > 0.0 and !is_equal_approx(move_blend_position, 1.0) and !is_equal_approx(move_blend_position, -1.0) and !active_tweens.has("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position"):
+		var seconds = (1.0 - move_blend_position) * tween_time
+		#Transition to Swim
+		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position", move_blend_position, 1.0, seconds, Tween.TRANS_LINEAR)
+		owner.get_node("Tween").start()
+		
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").stop()
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Ledge_Hang")
+		
+		add_active_tween("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position")
+	#Going from Swim_Forward to Idle
+	elif direction.length() == 0.0 and acceleration_horizontal < 0.0 and !is_equal_approx(move_blend_position, 0.0):
+		if active_tweens.has("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position"):
+			owner.get_node("Tween").stop(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position")
+		
+		var seconds = (move_blend_position) * tween_time
+		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position", move_blend_position, 0.0, seconds, Tween.TRANS_LINEAR)
+		owner.get_node("Tween").start()
+		
+		if !active_tweens.has("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position"):
+			add_active_tween("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position")
+	else:
+		remove_active_tween("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position")
+	
+	blend_ledge_move_anim(move_blend_position)
+
+
+func blend_ledge_move_anim(current_blend_position):
+	var tween_time = 0.5
+	var time_scale
+	var ledge_move_time_scale
+	
+	var ledge_move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position")
+	
+	#Swim_Idle time scale
+	if is_equal_approx(current_blend_position, 0.0):
+		current_blend_position = 0.0
+		
+		ledge_move_time_scale = 1.0
+		
+		time_scale = ledge_move_time_scale
+	#Swim_Forward time scale
+	elif !is_equal_approx(current_blend_position, 0.0):
+		#Determine if player is moving left or right
+		direction = get_input_direction()
+		var wall_facing_angle_global = calculate_global_y_rotation(-Raycast_Facing_Wall.get_collision_normal())
+		var velocity_angle = calculate_global_y_rotation(Vector3(velocity.x, 0.0, velocity.z))
+		
+		var move_angle = wall_facing_angle_global - velocity_angle
+		move_angle = bound_angle(move_angle)
+		
+		print(ledge_move_blend_position)
+		#Tween blend position for ledge_move blendspace1d
+		if move_angle < 0.0:
+			if ledge_move_blend_position != -1.0 and !active_tweens.has("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position"):
+			
+				var seconds = (abs(ledge_move_blend_position)) * tween_time
+				owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position", ledge_move_blend_position, -1.0, seconds, Tween.TRANS_LINEAR)
+				owner.get_node("Tween").start()
+				
+				add_active_tween("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position")
+		elif move_angle >= 0.0:
+			if ledge_move_blend_position != 1.0 and !active_tweens.has("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position"):
+			
+				var seconds = (abs(ledge_move_blend_position)) * tween_time
+				owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position", ledge_move_blend_position, 1.0, seconds, Tween.TRANS_LINEAR)
+				owner.get_node("Tween").start()
+				
+				add_active_tween("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position")
+		
+		if active_tweens.has("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position"):
+			if ledge_move_blend_position == -1.0 or ledge_move_blend_position == 1.0:
+				remove_active_tween("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position")
+				
+		
+		#Calculate movement time scale based on velocity
+		ledge_move_time_scale = (velocity_horizontal / speed_ledge_move) * ledge_move_anim_speed_max
+		
+		time_scale = ledge_move_time_scale
+	
+	#Set blend position and time_scale in anim nodes
+#	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position", ledge_move_blend_position)
+	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Ledge_Hang/TimeScale/scale", time_scale)
 
 

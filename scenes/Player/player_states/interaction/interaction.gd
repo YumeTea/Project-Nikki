@@ -61,6 +61,7 @@ const speed_default = 18
 const speed_bow_walk = 7
 const speed_aerial = 3
 const speed_swim = 8
+const speed_ledge_move = 2.0
 
 const surface_speed = 4
 const surface_accel = 48

@@ -162,12 +162,6 @@ func update(delta):
 	###Set held direction
 	direction = get_input_direction()
 	
-#	if Raycast_Floor.is_colliding():
-#		if direction.angle_to(Raycast_Floor.get_collision_normal()) >= deg2rad(90):
-#			print(direction.normalized().cross(Raycast_Floor.get_collision_normal()).length())
-#		else:
-#			print(-direction.normalized().cross(Raycast_Floor.get_collision_normal()).length())
-	
 	###Player Motion
 	velocity = Player.move_and_slide_with_snap(velocity, snap_vector, up_direction, true, 1, floor_angle_max, false) #Come back/check vars 3,4,5
 	
@@ -323,7 +317,6 @@ func calculate_movement_velocity(delta):
 	floor_normal.x = stepify(floor_normal.x, 0.001)
 	floor_normal.y = stepify(floor_normal.y, 0.001)
 	floor_normal.z = stepify(floor_normal.z, 0.001)
-	
 	
 	#Up Direction
 	if (owner.is_on_floor() or snap_vector_is_colliding()) and floor_angle <= floor_angle_max: #Special gravity if on slope and slope is within floor_angle_max
