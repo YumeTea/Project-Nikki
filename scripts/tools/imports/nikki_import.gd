@@ -18,7 +18,10 @@ var body_materials = [
 	preload("res://models/characters/Nikki/materials/Striped_Socks.material"),
 	preload("res://models/characters/Nikki/materials/Shorts.material"),
 ]
-var anim_folder : String = "res://models/characters/Nikki/model/temp/anim"
+var ANIM_FOLDER : String = "res://models/characters/Nikki/model/anims/"
+var ANIM_FOLDER_TEMP : String = "res://models/characters/Nikki/model/temp/anim"
+var CHARACTER_MODEL_SAVE_PATH : String = "res://models/characters/Nikki/model/Nikki Character Model.tscn"
+
 
 
 func post_import(scene):
@@ -52,28 +55,65 @@ func post_import(scene):
 	
 	###ANIMATIONS###
 	#Clear temp anim folder
-	var directory : Directory = Directory.new()
-	
-	if directory.open(anim_folder) == OK:
-		directory.list_dir_begin(true)
-		var file_name = directory.get_next()
+	var directory_anim_temp : Directory = Directory.new()
+
+	if directory_anim_temp.open(ANIM_FOLDER_TEMP) == OK:
+		directory_anim_temp.list_dir_begin(true)
+		var file_name = directory_anim_temp.get_next()
 		while file_name != "":
-			directory.remove(file_name)
-			file_name = directory.get_next()
+			directory_anim_temp.remove(file_name)
+			file_name = directory_anim_temp.get_next()
 	else:
-		print("An error occurred when trying to access %s" % anim_folder)
+		print("An error occurred when trying to access %s" % ANIM_FOLDER_TEMP)
 	
-	#Save anims to temp anim folder
+	#Iterate through imported anims
 	for anim in scene.get_node("AnimationPlayer").get_animation_list():
+		var anim_found = false
+		
 		var anim_resource = scene.get_node("AnimationPlayer").get_animation(anim)
 		anim_resource.step = 0.0166666 #change FPS to 60
 		anim_resource.loop = true
 		
-		var save_path = anim_folder.plus_file("%s.anim" % anim_resource.resource_name)
-
-		var error : int = ResourceSaver.save(save_path, anim_resource)
-		if error != OK:
-			print("error saving anim in nikki_import.gd")
+		var directory_anim : Directory = Directory.new()
+	
+		if directory_anim.open(ANIM_FOLDER) == OK:
+			directory_anim.list_dir_begin(true)
+			var file_name = directory_anim.get_next()
+			while file_name != "":
+				if file_name == "%s.anim" % anim:
+					var anim_saved = load(ANIM_FOLDER.plus_file(file_name))
+					
+					#Copy same tracks from new anim to saved anim
+					for track in anim_resource.get_track_count():
+						anim_resource.copy_track(track, anim_saved)
+					
+					#Save modified anim
+					print("saving to " + str(ANIM_FOLDER.plus_file(file_name)))
+					var save_path = ANIM_FOLDER.plus_file("%s.anim" % anim)
+					
+					var error : int = ResourceSaver.save(ANIM_FOLDER.plus_file(file_name), anim_saved)
+					if error != OK:
+						print("error saving anim in nikki_import.gd")
+					anim_found = true
+					break
+				
+				file_name = directory_anim.get_next()
+		
+		#Save anim in temp anim folder if it wasn't found on player anim player
+		if !anim_found:
+			var save_path = ANIM_FOLDER_TEMP.plus_file("%s.anim" % anim)
+			
+			var error : int = ResourceSaver.save(save_path, anim_resource)
+			if error != OK:
+				print("error saving anim in nikki_import.gd")
+	
+	#Delete AnimationPlayer
+	scene.get_node("AnimationPlayer").free()
+	
+	#Save character model scene
+	var error : int = ResourceSaver.save(CHARACTER_MODEL_SAVE_PATH, scene)
+	if error != OK:
+		print("error saving anim in nikki_import.gd")
 	
 	
 	return scene

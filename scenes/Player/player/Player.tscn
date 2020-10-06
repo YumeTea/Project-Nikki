@@ -829,149 +829,149 @@ animation = "Land"
 [sub_resource type="AnimationNodeAnimation" id=13]
 animation = "Ledge_Climb"
 
-[sub_resource type="AnimationNodeAnimation" id=83]
+[sub_resource type="AnimationNodeAnimation" id=14]
 animation = "Ledge_Hang"
 
-[sub_resource type="AnimationNodeAnimation" id=84]
+[sub_resource type="AnimationNodeAnimation" id=15]
 animation = "Ledge_Move_Left"
 
-[sub_resource type="AnimationNodeAnimation" id=85]
-animation = "Ledge_Move_Right"
-
-[sub_resource type="AnimationNodeBlendSpace1D" id=86]
-blend_point_0/node = SubResource( 84 )
-blend_point_0/pos = -1.0
-blend_point_1/node = SubResource( 85 )
-blend_point_1/pos = 1.0
-
-[sub_resource type="AnimationNodeBlendSpace1D" id=87]
-blend_point_0/node = SubResource( 83 )
-blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 86 )
-blend_point_1/pos = 1.0
-
-[sub_resource type="AnimationNodeTimeScale" id=88]
-
-[sub_resource type="AnimationNodeBlendTree" id=89]
-graph_offset = Vector2( -331, 38 )
-nodes/BlendSpace1D/node = SubResource( 87 )
-nodes/BlendSpace1D/position = Vector2( -100, 120 )
-nodes/TimeScale/node = SubResource( 88 )
-nodes/TimeScale/position = Vector2( 120, 120 )
-node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
-
-[sub_resource type="AnimationNodeAnimation" id=15]
-animation = "Swim_Idle"
-
 [sub_resource type="AnimationNodeAnimation" id=16]
-animation = "Swim_Forward"
+animation = "Ledge_Move_Right"
 
 [sub_resource type="AnimationNodeBlendSpace1D" id=17]
 blend_point_0/node = SubResource( 15 )
-blend_point_0/pos = 0.0
+blend_point_0/pos = -1.0
 blend_point_1/node = SubResource( 16 )
 blend_point_1/pos = 1.0
 
-[sub_resource type="AnimationNodeTimeScale" id=18]
+[sub_resource type="AnimationNodeBlendSpace1D" id=18]
+blend_point_0/node = SubResource( 14 )
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource( 17 )
+blend_point_1/pos = 1.0
 
-[sub_resource type="AnimationNodeBlendTree" id=19]
+[sub_resource type="AnimationNodeTimeScale" id=19]
+
+[sub_resource type="AnimationNodeBlendTree" id=20]
+graph_offset = Vector2( -331, 38 )
+nodes/BlendSpace1D/node = SubResource( 18 )
+nodes/BlendSpace1D/position = Vector2( -100, 120 )
+nodes/TimeScale/node = SubResource( 19 )
+nodes/TimeScale/position = Vector2( 120, 120 )
+node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
+
+[sub_resource type="AnimationNodeAnimation" id=21]
+animation = "Swim_Idle"
+
+[sub_resource type="AnimationNodeAnimation" id=22]
+animation = "Swim_Forward"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id=23]
+blend_point_0/node = SubResource( 21 )
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource( 22 )
+blend_point_1/pos = 1.0
+
+[sub_resource type="AnimationNodeTimeScale" id=24]
+
+[sub_resource type="AnimationNodeBlendTree" id=25]
 graph_offset = Vector2( -738, 49 )
-nodes/BlendSpace1D/node = SubResource( 17 )
+nodes/BlendSpace1D/node = SubResource( 23 )
 nodes/BlendSpace1D/position = Vector2( -120, 100 )
-nodes/TimeScale/node = SubResource( 18 )
+nodes/TimeScale/node = SubResource( 24 )
 nodes/TimeScale/position = Vector2( 80, 100 )
 node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
 
-[sub_resource type="AnimationNodeAnimation" id=20]
+[sub_resource type="AnimationNodeAnimation" id=26]
 animation = "Idle"
 
-[sub_resource type="AnimationNodeAnimation" id=21]
+[sub_resource type="AnimationNodeAnimation" id=27]
 animation = "Bow_Stance"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=22]
-blend_point_0/node = SubResource( 20 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=28]
+blend_point_0/node = SubResource( 26 )
 blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 21 )
+blend_point_1/node = SubResource( 27 )
 blend_point_1/pos = -1.0
 
-[sub_resource type="AnimationNodeAnimation" id=23]
+[sub_resource type="AnimationNodeAnimation" id=29]
 animation = "Walk"
 
-[sub_resource type="AnimationNodeAnimation" id=24]
+[sub_resource type="AnimationNodeAnimation" id=30]
 animation = "Run"
 
-[sub_resource type="AnimationNodeAnimation" id=25]
+[sub_resource type="AnimationNodeAnimation" id=31]
 animation = "Bow_Walk"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=26]
-blend_point_0/node = SubResource( 23 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=32]
+blend_point_0/node = SubResource( 29 )
 blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 24 )
+blend_point_1/node = SubResource( 30 )
 blend_point_1/pos = 1.0
-blend_point_2/node = SubResource( 25 )
+blend_point_2/node = SubResource( 31 )
 blend_point_2/pos = -1.0
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=27]
-blend_point_0/node = SubResource( 22 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=33]
+blend_point_0/node = SubResource( 28 )
 blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 26 )
+blend_point_1/node = SubResource( 32 )
 blend_point_1/pos = 1.0
 
-[sub_resource type="AnimationNodeTimeScale" id=28]
+[sub_resource type="AnimationNodeTimeScale" id=34]
 
-[sub_resource type="AnimationNodeBlendTree" id=29]
+[sub_resource type="AnimationNodeBlendTree" id=35]
 graph_offset = Vector2( -71, 68 )
-nodes/BlendSpace1D/node = SubResource( 27 )
+nodes/BlendSpace1D/node = SubResource( 33 )
 nodes/BlendSpace1D/position = Vector2( 360, 160 )
-nodes/TimeScale/node = SubResource( 28 )
+nodes/TimeScale/node = SubResource( 34 )
 nodes/TimeScale/position = Vector2( 560, 160 )
 nodes/output/position = Vector2( 740, 160 )
 node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=30]
+[sub_resource type="AnimationNodeStateMachineTransition" id=36]
 xfade_time = 0.25
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=31]
+[sub_resource type="AnimationNodeStateMachineTransition" id=37]
 xfade_time = 0.25
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=32]
-xfade_time = 0.07
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=33]
-xfade_time = 0.08
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=34]
-xfade_time = 0.08
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=38]
-xfade_time = 0.25
+xfade_time = 0.07
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=39]
-xfade_time = 0.25
-priority = 2
+xfade_time = 0.08
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=40]
+xfade_time = 0.08
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=41]
 xfade_time = 0.25
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=42]
+xfade_time = 0.25
+priority = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=43]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=44]
+xfade_time = 0.25
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=45]
 xfade_time = 0.1
 priority = 0
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=90]
+[sub_resource type="AnimationNodeStateMachineTransition" id=46]
 xfade_time = 0.05
 priority = 2
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=91]
+[sub_resource type="AnimationNodeStateMachineTransition" id=47]
 xfade_time = 0.1
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=92]
+[sub_resource type="AnimationNodeStateMachineTransition" id=48]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=93]
+[sub_resource type="AnimationNodeStateMachineTransition" id=49]
 xfade_time = 0.05
 
-[sub_resource type="AnimationNodeStateMachine" id=44]
+[sub_resource type="AnimationNodeStateMachine" id=50]
 states/Fall/node = SubResource( 10 )
 states/Fall/position = Vector2( 382, -170 )
 states/Jump/node = SubResource( 11 )
@@ -980,25 +980,25 @@ states/Land/node = SubResource( 12 )
 states/Land/position = Vector2( 590, -170 )
 states/Ledge_Climb/node = SubResource( 13 )
 states/Ledge_Climb/position = Vector2( 342, -333 )
-states/Ledge_Hang/node = SubResource( 89 )
+states/Ledge_Hang/node = SubResource( 20 )
 states/Ledge_Hang/position = Vector2( 342, -252.469 )
-states/Swim/node = SubResource( 19 )
+states/Swim/node = SubResource( 25 )
 states/Swim/position = Vector2( 165.779, 66.368 )
-states/Walk/node = SubResource( 29 )
+states/Walk/node = SubResource( 35 )
 states/Walk/position = Vector2( 165.779, -72 )
-transitions = [ "Walk", "Fall", SubResource( 30 ), "Jump", "Fall", SubResource( 31 ), "Walk", "Jump", SubResource( 32 ), "Land", "Walk", SubResource( 33 ), "Fall", "Land", SubResource( 34 ), "Walk", "Swim", SubResource( 38 ), "Fall", "Swim", SubResource( 39 ), "Swim", "Fall", SubResource( 40 ), "Jump", "Swim", SubResource( 41 ), "Swim", "Walk", SubResource( 42 ), "Fall", "Ledge_Hang", SubResource( 90 ), "Ledge_Hang", "Fall", SubResource( 91 ), "Ledge_Hang", "Ledge_Climb", SubResource( 92 ), "Swim", "Ledge_Hang", SubResource( 93 ) ]
+transitions = [ "Walk", "Fall", SubResource( 36 ), "Jump", "Fall", SubResource( 37 ), "Walk", "Jump", SubResource( 38 ), "Land", "Walk", SubResource( 39 ), "Fall", "Land", SubResource( 40 ), "Walk", "Swim", SubResource( 41 ), "Fall", "Swim", SubResource( 42 ), "Swim", "Fall", SubResource( 43 ), "Jump", "Swim", SubResource( 44 ), "Swim", "Walk", SubResource( 45 ), "Fall", "Ledge_Hang", SubResource( 46 ), "Ledge_Hang", "Fall", SubResource( 47 ), "Ledge_Hang", "Ledge_Climb", SubResource( 48 ), "Swim", "Ledge_Hang", SubResource( 49 ) ]
 graph_offset = Vector2( -186.221, -363.469 )
 
-[sub_resource type="AnimationNodeAnimation" id=45]
+[sub_resource type="AnimationNodeAnimation" id=51]
 animation = "Throw_Item"
 
-[sub_resource type="AnimationNodeStateMachine" id=46]
-states/Throw_Item/node = SubResource( 45 )
+[sub_resource type="AnimationNodeStateMachine" id=52]
+states/Throw_Item/node = SubResource( 51 )
 states/Throw_Item/position = Vector2( 553, 288 )
 
-[sub_resource type="AnimationNodeTimeScale" id=47]
+[sub_resource type="AnimationNodeTimeScale" id=53]
 
-[sub_resource type="AnimationNodeBlendTree" id=48]
+[sub_resource type="AnimationNodeBlendTree" id=54]
 graph_offset = Vector2( -1070, -216 )
 nodes/MovexAction/node = SubResource( 2 )
 nodes/MovexAction/position = Vector2( -260, 120 )
@@ -1010,67 +1010,23 @@ nodes/StateMachineAction/node = SubResource( 7 )
 nodes/StateMachineAction/position = Vector2( -740, 260 )
 nodes/StateMachineLeftArm/node = SubResource( 9 )
 nodes/StateMachineLeftArm/position = Vector2( -980, 100 )
-nodes/StateMachineMove/node = SubResource( 44 )
+nodes/StateMachineMove/node = SubResource( 50 )
 nodes/StateMachineMove/position = Vector2( -960, -80 )
-nodes/StateMachineRightArm/node = SubResource( 46 )
+nodes/StateMachineRightArm/node = SubResource( 52 )
 nodes/StateMachineRightArm/position = Vector2( -740, 100 )
-nodes/TimeScaleAction/node = SubResource( 47 )
+nodes/TimeScaleAction/node = SubResource( 53 )
 nodes/TimeScaleAction/position = Vector2( -500, 260 )
 nodes/output/position = Vector2( -60, 120 )
-node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexRightArm", "MovexAction", 1, "TimeScaleAction", "TimeScaleAction", 0, "StateMachineAction", "MovexLeftArm", 0, "StateMachineMove", "MovexLeftArm", 1, "StateMachineLeftArm", "MovexRightArm", 0, "MovexLeftArm", "MovexRightArm", 1, "StateMachineRightArm" ]
+node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexRightArm", "MovexAction", 1, "TimeScaleAction", "TimeScaleAction", 0, "StateMachineAction", "MovexRightArm", 0, "MovexLeftArm", "MovexRightArm", 1, "StateMachineRightArm", "MovexLeftArm", 0, "StateMachineMove", "MovexLeftArm", 1, "StateMachineLeftArm" ]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=49]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=55]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=50]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=56]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=51]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=57]
 resource_local_to_scene = false
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=52]
-
-[sub_resource type="ShaderMaterial" id=53]
-shader = ExtResource( 35 )
-shader_param/outline_color = Color( 0, 0, 0, 1 )
-shader_param/outline_width = 1.0
-
-[sub_resource type="GradientTexture" id=54]
-gradient = ExtResource( 44 )
-
-[sub_resource type="ShaderMaterial" id=55]
-resource_local_to_scene = true
-render_priority = 1
-next_pass = SubResource( 53 )
-shader = ExtResource( 38 )
-shader_param/albedo = Color( 1, 1, 1, 1 )
-shader_param/highlight_color = Color( 0, 0, 0, 1 )
-shader_param/highlight_strength = 0.8
-shader_param/highlighted = false
-shader_param/transparent = false
-shader_param/shaded = true
-shader_param/texturemap = ExtResource( 41 )
-shader_param/light_ramp = SubResource( 54 )
-
-[sub_resource type="ShaderMaterial" id=56]
-shader = ExtResource( 35 )
-shader_param/outline_color = Color( 0, 0, 0, 1 )
-shader_param/outline_width = 1.0
-
-[sub_resource type="GradientTexture" id=57]
-gradient = ExtResource( 44 )
-
-[sub_resource type="ShaderMaterial" id=58]
-resource_local_to_scene = true
-render_priority = 1
-next_pass = SubResource( 56 )
-shader = ExtResource( 38 )
-shader_param/albedo = Color( 1, 1, 1, 1 )
-shader_param/highlight_color = Color( 0, 0, 0, 1 )
-shader_param/highlight_strength = 0.8
-shader_param/highlighted = false
-shader_param/transparent = false
-shader_param/shaded = true
-shader_param/texturemap = ExtResource( 39 )
-shader_param/light_ramp = SubResource( 57 )
+[sub_resource type="AnimationNodeStateMachinePlayback" id=58]
 
 [sub_resource type="ShaderMaterial" id=59]
 shader = ExtResource( 35 )
@@ -1084,10 +1040,14 @@ gradient = ExtResource( 44 )
 resource_local_to_scene = true
 render_priority = 1
 next_pass = SubResource( 59 )
-shader = ExtResource( 37 )
+shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
-shader_param/eye_light_default = Vector3( 0.2, 0.2, 0.2 )
-shader_param/texturemap = ExtResource( 36 )
+shader_param/highlight_color = Color( 0, 0, 0, 1 )
+shader_param/highlight_strength = 0.8
+shader_param/highlighted = false
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 41 )
 shader_param/light_ramp = SubResource( 60 )
 
 [sub_resource type="ShaderMaterial" id=62]
@@ -1095,13 +1055,10 @@ shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="Gradient" id=63]
-offsets = PoolRealArray( 0.597015, 0.60199 )
+[sub_resource type="GradientTexture" id=63]
+gradient = ExtResource( 44 )
 
-[sub_resource type="GradientTexture" id=64]
-gradient = SubResource( 63 )
-
-[sub_resource type="ShaderMaterial" id=65]
+[sub_resource type="ShaderMaterial" id=64]
 resource_local_to_scene = true
 render_priority = 1
 next_pass = SubResource( 62 )
@@ -1112,43 +1069,42 @@ shader_param/highlight_strength = 0.8
 shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
-shader_param/texturemap = ExtResource( 42 )
-shader_param/light_ramp = SubResource( 64 )
+shader_param/texturemap = ExtResource( 39 )
+shader_param/light_ramp = SubResource( 63 )
 
-[sub_resource type="ShaderMaterial" id=66]
+[sub_resource type="ShaderMaterial" id=65]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=67]
+[sub_resource type="GradientTexture" id=66]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=68]
+[sub_resource type="ShaderMaterial" id=67]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 66 )
-shader = ExtResource( 38 )
+next_pass = SubResource( 65 )
+shader = ExtResource( 37 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
-shader_param/highlight_color = Color( 0, 0, 0, 1 )
-shader_param/highlight_strength = 0.8
-shader_param/highlighted = false
-shader_param/transparent = false
-shader_param/shaded = true
-shader_param/texturemap = ExtResource( 43 )
-shader_param/light_ramp = SubResource( 67 )
+shader_param/eye_light_default = Vector3( 0.2, 0.2, 0.2 )
+shader_param/texturemap = ExtResource( 36 )
+shader_param/light_ramp = SubResource( 66 )
 
-[sub_resource type="ShaderMaterial" id=69]
+[sub_resource type="ShaderMaterial" id=68]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
+[sub_resource type="Gradient" id=69]
+offsets = PoolRealArray( 0.597015, 0.60199 )
+
 [sub_resource type="GradientTexture" id=70]
-gradient = ExtResource( 44 )
+gradient = SubResource( 69 )
 
 [sub_resource type="ShaderMaterial" id=71]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 69 )
+next_pass = SubResource( 68 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/highlight_color = Color( 0, 0, 0, 1 )
@@ -1156,7 +1112,7 @@ shader_param/highlight_strength = 0.8
 shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
-shader_param/texturemap = ExtResource( 40 )
+shader_param/texturemap = ExtResource( 42 )
 shader_param/light_ramp = SubResource( 70 )
 
 [sub_resource type="ShaderMaterial" id=72]
@@ -1171,31 +1127,75 @@ gradient = ExtResource( 44 )
 resource_local_to_scene = true
 render_priority = 1
 next_pass = SubResource( 72 )
+shader = ExtResource( 38 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/highlight_color = Color( 0, 0, 0, 1 )
+shader_param/highlight_strength = 0.8
+shader_param/highlighted = false
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 43 )
+shader_param/light_ramp = SubResource( 73 )
+
+[sub_resource type="ShaderMaterial" id=75]
+shader = ExtResource( 35 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=76]
+gradient = ExtResource( 44 )
+
+[sub_resource type="ShaderMaterial" id=77]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 75 )
+shader = ExtResource( 38 )
+shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/highlight_color = Color( 0, 0, 0, 1 )
+shader_param/highlight_strength = 0.8
+shader_param/highlighted = false
+shader_param/transparent = false
+shader_param/shaded = true
+shader_param/texturemap = ExtResource( 40 )
+shader_param/light_ramp = SubResource( 76 )
+
+[sub_resource type="ShaderMaterial" id=78]
+shader = ExtResource( 35 )
+shader_param/outline_color = Color( 0, 0, 0, 1 )
+shader_param/outline_width = 1.0
+
+[sub_resource type="GradientTexture" id=79]
+gradient = ExtResource( 44 )
+
+[sub_resource type="ShaderMaterial" id=80]
+resource_local_to_scene = true
+render_priority = 1
+next_pass = SubResource( 78 )
 shader = ExtResource( 37 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/eye_light_default = Vector3( 0.2, 0.2, 0.2 )
 shader_param/texturemap = ExtResource( 36 )
-shader_param/light_ramp = SubResource( 73 )
-
-[sub_resource type="SphereMesh" id=75]
-
-[sub_resource type="CapsuleShape" id=76]
-radius = 0.5
-height = 5.35
-
-[sub_resource type="SphereShape" id=77]
-
-[sub_resource type="CubeMesh" id=78]
-
-[sub_resource type="CubeMesh" id=79]
-size = Vector3( 2, 2, 5 )
-
-[sub_resource type="SpatialMaterial" id=80]
-albedo_color = Color( 0.752941, 0.752941, 0.752941, 1 )
+shader_param/light_ramp = SubResource( 79 )
 
 [sub_resource type="SphereMesh" id=81]
 
-[sub_resource type="SpatialMaterial" id=82]
+[sub_resource type="CapsuleShape" id=82]
+radius = 0.5
+height = 5.35
+
+[sub_resource type="SphereShape" id=83]
+
+[sub_resource type="CubeMesh" id=84]
+
+[sub_resource type="CubeMesh" id=85]
+size = Vector3( 2, 2, 5 )
+
+[sub_resource type="SpatialMaterial" id=86]
+albedo_color = Color( 0.752941, 0.752941, 0.752941, 1 )
+
+[sub_resource type="SphereMesh" id=87]
+
+[sub_resource type="SpatialMaterial" id=88]
 emission_enabled = true
 emission = Color( 0, 1, 0.180392, 1 )
 emission_energy = 1.0
@@ -1236,15 +1236,15 @@ anims/Throw_Item = ExtResource( 1 )
 anims/Walk = ExtResource( 54 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 48 )
+tree_root = SubResource( 54 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/MovexAction/blend_amount = 0.0
 parameters/MovexLeftArm/blend_amount = 0.0
 parameters/MovexRightArm/blend_amount = 0.0
-parameters/StateMachineAction/playback = SubResource( 49 )
-parameters/StateMachineLeftArm/playback = SubResource( 50 )
-parameters/StateMachineMove/playback = SubResource( 51 )
+parameters/StateMachineAction/playback = SubResource( 55 )
+parameters/StateMachineLeftArm/playback = SubResource( 56 )
+parameters/StateMachineMove/playback = SubResource( 57 )
 parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position = 0.0
 parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position = -0.9922
 parameters/StateMachineMove/Ledge_Hang/TimeScale/scale = 1.0
@@ -1254,7 +1254,7 @@ parameters/StateMachineMove/Walk/BlendSpace1D/blend_position = 0.0
 parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position = 0
 parameters/StateMachineMove/Walk/BlendSpace1D/1/blend_position = 0
 parameters/StateMachineMove/Walk/TimeScale/scale = 1.0
-parameters/StateMachineRightArm/playback = SubResource( 52 )
+parameters/StateMachineRightArm/playback = SubResource( 58 )
 parameters/TimeScaleAction/scale = 1.0
 script = ExtResource( 10 )
 
@@ -1324,17 +1324,23 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.89, 0 )
 [node name="Rig" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.11, 0 )
 
+[node name="Skeleton" parent="Rig" index="0"]
+bones/47/bound_children = [ NodePath("Hand_L") ]
+bones/71/bound_children = [ NodePath("Hand_R") ]
+bones/94/bound_children = [ NodePath("Foot_Floor_L") ]
+bones/95/bound_children = [ NodePath("Foot_Floor_R") ]
+
 [node name="Body Simplified" parent="Rig/Skeleton" index="0"]
-material/0 = SubResource( 55 )
-material/1 = SubResource( 58 )
-material/2 = SubResource( 61 )
-material/3 = SubResource( 65 )
-material/4 = SubResource( 68 )
+material/0 = SubResource( 61 )
+material/1 = SubResource( 64 )
+material/2 = SubResource( 67 )
+material/3 = SubResource( 71 )
+material/4 = SubResource( 74 )
 
 [node name="Head" parent="Rig/Skeleton" index="1"]
-material/0 = SubResource( 71 )
-material/1 = SubResource( 74 )
-material/2 = SubResource( 58 )
+material/0 = SubResource( 77 )
+material/1 = SubResource( 80 )
+material/2 = SubResource( 64 )
 
 [node name="Camera_Rig_Pos" type="Position3D" parent="Rig/Skeleton" index="2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
@@ -1345,7 +1351,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.8, 0.3 )
 [node name="Hand_L_Cont" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
 
 [node name="Hand_L_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_L_Cont"]
-transform = Transform( -0.448772, -0.0851308, 0.889582, 0.891873, 0.0199792, 0.45184, -0.0562385, 0.996167, 0.0669606, 0.162883, -0.553506, 2.62704 )
+transform = Transform( -0.448772, -0.0851308, 0.889582, 0.891873, 0.0199792, 0.45184, -0.0562385, 0.996167, 0.0669606, 0.162883, -0.553506, 1.91087 )
 
 [node name="Hand_L_Magnet" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_L_Cont"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.19, -1.3 )
@@ -1354,7 +1360,7 @@ script = ExtResource( 32 )
 [node name="Hand_R_Cont" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
 
 [node name="Hand_R_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_R_Cont"]
-transform = Transform( 0.018769, 0.0242496, -0.999529, -0.994643, 0.102096, -0.0162003, 0.101655, 0.994478, 0.0260359, -0.239, -0.486, -0.07 )
+transform = Transform( 0.018769, 0.0242496, -0.999529, -0.994643, 0.102096, -0.0162003, 0.101655, 0.994478, 0.0260359, -0.208635, -0.358156, 1.17529 )
 
 [node name="Hand_R_Magnet" type="Position3D" parent="Rig/Skeleton/Bow_IK/Hand_R_Cont"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.962, -2.8 )
@@ -1365,7 +1371,7 @@ visible = false
 cast_to = Vector3( 0, 0, 10 )
 
 [node name="Projectile_Position" type="Position3D" parent="Rig/Skeleton/Bow_IK"]
-transform = Transform( 1, 0, 0, 0, 0.866026, 0.5, 0, -0.5, 0.866026, 0, -1.09195, 1.69545 )
+transform = Transform( 1, 0, 0, 0, 0.999848, 0.0174524, 0, -0.0174524, 0.999848, 0, 0, 2.65897 )
 
 [node name="arrow lineup" type="Position3D" parent="Rig/Skeleton/Bow_IK/Projectile_Position"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0573506, 0.287355 )
@@ -1397,7 +1403,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.3, 3.2 )
 script = ExtResource( 33 )
 
 [node name="Hand_L" type="BoneAttachment" parent="Rig/Skeleton" index="5"]
-transform = Transform( -0.993306, -0.0879623, 0.0748753, -0.0719572, 0.978234, 0.194626, -0.0903652, 0.187936, -0.978016, 0.442822, 7.13848, 0.47759 )
+transform = Transform( 0.00364715, -0.0636322, 0.997967, 0.0538475, -0.996514, -0.0637365, 0.998543, 0.0539696, -0.000208706, 1.07404, 3.01369, 0.03844 )
 bone_name = "hand_l"
 
 [node name="Bow_Position" type="Position3D" parent="Rig/Skeleton/Hand_L"]
@@ -1407,7 +1413,7 @@ transform = Transform( 0.999998, -2.6077e-08, 2.7474e-08, 3.72529e-08, 0.999998,
 visible = false
 
 [node name="Hand_R" type="BoneAttachment" parent="Rig/Skeleton" index="6"]
-transform = Transform( -0.993305, 0.0879636, -0.0748759, 0.0719577, 0.978234, 0.194625, 0.090366, 0.187934, -0.978015, -0.44282, 7.13848, 0.477586 )
+transform = Transform( 0.310638, 0.0400846, -0.949682, -0.126068, -0.988547, -0.0829608, -0.942132, 0.145496, -0.302026, -0.815836, 2.99316, -0.312569 )
 bone_name = "hand_r"
 
 [node name="Arrow_Position" type="Position3D" parent="Rig/Skeleton/Hand_R"]
@@ -1424,7 +1430,7 @@ transform = Transform( 1, 1.62982e-08, -2.42144e-07, -1.62981e-08, 1, 2.6077e-07
 visible = false
 
 [node name="Foot_Floor_L" type="BoneAttachment" parent="Rig/Skeleton" index="7"]
-transform = Transform( -0.999349, -0.0360769, -1.09539e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.243318, 0.221834, 0.0937047 )
+transform = Transform( -0.999349, -0.0360769, -1.09539e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.243319, 0.20549, 0.496422 )
 bone_name = "foot_floor_ik_l"
 
 [node name="Foot_L_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_L"]
@@ -1433,7 +1439,7 @@ enabled = true
 cast_to = Vector3( 0, -2.34, 0 )
 
 [node name="Foot_Floor_R" type="BoneAttachment" parent="Rig/Skeleton" index="8"]
-transform = Transform( -0.999349, 0.0360769, 1.09539e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.243318, 0.221834, 0.0937047 )
+transform = Transform( -0.999349, 0.0360769, 1.09539e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.243218, 0.203322, -0.64728 )
 bone_name = "foot_floor_ik_r"
 
 [node name="Foot_R_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_R"]
@@ -1480,7 +1486,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 2 )
 
 [node name="Cast_Glow" type="MeshInstance" parent="Rig/Projectile_Position"]
 transform = Transform( 0.001, 0, 0, 0, 0.001, 0, 0, 0, 0.001, 0, 0, 0 )
-mesh = SubResource( 75 )
+mesh = SubResource( 81 )
 material/0 = ExtResource( 18 )
 
 [node name="Raycast_Floor" type="RayCast" parent="Rig"]
@@ -1493,7 +1499,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.26956, -0.042 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.175, -0.042 )
-shape = SubResource( 76 )
+shape = SubResource( 82 )
 
 [node name="Targetting_Area" type="Area" parent="."]
 transform = Transform( 176, 0, 0, 0, 176, 0, 0, 0, 176, 0, 4.89, 0 )
@@ -1502,7 +1508,7 @@ collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape" parent="Targetting_Area"]
-shape = SubResource( 77 )
+shape = SubResource( 83 )
 
 [node name="Interact_System" parent="." instance=ExtResource( 53 )]
 input_ray_pickable = false
@@ -1525,27 +1531,28 @@ layer = 0
 [node name="Ledge" type="MeshInstance" parent="Temp"]
 transform = Transform( 2, 0, 0, 0, 0.1, 0, 0, 0, 2, 0, 7.19104, 0 )
 visible = false
-mesh = SubResource( 78 )
+mesh = SubResource( 84 )
 material/0 = null
 
 [node name="Wall" type="MeshInstance" parent="Temp"]
 transform = Transform( 5, 0, 8.9407e-08, 0, 5, 0, 4.29153e-06, 0, 1, 0, 2.257, 3 )
-mesh = SubResource( 79 )
-material/0 = SubResource( 80 )
+visible = false
+mesh = SubResource( 85 )
+material/0 = SubResource( 86 )
 
 [node name="Debug" type="Node" parent="."]
 
 [node name="Velocity_Start" type="MeshInstance" parent="Debug"]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-mesh = SubResource( 81 )
-material/0 = SubResource( 82 )
+mesh = SubResource( 87 )
+material/0 = SubResource( 88 )
 
 [node name="Velocity_End" type="MeshInstance" parent="Debug"]
 transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0 )
-mesh = SubResource( 81 )
-material/0 = SubResource( 82 )
-[connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
+mesh = SubResource( 87 )
+material/0 = SubResource( 88 )
 [connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
+[connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
 [connection signal="is_falling" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_is_falling"]
 [connection signal="position_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_position_changed"]
 [connection signal="targets_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_targets_changed"]
