@@ -48,6 +48,7 @@ func enter():
 	translate_time_left = translate_time
 	#Initial Physics Values
 	velocity = Vector3(0,0,0)
+	velocity_gravity = Vector3(0,0,0)
 	speed = speed_ledge_move
 	
 	connect_player_signals()
@@ -80,14 +81,6 @@ func handle_input(event):
 			emit_signal("finished", "fall")
 		elif at_ledge:
 			emit_signal("finished", "ledge_climb")
-	
-	if event.is_action_pressed("debug_]") and event.get_device() == 0:
-		ledge_move_anim_speed_max += 0.1
-		print(ledge_move_anim_speed_max)
-	if event.is_action_pressed("debug_[") and event.get_device() == 0:
-		ledge_move_anim_speed_max -= 0.1
-		print(ledge_move_anim_speed_max)
-	
 	
 	.handle_input(event)
 
@@ -277,7 +270,6 @@ func blend_ledge_move_anim(current_blend_position):
 		var move_angle = wall_facing_angle_global - velocity_angle
 		move_angle = bound_angle(move_angle)
 		
-		print(ledge_move_blend_position)
 		#Tween blend position for ledge_move blendspace1d
 		if move_angle < 0.0:
 			if ledge_move_blend_position != -1.0 and !active_tweens.has("parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position"):

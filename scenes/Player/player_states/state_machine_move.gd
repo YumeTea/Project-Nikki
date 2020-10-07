@@ -11,8 +11,10 @@ var initialized_values = {
 	
 	"direction": Vector3(),
 	"velocity": Vector3(),
+	"velocity_gravity": Vector3(),
 	"velocity_horizontal": Vector2(),
 	"speed": 0.0,
+	"landing_speed": 0.0,
 	
 	"ledge_height": 0.0,
 	"ledge_grab_transform": Transform(),

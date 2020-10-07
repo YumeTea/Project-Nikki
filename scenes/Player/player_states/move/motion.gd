@@ -73,13 +73,16 @@ var height : float
 var direction = Vector3(0,0,0)
 var direction_angle = Vector2(0,0)
 var velocity = Vector3(0,0,0)
+var velocity_gravity = Vector3(0,0,0)
 var velocity_horizontal : float
 var acceleration_horizontal : float
 const gravity = -9.8
 const weight = 5
 #Walk Variables
 var up_direction = Vector3(0,1,0)
+var floor_angle : float
 const floor_angle_max = deg2rad(50)
+var landing_speed : float = 0.0
 var slope_influence = 0.16
 
 #Input Variables
@@ -163,7 +166,42 @@ func update(delta):
 	direction = get_input_direction()
 	
 	###Player Motion
-	velocity = Player.move_and_slide_with_snap(velocity, snap_vector, up_direction, true, 1, floor_angle_max, false) #Come back/check vars 3,4,5
+	#Gravity
+	if(owner.is_on_floor()) and floor_angle <= floor_angle_max and snap_vector != Vector3(0,0,0):
+		if velocity_gravity.y > gravity * weight * delta or is_equal_approx(velocity_gravity.y, gravity * weight * delta):
+			velocity_gravity = Vector3(0,0,0)
+	
+	if state_move == "Fall":
+		landing_speed = velocity_gravity.y
+	if state_move in ["Ledge_Hang", "Swim"]:
+		landing_speed = 0.0
+	
+	velocity_gravity = Player.move_and_slide_with_snap(velocity_gravity, snap_vector, Vector3.UP, true, 1, floor_angle_max, false)
+	
+	
+	
+	
+	
+	
+	
+	
+	#Input Movement
+	velocity = Player.move_and_slide_with_snap(velocity, snap_vector, Vector3.UP, true, 1, floor_angle_max, false)
+	
+	
+	###DEBUG###
+	owner.get_node("Debug/Velocity_Start").global_transform.origin = owner.global_transform.origin
+	owner.get_node("Debug/Velocity_Start").global_transform.origin.y += 4.0
+	owner.get_node("Debug/Velocity_End").global_transform.origin = owner.get_node("Debug/Velocity_Start").global_transform.origin + velocity
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	###Player Slope Adjustment
 	adjust_to_ground()
@@ -296,9 +334,17 @@ func calculate_movement_velocity(delta):
 	###Determine the type of acceleration
 	var acceleration
 	if direction.dot(temp_velocity) > 0 or temp_velocity == Vector3(0,0,0):
+		#XZ Acceleration
 		acceleration = ACCEL
 	else:
+		#XZ Acceleration
 		acceleration = DEACCEL
+		#Y Acceleration
+		if velocity.y > 0.0:
+			if velocity.y + (gravity * weight * delta) > 0.0:
+				velocity.y += (gravity * weight * delta)
+			else:
+				velocity.y = 0.0
 	
 	#Calculate a portion of the distance to go
 	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
@@ -311,22 +357,15 @@ func calculate_movement_velocity(delta):
 		velocity.x = 0.0
 		velocity.z = 0.0
 	
-	##Gravity
+	##Floor Influence
 	var floor_angle = Raycast_Floor.get_collision_normal().angle_to(Vector3.UP)
 	var floor_normal = Raycast_Floor.get_collision_normal()
-	floor_normal.x = stepify(floor_normal.x, 0.001)
-	floor_normal.y = stepify(floor_normal.y, 0.001)
-	floor_normal.z = stepify(floor_normal.z, 0.001)
-	
+
 	#Up Direction
 	if (owner.is_on_floor() or snap_vector_is_colliding()) and floor_angle <= floor_angle_max: #Special gravity if on slope and slope is within floor_angle_max
-		up_direction = floor_normal #Player will fall toward valid slopes, essentially sticking to them
+		snap_vector = -floor_normal #Player will fall toward valid slopes, essentially sticking to them
 	else: #Default gravity on floors over floor_angle_max
-		up_direction = Vector3.UP
-	
-	snap_vector = -up_direction
-	var g = up_direction * gravity
-	velocity += weight * g * delta
+		snap_vector = -Vector3.UP
 	
 	#Slope Velocity Modifier
 	var slope_modifier
@@ -334,14 +373,29 @@ func calculate_movement_velocity(delta):
 	if Raycast_Floor.is_colliding() and direction != Vector3(0,0,0):
 		#Uphill
 		if direction.angle_to(floor_normal) >= deg2rad(90):
-			slope_modifier = direction.normalized().cross(floor_normal).length()
+			var velocity_direction = Vector3(velocity.x, 0.0, velocity.z).normalized()
+			
+			slope_modifier = velocity_direction.cross(floor_normal).length()
 			slope_modifier += (1.0 - slope_modifier) * (1.0 - slope_influence)
+			
 			velocity *= slope_modifier
+			if is_equal_approx(velocity_direction.angle_to(floor_normal), deg2rad(90)):
+				velocity.y = 0.0
 		#Downhill
 		else:
-			slope_modifier = direction.normalized().cross(floor_normal).length()
-			slope_modifier = 1.0 + (1.0 - slope_modifier) * (1.0 - slope_influence)
-			velocity += velocity * slope_modifier * delta
+			slope_modifier = velocity.normalized().dot(floor_normal)
+			slope_modifier *= slope_influence
+			
+			print(slope_modifier)
+			
+			if landing_speed < gravity * weight * delta:
+				velocity += velocity.normalized() * -landing_speed * slope_modifier
+			velocity += -velocity.normalized() * gravity * weight * delta * slope_modifier
+			velocity.y = 0.0
+	
+	#Gravity
+	velocity_gravity.y += weight * gravity * delta
+	landing_speed = 0.0
 
 
 func calculate_aerial_velocity(delta):
@@ -374,7 +428,7 @@ func calculate_aerial_velocity(delta):
 		velocity.x = 0.0
 		velocity.z = 0.0
 	
-	velocity.y += weight * gravity * delta
+	velocity_gravity.y += weight * gravity * delta
 
 
 func calculate_ledge_velocity(delta):
@@ -402,7 +456,10 @@ func calculate_ledge_velocity(delta):
 	if temp_velocity.length() <= 0.01:
 		temp_velocity.x = 0.0
 		temp_velocity.z = 0.0
-		
+	
+	#Gravity
+	velocity_gravity = Vector3(0,0,0)
+	
 	return temp_velocity
 
 
@@ -440,6 +497,9 @@ func calculate_swim_velocity(delta):
 			velocity.y = surface_speed
 	else:
 		Player.global_transform.origin.y = surfaced_height
+	
+	#Gravity
+	velocity_gravity = Vector3(0,0,0)
 
 
 func run_foot_ik():

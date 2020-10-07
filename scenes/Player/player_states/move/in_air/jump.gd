@@ -49,7 +49,7 @@ func update(delta):
 	
 	if owner.is_on_floor() and has_jumped:
 		emit_signal("finished", "previous")
-	elif !owner.is_on_floor() and velocity.y < 0 and has_jumped:
+	elif !owner.is_on_floor() and velocity_gravity.y < 0.0 and has_jumped:
 		emit_signal("finished", "fall")
 
 
@@ -71,7 +71,11 @@ func jump():
 	if !has_jumped:
 		speed = speed_aerial
 		snap_vector = Vector3(0,0,0)
-		velocity += jump_velocity(Raycast_Floor.get_collision_normal())
+		
+		var velocity_jump = jump_velocity(Raycast_Floor.get_collision_normal())
+		velocity.x += velocity_jump.x
+		velocity_gravity.y += velocity_jump.y
+		velocity.z += velocity_jump.z
 		has_jumped = true
 
 

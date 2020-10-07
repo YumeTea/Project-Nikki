@@ -85,10 +85,10 @@ func post_import(scene):
 					
 					#Copy same tracks from new anim to saved anim
 					for track in anim_resource.get_track_count():
+						anim_saved.remove_track(anim_saved.find_track(anim_resource.track_get_path(track)))
 						anim_resource.copy_track(track, anim_saved)
 					
 					#Save modified anim
-					print("saving to " + str(ANIM_FOLDER.plus_file(file_name)))
 					var save_path = ANIM_FOLDER.plus_file("%s.anim" % anim)
 					
 					var error : int = ResourceSaver.save(ANIM_FOLDER.plus_file(file_name), anim_saved)
@@ -110,10 +110,15 @@ func post_import(scene):
 	#Delete AnimationPlayer
 	scene.get_node("AnimationPlayer").free()
 	
+	###SCENE SAVING###
 	#Save character model scene
-	var error : int = ResourceSaver.save(CHARACTER_MODEL_SAVE_PATH, scene)
-	if error != OK:
-		print("error saving anim in nikki_import.gd")
+	var scene_resource = PackedScene.new()
+	
+	var result = scene_resource.pack(scene)
+	if result == OK:
+		var error : int = ResourceSaver.save(CHARACTER_MODEL_SAVE_PATH, scene_resource)
+		if error != OK:
+			print("error saving %s" % scene.name)
 	
 	
 	return scene
