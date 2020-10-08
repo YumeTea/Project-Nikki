@@ -184,7 +184,7 @@ func rotate_camera(input_change):
 	var turn_angle = Vector2()
 	var facing_direction = get_node_direction(Player.get_node("Rig"))
 	var facing_angle = Vector2()
-
+	
 	focus_direction = get_node_direction(Pivot)
 	focus_angle_global.y = calculate_global_y_rotation(focus_direction)
 	focus_angle_global.x = calculate_local_x_rotation(focus_direction)
@@ -193,6 +193,7 @@ func rotate_camera(input_change):
 	
 	###Focus angle body rotation correction
 	var facing_angle_change = Vector2()
+	
 	###Y Focus Angle Limiting
 	facing_angle_change.y = previous_facing_angle.y - facing_angle.y
 	facing_angle_change.y = bound_angle(facing_angle_change.y)
@@ -204,21 +205,9 @@ func rotate_camera(input_change):
 		focus_angle_change.y = (sign(focus_angle.y) * focus_angle_lim.y) - focus_angle.y
 		focus_angle.y += focus_angle_change.y
 		turn_angle.y = -facing_angle_change.y + focus_angle_change.y
-	
+		
 		Camera_Rig.rotate_y(turn_angle.y)
 	
-	###X Focus Angle Limiting
-	facing_angle_change.x = previous_facing_angle.x - facing_angle.x
-	facing_angle_change.x = bound_angle(facing_angle_change.x)
-	
-	if(focus_angle.x + facing_angle_change.x) < focus_angle_lim.x and (focus_angle.x + facing_angle_change.x) > -focus_angle_lim.x:
-		focus_angle.x += facing_angle_change.x
-	else:
-		focus_angle_change.x = (sign(focus_angle.x) * focus_angle_lim.x) - focus_angle.x
-		focus_angle.x += focus_angle_change.x
-		turn_angle.x = -facing_angle_change.x + focus_angle_change.x
-	
-		Pivot.rotate_x(turn_angle.x)
 	
 	###Focus Input Handling (Actual rotation based on input)
 	if input_change.length() > 0:
@@ -240,9 +229,11 @@ func rotate_camera(input_change):
 			Pivot.rotate_x((focus_angle_lim.x * sign(focus_angle.x)) - focus_angle.x)
 			focus_angle.x += ((focus_angle_lim.x * sign(focus_angle.x)) - focus_angle.x)
 	
+	
 	###Focus angle bounding (keep focus angle between -PI > 0 > PI)
 	focus_angle.y = bound_angle(focus_angle.y)
 	focus_angle.x = bound_angle(focus_angle.x)
+	
 	
 	#Update previous facing angle and focus direction
 	previous_facing_angle.y = calculate_global_y_rotation(get_node_direction(Player.get_node("Rig")))

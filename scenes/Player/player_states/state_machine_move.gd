@@ -20,6 +20,8 @@ var initialized_values = {
 	"ledge_grab_transform": Transform(),
 	"wall_normal": Vector3(),
 	
+	"facing_direction": Vector3(),
+	"camera_direction": Vector3(),
 	"targetting": false,
 	"focus_object": null,
 	
@@ -52,6 +54,7 @@ func _ready():
 	"ledge_hang": $Ledge_Hang,
 	"ledge_climb": $Ledge_Climb,
 	"swim": $Swim,
+	"dive": $Dive,
 	"death": $Death,
 	"void": $Void
 }
@@ -78,7 +81,7 @@ func _change_state(state_name): #state_machine.gd does the generalized work
 		states_stack.pop_front()
 	if state_name in ["fall"] and current_state in [$Jump, $Fall, $Ledge_Hang, $Ledge_Climb, $Swim]:
 		states_stack.pop_front()
-	if state_name in ["swim"] and current_state in [$Jump, $Fall, $Swim]:
+	if state_name in ["swim"] and current_state in [$Jump, $Fall, $Dive]:
 		states_stack.pop_front()
 	if state_name in ["void"] and current_state in [$Jump, $Fall, $Swim]:
 		states_stack.pop_front()

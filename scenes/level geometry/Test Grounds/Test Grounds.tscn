@@ -183,7 +183,7 @@ collision_mask = 262145
 shape = SubResource( 11 )
 
 [node name="Complex_Ledge_Test" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, -11.5905, 10.4779, 55.8553 )
+transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, 12.3095, 10.4779, 55.8553 )
 mesh = ExtResource( 11 )
 material/0 = SubResource( 14 )
 

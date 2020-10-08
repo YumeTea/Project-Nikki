@@ -25,7 +25,10 @@ render_priority = 1
 next_pass = SubResource( 3 )
 shader = ExtResource( 3 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
-shader_param/shadow_color = Color( 0.356863, 0.356863, 0.356863, 1 )
+shader_param/highlight_color = Color( 0, 0.57, 0.67, 1 )
+shader_param/highlight_strength = 0.8
+shader_param/highlighted = false
+shader_param/transparent = false
 shader_param/shaded = true
 shader_param/light_ramp = SubResource( 5 )
 
@@ -43,4 +46,4 @@ shape = SubResource( 1 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 6 )
 
-[node name="target_pos" type="Position3D" parent="."]
+[node name="Target_Pos" type="Position3D" parent="."]

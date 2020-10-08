@@ -1,9 +1,12 @@
 extends "res://scenes/Player/player_states/move/in_water/in_water.gd"
 
+"""
+Direction_angle may be unused
+"""
 
 #Animation Variables
 var swim_anim_speed_max = 1.5
-const blend_lower_lim = 5.0 #Velocity where idle changes to all swim_forward
+const blend_lower_lim = 5.0 #Velocity where idle changes to all dive_forward
 
 
 func initialize(init_values_dic):
@@ -13,10 +16,10 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
+	velocity.y = -1.0
 	speed = speed_swim
 	quick_turn = true
 	snap_vector = Vector3(0,0,0)
-	velocity.y = 0.0
 	
 	connect_player_signals()
 	
@@ -30,6 +33,11 @@ func enter():
 
 #Cleans up state, reinitializes values like timers
 func exit():
+	#Rotate rig x rotation back to center
+	var angle = calculate_local_x_rotation(facing_direction)
+	angle = bound_angle(angle)
+	rig_rotate_x_local(angle)
+	
 	#Clear active tweens
 	remove_active_tween("parameters/StateMachineMove/Walk/BlendSpace1D/blend_position")
 	
@@ -40,32 +48,25 @@ func exit():
 
 #Creates output based on the input event passed in
 func handle_input(event):
-	if event.is_action_pressed("jump") and event.get_device() == 0:
-		direction = get_input_direction()
-		facing_direction = get_node_direction(Rig)
-		var facing_dot_direction = facing_direction.dot(direction)
-		
-		if facing_dot_direction > 0.0:
-			emit_signal("finished", "dive")
-	
 	.handle_input(event)
 
 
 #Acts as the _process method would
 func update(delta):
-#	print("player height:   " + str(Player.global_transform.origin.y))
-#	print("surfaced height: " + str(surfaced_height))
 	if Player.global_transform.origin.y >= surfaced_height + (surface_speed * 1.01 * delta):
 		emit_signal("finished", "previous")
 	
 	if view_mode == "third_person":
-		swim_third_person(delta)
+		dive_third_person(delta)
 	if view_mode == "first_person":
-		swim_first_person(delta)
+		dive_first_person(delta)
 		
-	calculate_swim_velocity(delta)
+	calculate_dive_velocity(delta)
 	
 	.update(delta)
+	
+	if height >= surfaced_height:
+		emit_signal("finished", "swim")
 
 
 func on_animation_started(_anim_name):
@@ -76,88 +77,32 @@ func on_animation_finished(_anim_name):
 	pass
 
 
-func swim_third_person(delta):
-	if !centering_view and !strafe_locked:
-		swim_free(delta)
-	elif centering_view:
-		swim_locked_third_person(delta)
+func dive_third_person(delta):
+	if centering_view:
+		dive_locked_third_person(delta)
 	elif strafe_locked:
-		swim_strafe(delta)
+		dive_strafe(delta)
 	
 	blend_move_anim()
 
 
-func swim_first_person(delta):
-	direction = get_input_direction()
-	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
-	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
-	direction_angle.y = calculate_global_y_rotation(direction)
-	
-	###Check if next_turn_angle is within focus_angle_lim
-	var next_turn_angle = Vector2()
-
-	if direction.length() > 0.0:
-		next_turn_angle.y = direction_angle.y - camera_angle_global.y
-	else:
-		next_turn_angle.y = 0.0
-	
-	###Turn angle bounding
-	next_turn_angle.y = bound_angle(next_turn_angle.y)
-	
+func dive_first_person(delta):
 	if rotate_to_focus:
-		swim_rotate_to_focus(delta) #for entering first person
-	elif !centering_view and !strafe_locked and ((next_turn_angle.y < focus_angle_lim.y - deg2rad(2.0)) and (next_turn_angle.y > -focus_angle_lim.y + deg2rad(2.0))):
-		swim_free(delta)
+		dive_rotate_to_focus(delta) #for entering first person
 	elif centering_view:
-		swim_locked_first_person(delta)
-	else:
-		swim_strafe(delta) #if trying to turn to where neck is over focus angle lim, strafe swim instead
+		dive_locked_first_person(delta)
+	elif strafe_locked:
+		dive_strafe(delta) #if trying to turn to where neck is over focus angle lim, strafe dive instead
 	
 	blend_move_anim()
-
-
-func swim_free(delta):
-	direction = get_input_direction()
-	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
-	var input_direction_angle = calculate_global_y_rotation(direction)
-	
-	if !direction:
-		is_moving = false
-		quick_turn = true
-	
-	###Turn angle calculations
-	turn_angle.y = input_direction_angle - facing_angle.y
-	###Turn angle bounding
-	turn_angle.y = bound_angle(turn_angle.y)
-	
-	###Turn radius limiting
-	if is_moving:
-		turn_angle.y = clamp(turn_angle.y, -turn_radius, turn_radius)
-		#Change direction and velocity to match new facing direction
-		if (direction.x != 0 or direction.z != 0):
-			direction_angle.y = facing_angle.y + turn_angle.y
-			direction = direction.rotated(Vector3(0,1,0), direction_angle.y - input_direction_angle)
-			velocity = velocity.rotated(Vector3(0,1,0), turn_angle.y)
-	
-	###Quick turn radius limiting
-	if quick_turn:
-		turn_angle.y = clamp(turn_angle.y, -quick_turn_radius, quick_turn_radius)
-		
-		if turn_angle.y == 0:
-			is_moving = true
-			quick_turn = false
-	
-	calculate_swim_velocity(delta)
-	
-	###Player Rotation
-	if direction:
-		owner.get_node("Rig").rotate_y(turn_angle.y)
 
 
 #Locks rig to target or rig facing angle (assumes locked camera control)
-func swim_locked_third_person(delta):
+func dive_locked_third_person(delta):
 	direction = get_input_direction()
-	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
+	facing_angle.x = -calculate_local_x_rotation(facing_direction)
+	facing_angle.y = calculate_global_y_rotation(facing_direction)
+	camera_angle_global.x = -calculate_local_x_rotation(camera_direction)
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	
 	direction_angle.y = calculate_global_y_rotation(direction)
@@ -165,130 +110,159 @@ func swim_locked_third_person(delta):
 	if centering_time_left <= 0:
 		centered = true
 		
-	
 	#Calculate turn angle based on target angle
 	if focus_object != null:
+		var target_angle : Vector2
 		var target_position = focus_object.get_global_transform().origin
-		var target_angle = calculate_global_y_rotation(Player.get_global_transform().origin.direction_to(target_position))
+		target_angle.x = -calculate_local_x_rotation(Player.get_global_transform().origin.direction_to(target_position))
+		target_angle.y = calculate_global_y_rotation(Player.get_global_transform().origin.direction_to(target_position))
 		
-		turn_angle.y = target_angle - facing_angle.y
+		turn_angle = target_angle - facing_angle
+		turn_angle.x = bound_angle(turn_angle.x)
 		turn_angle.y = bound_angle(turn_angle.y)
 		if !centered:
-			turn_angle.y = turn_angle.y/centering_time_left
+			turn_angle = turn_angle/centering_time_left
 	else:
-		turn_angle.y = 0
+		#X
+		turn_angle.x = -facing_angle.x
+		if !centered:
+			turn_angle.x = turn_angle.x/centering_time_left
+		#Y
+		turn_angle.y = 0.0
 	
 	
-	calculate_swim_velocity(delta)
+	calculate_dive_velocity(delta)
 	
 	
 	###Player Rotation
-	Rig.rotate_y(turn_angle.y)
+	#X Rotation
+	rig_rotate_x_local(turn_angle.x)
 	
-	if direction:
-		is_moving = true
-	else:
-		is_moving = false
-		
-		
+	#Y Rotation
+	Rig.transform = Rig.transform.rotated(Vector3.UP, turn_angle.y)
+	
+	
 	###Decrement Timer
 	if centering_time_left > 0:
 		centering_time_left -= 1
 
 
 #Locks rig to target or focus angle (assumes locked camera control)
-func swim_locked_first_person(delta):
+func dive_locked_first_person(delta):
 	direction = get_input_direction()
-	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
+	facing_angle.x = -calculate_local_x_rotation(facing_direction)
+	facing_angle.y = calculate_global_y_rotation(facing_direction)
+	camera_angle_global.x = -calculate_local_x_rotation(camera_direction)
+	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	
 	direction_angle.y = calculate_global_y_rotation(direction)
 	
 	if centering_time_left <= 0:
 		centered = true
-		
+	
 	
 	#Calculate turn angle based on target angle
 	if focus_object != null:
+		var target_angle : Vector2
 		var target_position = focus_object.get_global_transform().origin
-		var target_angle = calculate_global_y_rotation(Player.get_global_transform().origin.direction_to(target_position))
+		target_angle.x = -calculate_local_x_rotation(Player.get_global_transform().origin.direction_to(target_position))
+		target_angle.y = calculate_global_y_rotation(Player.get_global_transform().origin.direction_to(target_position))
 		
-		turn_angle.y = target_angle - facing_angle.y
+		turn_angle = target_angle - facing_angle
+		turn_angle.x = bound_angle(turn_angle.x)
 		turn_angle.y = bound_angle(turn_angle.y)
 		if !centered:
-			turn_angle.y = turn_angle.y/centering_time_left
+			turn_angle = turn_angle/centering_time_left
 	else:
-		camera_angle_global.y = calculate_global_y_rotation(camera_direction)
-		facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
-		
-		turn_angle.y = camera_angle_global.y - facing_angle.y
+		#Rotate to camera angle
+		turn_angle = camera_angle_global - facing_angle
+		turn_angle.x = bound_angle(turn_angle.x)
 		turn_angle.y = bound_angle(turn_angle.y)
 		if !centered:
-			turn_angle.y = turn_angle.y/centering_time_left
+			turn_angle = turn_angle/centering_time_left
 	
 	
-	calculate_swim_velocity(delta)
+	calculate_dive_velocity(delta)
 	
 	
 	###Player Rotation
-	owner.get_node("Rig").rotate_y(turn_angle.y)
+	#X Rotation
+	rig_rotate_x_local(turn_angle.x)
 	
-	if direction:
-		is_moving = true
-	else:
-		is_moving = false
-		
-		
+	#Y Rotation
+	Rig.transform = Rig.transform.rotated(Vector3.UP, turn_angle.y)
+	
+	
 	###Decrement Timer
 	if centering_time_left > 0:
 		centering_time_left -= 1
 
 
 #Locks rig to focus angle
-func swim_strafe(delta):
+func dive_strafe(delta):
 	direction = get_input_direction()
-	facing_angle.y = Rig.get_global_transform().basis.get_euler().y
+	facing_angle.x = -calculate_local_x_rotation(facing_direction)
+	facing_angle.y = calculate_global_y_rotation(facing_direction)
+	camera_angle_global.x = -calculate_local_x_rotation(camera_direction)
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	
-	calculate_swim_velocity(delta)
 	
-	if !direction:
-		quick_turn = true
+	calculate_dive_velocity(delta)
+	
 	
 	###Turn angle calculations
-	turn_angle.y = camera_angle_global.y - facing_angle.y
+	turn_angle = camera_angle_global - facing_angle
 	###Turn angle bounding
+	turn_angle.x = bound_angle(turn_angle.x)
 	turn_angle.y = bound_angle(turn_angle.y)
 	
 	###Turn radius limiting
+	turn_angle.x = clamp(turn_angle.x, -turn_radius, turn_radius)
 	turn_angle.y = clamp(turn_angle.y, -turn_radius, turn_radius)
 	
-	###Player Rotation
-	owner.get_node("Rig").rotate_y(turn_angle.y)
+	###Turn limit bounding
+	if abs(facing_angle.x + turn_angle.x) > focus_angle_lim.x:
+		turn_angle.x = (focus_angle_lim.x * sign(turn_angle.x)) - facing_angle.x
+	
+	if direction != Vector3(0,0,0):
+		###Player Rotation
+		#X Rotation
+		rig_rotate_x_local(turn_angle.x)
+		
+		#Y Rotation
+		Rig.transform = Rig.transform.rotated(Vector3.UP, turn_angle.y)
 
 
 #Used to enter third person while moving
-func swim_rotate_to_focus(delta):
+func dive_rotate_to_focus(delta):
 	direction = get_input_direction()
-	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
+	facing_angle.x = -calculate_local_x_rotation(facing_direction)
+	facing_angle.y = calculate_global_y_rotation(facing_direction)
+	camera_angle_global.x = -calculate_local_x_rotation(camera_direction)
 	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
 	
 	direction_angle.y = calculate_global_y_rotation(direction)
 	
-	calculate_swim_velocity(delta)
+	calculate_dive_velocity(delta)
 	
-	turn_angle.y = camera_angle_global.y - facing_angle.y
+	turn_angle = camera_angle_global - facing_angle
+	turn_angle.x = bound_angle(turn_angle.x)
 	turn_angle.y = bound_angle(turn_angle.y)
 	if view_change_time_left > 0:
-		turn_angle.y = turn_angle.y/view_change_time_left
+		turn_angle = turn_angle/view_change_time_left
 	
 	###Player Rotation
-	owner.get_node("Rig").rotate_y(turn_angle.y)
+	#X Rotation
+	rig_rotate_x_local(turn_angle.x)
+	
+	#Y Rotation
+	Rig.transform = Rig.transform.rotated(Vector3.UP, turn_angle.y)
 	
 	#Decrement Timer
-	if centering_time_left > 0:
-		centering_time_left -= 1
+	if view_change_time_left > 0:
+		view_change_time_left -= 1
 		
-	if centering_time_left <= 0:
+	if view_change_time_left <= 0:
 		centered = true
 		rotate_to_focus = false
 
@@ -349,6 +323,9 @@ func blend_swim_anim(current_blend_position):
 	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Swim/TimeScale/scale", time_scale)
 
 
-
-
+func rig_rotate_x_local(angle):
+	var transform = Rig.transform
+	transform.origin.y -= player_height / 2.0
+	Rig.transform = transform.rotated(facing_direction.cross(Vector3.UP).normalized(), angle)
+	Rig.transform.origin.y += player_height / 2.0
 

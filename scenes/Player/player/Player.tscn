@@ -1,4 +1,4 @@
-[gd_scene load_steps=148 format=2]
+[gd_scene load_steps=149 format=2]
 
 [ext_resource path="res://models/characters/Nikki/model/anims/Throw_Item.anim" type="Animation" id=1]
 [ext_resource path="res://scenes/Player/player/player_controller.gd" type="Script" id=2]
@@ -26,6 +26,7 @@
 [ext_resource path="res://scenes/Player/player_states/action/none.gd" type="Script" id=24]
 [ext_resource path="res://scenes/Player/player_states/action/cast.gd" type="Script" id=25]
 [ext_resource path="res://models/characters/Nikki/model/anims/Fall.anim" type="Animation" id=26]
+[ext_resource path="res://scenes/Player/player_states/move/in_water/dive.gd" type="Script" id=27]
 [ext_resource path="res://models/characters/Nikki/model/anims/Idle.anim" type="Animation" id=28]
 [ext_resource path="res://models/characters/Nikki/model/anims/Swim_Idle.anim" type="Animation" id=29]
 [ext_resource path="res://models/objects/items_player/bows/Keeper_Bow/Keeper_Bow.tscn" type="PackedScene" id=30]
@@ -783,7 +784,7 @@ tracks/101/imported = false
 tracks/101/enabled = true
 tracks/101/keys = PoolRealArray( 0, 1, 0, -0.636679, 0, 0.0120384, 2.67309e-18, 2.00347e-25, 0.999928, 1, 1, 1, 0.0166667, 1, 0, -0.615031, 0, 0.0195168, 2.67605e-18, 2.90861e-26, 0.99981, 1, 1, 1, 0.0333333, 1, 0, -0.555674, 0, 0.0413616, 2.68484e-18, 1.48761e-25, 0.999144, 1, 1, 1, 0.05, 1, 0, -0.466988, 0, 0.0767848, 2.69829e-18, -3.24074e-26, 0.997048, 1, 1, 1, 0.1, 1, 0, -0.108753, 0, 0.249493, -0.000443094, -0.00430585, 0.968367, 1, 1, 1, 0.133333, 1, 0, 0.123087, 0, 0.372346, -0.00134593, -0.0130794, 0.928001, 1, 1, 1, 0.15, 1, 0, 0.211773, 0, 0.418837, -0.00176702, -0.0171714, 0.907898, 1, 1, 1, 0.166667, 1, 0, 0.271129, 0, 0.449489, -0.00206919, -0.0201078, 0.893057, 1, 1, 1, 0.183333, 1, 0, 0.292777, 0, 0.460586, -0.00218502, -0.0212334, 0.887358, 1, 1, 1 )
 
-[sub_resource type="Animation" id=89]
+[sub_resource type="Animation" id=2]
 resource_name = "Run"
 length = 1.33333
 loop = true
@@ -1496,7 +1497,7 @@ tracks/100/imported = true
 tracks/100/enabled = true
 tracks/100/keys = PoolRealArray( 0, 1, 0.312498, -0.400612, -1.39954, -0.395764, 0.00801244, -0.1712, 0.902218, 1, 1, 1, 0.0166667, 1, 0.448071, -0.411856, -1.39076, -0.395754, 0.00292847, -0.209929, 0.894036, 1, 1, 1, 0.0333333, 1, 0.581425, -0.443978, -1.36573, -0.394243, -0.0109402, -0.252251, 0.883642, 1, 1, 1, 0.0666667, 1, 0.835209, -0.561214, -1.27452, -0.386201, -0.0563811, -0.344481, 0.853817, 1, 1, 1, 0.116667, 1, 1.16006, -0.833367, -1.06368, -0.361676, -0.135008, -0.48906, 0.782166, 1, 1, 1, 0.133333, 1, 1.24719, -0.940118, -0.981333, -0.351029, -0.155096, -0.536241, 0.751778, 1, 1, 1, 0.15, 1, 1.32113, -1.05087, -0.896147, -0.339761, -0.16867, -0.582421, 0.718956, 1, 1, 1, 0.166667, 1, 1.38031, -1.1632, -0.810043, -0.328258, -0.173774, -0.627643, 0.684188, 1, 1, 1, 0.216667, 1, 1.49261, -1.48735, -0.563012, -0.292711, -0.164996, -0.75075, 0.568745, 1, 1, 1, 0.233333, 1, 1.51432, -1.58431, -0.489139, -0.281112, -0.158673, -0.784811, 0.529028, 1, 1, 1, 0.25, 1, 1.52988, -1.67236, -0.421811, 0.27027, 0.151251, 0.814404, -0.490738, 1, 1, 1, 0.283333, 1, 1.54663, -1.81363, -0.312337, 0.252801, 0.13483, 0.859044, -0.424213, 1, 1, 1, 0.3, 1, 1.54988, -1.86281, -0.272965, 0.247204, 0.126728, 0.873899, -0.398912, 1, 1, 1, 0.316667, 1, 1.55107, -1.89499, -0.245685, 0.244376, 0.119283, 0.883759, -0.380817, 1, 1, 1, 0.333333, 1, 1.55124, -1.90815, -0.231881, 0.244789, 0.112908, 0.888533, -0.371267, 1, 1, 1, 0.35, 1, 1.55116, -1.90093, -0.232521, 0.248687, 0.107876, 0.888121, -0.371159, 1, 1, 1, 0.366667, 1, 1.55058, -1.87463, -0.246889, 0.255539, 0.104003, 0.882946, -0.379854, 1, 1, 1, 0.383333, 1, 1.549, -1.8312, -0.273848, 0.264573, 0.100968, 0.873368, -0.396277, 1, 1, 1, 0.4, 1, 1.54592, -1.77261, -0.31226, 0.274973, 0.0984399, 0.859588, -0.419295, 1, 1, 1, 0.433333, 1, 1.53327, -1.6178, -0.418902, 0.296479, 0.0935622, 0.82011, -0.480381, 1, 1, 1, 0.45, 1, 1.52271, -1.5255, -0.484859, -0.305893, -0.0905626, -0.794941, 0.51604, 1, 1, 1, 0.483334, 1, 1.49059, -1.3209, -0.636358, -0.318084, -0.0819325, -0.736102, 0.591831, 1, 1, 1, 0.516667, 1, 1.43312, -1.1028, -0.806184, -0.318749, -0.0680673, -0.670133, 0.666849, 1, 1, 1, 0.566667, 1, 1.22322, -0.789774, -1.06281, -0.314905, -0.0399799, -0.561207, 0.764384, 1, 1, 1, 0.616667, 1, 0.893444, -0.552945, -1.26437, -0.312238, -0.0143764, -0.444196, 0.839637, 1, 1, 1, 0.65, 1, 0.631, -0.470397, -1.33612, -0.313651, -0.00458805, -0.362374, 0.87766, 1, 1, 1, 0.666667, 1, 0.492404, -0.45915, -1.34599, -0.315919, -0.00320468, -0.319903, 0.893223, 1, 1, 1, 0.683333, 1, 0.351233, -0.459966, -1.34505, -0.319842, -0.00569352, -0.275417, 0.90654, 1, 1, 1, 0.7, 1, 0.208999, -0.462557, -1.34217, -0.325398, -0.0127771, -0.228786, 0.917393, 1, 1, 1, 0.716667, 1, 0.0671533, -0.467134, -1.33723, -0.331944, -0.0239171, -0.180934, 0.925475, 1, 1, 1, 0.733333, 1, -0.0728507, -0.473912, -1.33013, -0.338845, -0.038505, -0.132907, 0.930611, 1, 1, 1, 0.766667, 1, -0.341529, -0.494923, -1.30898, -0.351384, -0.0753218, -0.0408165, 0.932304, 1, 1, 1, 0.8, 1, -0.585417, -0.527291, -1.27785, -0.359078, -0.117699, 0.0387587, 0.925045, 1, 1, 1, 0.816667, 1, -0.694435, -0.548268, -1.25827, -0.360227, -0.139365, 0.0715185, 0.919619, 1, 1, 1, 0.833333, 1, -0.7929, -0.572724, -1.23586, -0.359238, -0.160626, 0.0986103, 0.914015, 1, 1, 1, 0.85, 1, -0.879704, -0.600625, -1.21067, -0.356428, -0.181067, 0.120697, 0.908629, 1, 1, 1, 0.866666, 1, -0.955128, -0.630949, -1.18339, -0.352515, -0.200223, 0.139062, 0.903497, 1, 1, 1, 0.883333, 1, -1.0198, -0.662428, -1.15486, -0.347851, -0.217556, 0.153992, 0.898863, 1, 1, 1, 0.9, 1, -1.07433, -0.693793, -1.1259, -0.342776, -0.23252, 0.165751, 0.894967, 1, 1, 1, 0.916666, 1, -1.11936, -0.723776, -1.09738, -0.337622, -0.244554, 0.174569, 0.892037, 1, 1, 1, 0.933333, 1, -1.15551, -0.751107, -1.07012, -0.332711, -0.25307, 0.180652, 0.890294, 1, 1, 1, 0.95, 1, -1.18341, -0.774519, -1.04497, -0.328359, -0.257443, 0.184177, 0.889934, 1, 1, 1, 0.966666, 1, -1.20367, -0.792742, -1.02277, -0.324866, -0.257002, 0.185292, 0.891111, 1, 1, 1, 0.983333, 1, -1.21692, -0.804507, -1.00436, -0.322515, -0.251015, 0.184119, 0.893911, 1, 1, 1, 1, 1, -1.2238, -0.808547, -0.990576, -0.321559, -0.238688, 0.180744, 0.898309, 1, 1, 1, 1.01667, 1, -1.22471, -0.804003, -0.982089, -0.322128, -0.21957, 0.17523, 0.904056, 1, 1, 1, 1.03333, 1, -1.21931, -0.791658, -0.978872, -0.323986, -0.194795, 0.16767, 0.91048, 1, 1, 1, 1.05, 1, -1.207, -0.772705, -0.980722, -0.326821, -0.165979, 0.15819, 0.916851, 1, 1, 1, 1.06667, 1, -1.18723, -0.748336, -0.987441, -0.330351, -0.134848, 0.146964, 0.922543, 1, 1, 1, 1.08333, 1, -1.15943, -0.719746, -0.998826, -0.334352, -0.103216, 0.134223, 0.927113, 1, 1, 1, 1.1, 1, -1.12302, -0.688126, -1.01468, -0.338669, -0.0729314, 0.120243, 0.930336, 1, 1, 1, 1.11667, 1, -1.07743, -0.654671, -1.03479, -0.343224, -0.0458233, 0.105323, 0.932204, 1, 1, 1, 1.13333, 1, -1.0221, -0.620573, -1.05897, -0.348005, -0.023653, 0.0897627, 0.932886, 1, 1, 1, 1.15, 1, -0.956465, -0.587027, -1.08701, -0.353048, -0.00810225, 0.0738376, 0.932652, 1, 1, 1, 1.16667, 1, -0.879941, -0.555223, -1.11872, -0.358401, -0.000797026, 0.0577794, 0.931778, 1, 1, 1, 1.2, 1, -0.694342, -0.500061, -1.19076, -0.36894, 0.00349343, 0.0250824, 0.929108, 1, 1, 1, 1.23333, 1, -0.472616, -0.456832, -1.26576, -0.378362, 0.00608133, -0.0108514, 0.925574, 1, 1, 1, 1.26667, 1, -0.224446, -0.425723, -1.33282, -0.386387, 0.00741131, -0.0532656, 0.920768, 1, 1, 1, 1.31667, 1, 0.176209, -0.402194, -1.39469, -0.394563, 0.00798982, -0.136503, 0.908638, 1, 1, 1, 1.33333, 1, 0.312498, -0.400612, -1.39954, -0.395764, 0.00801244, -0.1712, 0.902218, 1, 1, 1 )
 
-[sub_resource type="Animation" id=90]
+[sub_resource type="Animation" id=3]
 resource_name = "Walk"
 length = 1.33333
 loop = true
@@ -2209,261 +2210,261 @@ tracks/100/imported = true
 tracks/100/enabled = true
 tracks/100/keys = PoolRealArray( 0, 1, 0.150781, -0.513936, -1.41318, -0.384912, -0.0964452, -0.105282, 0.911842, 1, 1, 1, 0.0166667, 1, 0.180463, -0.514736, -1.40705, -0.381194, -0.0848691, -0.115866, 0.913271, 1, 1, 1, 0.05, 1, 0.249295, -0.521527, -1.3943, -0.373728, -0.059827, -0.133311, 0.915956, 1, 1, 1, 0.0833333, 1, 0.327681, -0.536108, -1.38107, -0.366672, -0.0348246, -0.14895, 0.917689, 1, 1, 1, 0.1, 1, 0.369304, -0.546645, -1.37434, -0.363478, -0.0233266, -0.157273, 0.917935, 1, 1, 1, 0.116667, 1, 0.411932, -0.559522, -1.36756, -0.360607, -0.0130347, -0.166555, 0.917634, 1, 1, 1, 0.133333, 1, 0.455106, -0.574868, -1.36076, -0.358133, -0.00435329, -0.177256, 0.91668, 1, 1, 1, 0.15, 1, 0.498363, -0.592814, -1.35396, -0.356121, 0.00231585, -0.189817, 0.914955, 1, 1, 1, 0.166667, 1, 0.541242, -0.61349, -1.3472, -0.354623, 0.0065802, -0.204656, 0.912313, 1, 1, 1, 0.183333, 1, 0.583247, -0.636835, -1.3405, -0.355032, 0.00922811, -0.222273, 0.907999, 1, 1, 1, 0.2, 1, 0.62373, -0.662027, -1.33398, -0.358198, 0.0113508, -0.242247, 0.9016, 1, 1, 1, 0.233333, 1, 0.6974, -0.713897, -1.32197, -0.369863, 0.0142674, -0.285273, 0.884091, 1, 1, 1, 0.266667, 1, 0.756787, -0.760988, -1.31216, -0.38409, 0.015785, -0.32568, 0.863805, 1, 1, 1, 0.283333, 1, 0.779417, -0.780207, -1.30839, -0.390595, 0.0161586, -0.342405, 0.854361, 1, 1, 1, 0.3, 1, 0.796427, -0.795189, -1.30555, -0.395926, 0.0163521, -0.355523, 0.84651, 1, 1, 1, 0.316667, 1, 0.807133, -0.804923, -1.30375, -0.399535, 0.016425, -0.364089, 0.841155, 1, 1, 1, 0.333333, 1, 0.810854, -0.808393, -1.30312, -0.400866, 0.0164363, -0.367159, 0.839184, 1, 1, 1, 0.35, 1, 0.806871, -0.806543, -1.30565, -0.400866, 0.0164363, -0.367159, 0.839184, 1, 1, 1, 0.366667, 1, 0.795761, -0.801272, -1.3125, -0.400866, 0.0164363, -0.367159, 0.839184, 1, 1, 1, 0.383333, 1, 0.778788, -0.792999, -1.32261, -0.400866, 0.0164363, -0.367159, 0.839184, 1, 1, 1, 0.433333, 1, 0.70531, -0.754365, -1.36158, -0.400866, 0.0164363, -0.367159, 0.839184, 1, 1, 1, 0.483334, 1, 0.624496, -0.703806, -1.3908, -0.400866, 0.0164363, -0.367159, 0.839184, 1, 1, 1, 0.5, 1, 0.601818, -0.68626, -1.39333, -0.400866, 0.0164363, -0.367159, 0.839184, 1, 1, 1, 0.516667, 1, 0.582976, -0.669029, -1.39294, -0.400449, 0.0164259, -0.36394, 0.840784, 1, 1, 1, 0.533333, 1, 0.567245, -0.652354, -1.39189, -0.399316, 0.0163548, -0.355032, 0.845122, 1, 1, 1, 0.55, 1, 0.5535, -0.636436, -1.39034, -0.397621, 0.0161618, -0.341546, 0.851459, 1, 1, 1, 0.583333, 1, 0.527477, -0.607689, -1.38641, -0.393168, 0.0151687, -0.305295, 0.86717, 1, 1, 1, 0.616667, 1, 0.495923, -0.584414, -1.38248, -0.388601, 0.012974, -0.264331, 0.882581, 1, 1, 1, 0.633333, 1, 0.475263, -0.575336, -1.38093, -0.38691, 0.0112839, -0.245026, 0.888896, 1, 1, 1, 0.65, 1, 0.44985, -0.568236, -1.37988, -0.386029, 0.00912162, -0.228091, 0.893797, 1, 1, 1, 0.666667, 1, 0.418561, -0.563317, -1.3795, -0.386309, 0.00642477, -0.214713, 0.897007, 1, 1, 1, 0.683333, 1, 0.380735, -0.55992, -1.38076, -0.387687, 0.00194593, -0.205439, 0.898605, 1, 1, 1, 0.7, 1, 0.337559, -0.557199, -1.3842, -0.389754, -0.00520808, -0.199472, 0.899042, 1, 1, 1, 0.716667, 1, 0.290683, -0.55508, -1.38931, -0.392338, -0.0145678, -0.195962, 0.898587, 1, 1, 1, 0.733333, 1, 0.241758, -0.553488, -1.39557, -0.395252, -0.0256582, -0.19403, 0.89748, 1, 1, 1, 0.766667, 1, 0.144359, -0.551582, -1.40947, -0.401313, -0.0511464, -0.19136, 0.894267, 1, 1, 1, 0.783333, 1, 0.0991846, -0.551119, -1.41608, -0.404106, -0.0646231, -0.188857, 0.892668, 1, 1, 1, 0.8, 1, 0.0585602, -0.550881, -1.42177, -0.406519, -0.0779963, -0.184407, 0.891433, 1, 1, 1, 0.816667, 1, 0.0241358, -0.550793, -1.42603, -0.408393, -0.0908384, -0.17713, 0.890836, 1, 1, 1, 0.833333, 1, -0.00243872, -0.55078, -1.42834, -0.409557, -0.102731, -0.16613, 0.891128, 1, 1, 1, 0.85, 1, -0.0224019, -0.552803, -1.42928, -0.410304, -0.113303, -0.150785, 0.892231, 1, 1, 1, 0.866666, 1, -0.0383872, -0.558294, -1.42986, -0.410983, -0.122489, -0.131858, 0.893702, 1, 1, 1, 0.883333, 1, -0.0508366, -0.566386, -1.43015, -0.411506, -0.130326, -0.110536, 0.895243, 1, 1, 1, 0.9, 1, -0.060192, -0.576212, -1.43026, -0.411815, -0.136857, -0.0880389, 0.89662, 1, 1, 1, 0.933333, 1, -0.0713892, -0.597598, -1.43029, -0.411763, -0.146227, -0.0444994, 0.898381, 1, 1, 1, 0.95, 1, -0.0741147, -0.607423, -1.4304, -0.411492, -0.149227, -0.0259599, 0.898739, 1, 1, 1, 0.966666, 1, -0.0755143, -0.615516, -1.43069, -0.411173, -0.151236, -0.011221, 0.898854, 1, 1, 1, 0.983333, 1, -0.0760301, -0.621006, -1.43126, -0.410913, -0.152364, -0.00149549, 0.898851, 1, 1, 1, 1, 1, -0.0761037, -0.62303, -1.43221, -0.410809, -0.152718, 0.00201453, 0.898838, 1, 1, 1, 1.01667, 1, -0.0750361, -0.621701, -1.43366, -0.410809, -0.152718, 0.0020146, 0.898838, 1, 1, 1, 1.03333, 1, -0.0719948, -0.617977, -1.43557, -0.410809, -0.152718, 0.0020146, 0.898838, 1, 1, 1, 1.05, 1, -0.0672218, -0.612253, -1.4378, -0.410809, -0.152718, 0.0020146, 0.898838, 1, 1, 1, 1.1, 1, -0.0449364, -0.58702, -1.44497, -0.410809, -0.152718, 0.0020146, 0.898838, 1, 1, 1, 1.15, 1, -0.0157875, -0.55797, -1.44978, -0.410809, -0.152718, 0.0020146, 0.898838, 1, 1, 1, 1.16667, 1, -0.00567648, -0.549277, -1.45018, -0.410809, -0.152718, 0.0020146, 0.898838, 1, 1, 1, 1.18333, 1, 0.00433487, -0.54166, -1.44969, -0.410428, -0.152138, 2.73168e-05, 0.899112, 1, 1, 1, 1.2, 1, 0.0145376, -0.535129, -1.44827, -0.409344, -0.150408, -0.00552762, 0.89988, 1, 1, 1, 1.21667, 1, 0.0253295, -0.529616, -1.446, -0.407635, -0.147539, -0.0140362, 0.901038, 1, 1, 1, 1.25, 1, 0.0502718, -0.521379, -1.43923, -0.402635, -0.138423, -0.0374669, 0.904058, 1, 1, 1, 1.28333, 1, 0.0823438, -0.516415, -1.43005, -0.396054, -0.124872, -0.065393, 0.907344, 1, 1, 1, 1.3, 1, 0.102048, -0.514993, -1.42476, -0.392399, -0.116466, -0.0795415, 0.908918, 1, 1, 1, 1.31667, 1, 0.124727, -0.514189, -1.41911, -0.388645, -0.106988, -0.0930299, 0.910414, 1, 1, 1, 1.33333, 1, 0.150781, -0.513936, -1.41318, -0.384912, -0.0964452, -0.105282, 0.911842, 1, 1, 1 )
 
-[sub_resource type="AnimationNodeBlend2" id=2]
+[sub_resource type="AnimationNodeBlend2" id=4]
 filter_enabled = true
 filters = [ "AnimationTree", "Rig/Projectile_Position/cast_glow:scale", "Rig/Projectile_Position/cast_glow:translation", "Rig/Projectile_Position/cast_glow:visible", "Rig/Projectile_Position:translation", "Rig/Skeleton/Bow_IK/Hand_L_Cont/Hand_L_Position:translation", "Rig/Skeleton/Bow_IK/Hand_L_Controller/Hand_L_Position:translation", "Rig/Skeleton/Bow_IK/Hand_R_Cont/Hand_R_Position:rotation_degrees", "Rig/Skeleton/Bow_IK/Hand_R_Cont/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Hand_R_Controller/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Projectile_Position:rotation_degrees", "Rig/Skeleton/Bow_IK/Projectile_Position:translation", "Rig/Skeleton/SkeletonIK_Arrow", "Rig/Skeleton/SkeletonIK_Arrow:interpolation", "Rig/Skeleton/SkeletonIK_Bow", "Rig/Skeleton/SkeletonIK_Bow:interpolation", "Rig/Skeleton:arm_ik_l", "Rig/Skeleton:arm_ik_r", "Rig/Skeleton:bicep_l", "Rig/Skeleton:bicep_r", "Rig/Skeleton:chest", "Rig/Skeleton:elbow_l", "Rig/Skeleton:elbow_r", "Rig/Skeleton:forearm_l", "Rig/Skeleton:forearm_r", "Rig/Skeleton:hand_index_1_l", "Rig/Skeleton:hand_index_1_r", "Rig/Skeleton:hand_index_2_l", "Rig/Skeleton:hand_index_2_r", "Rig/Skeleton:hand_index_3_l", "Rig/Skeleton:hand_index_3_r", "Rig/Skeleton:hand_index_controller_l", "Rig/Skeleton:hand_index_controller_r", "Rig/Skeleton:hand_l", "Rig/Skeleton:hand_middle_1_l", "Rig/Skeleton:hand_middle_1_r", "Rig/Skeleton:hand_middle_2_l", "Rig/Skeleton:hand_middle_2_r", "Rig/Skeleton:hand_middle_3_l", "Rig/Skeleton:hand_middle_3_r", "Rig/Skeleton:hand_middle_controller_l", "Rig/Skeleton:hand_middle_controller_r", "Rig/Skeleton:hand_pinky_1_l", "Rig/Skeleton:hand_pinky_1_r", "Rig/Skeleton:hand_pinky_2_l", "Rig/Skeleton:hand_pinky_2_r", "Rig/Skeleton:hand_pinky_3_l", "Rig/Skeleton:hand_pinky_3_r", "Rig/Skeleton:hand_pinky_controller_l", "Rig/Skeleton:hand_pinky_controller_r", "Rig/Skeleton:hand_r", "Rig/Skeleton:hand_ring_1_l", "Rig/Skeleton:hand_ring_1_r", "Rig/Skeleton:hand_ring_2_l", "Rig/Skeleton:hand_ring_2_r", "Rig/Skeleton:hand_ring_3_l", "Rig/Skeleton:hand_ring_3_r", "Rig/Skeleton:hand_ring_controller_l", "Rig/Skeleton:hand_ring_controller_r", "Rig/Skeleton:hand_thumb_1_l", "Rig/Skeleton:hand_thumb_1_r", "Rig/Skeleton:hand_thumb_2_l", "Rig/Skeleton:hand_thumb_2_r", "Rig/Skeleton:hand_thumb_3_l", "Rig/Skeleton:hand_thumb_3_r", "Rig/Skeleton:hand_thumb_controller_l", "Rig/Skeleton:hand_thumb_controller_r", "Rig/Skeleton:head", "Rig/Skeleton:neck", "Rig/Skeleton:shoulder_blade_l", "Rig/Skeleton:shoulder_blade_r", "Rig/Skeleton:shoulder_l", "Rig/Skeleton:shoulder_r", "Rig/Skeleton:spine", "State_Machine_Action/Bow" ]
 
-[sub_resource type="AnimationNodeBlend2" id=3]
+[sub_resource type="AnimationNodeBlend2" id=5]
 filter_enabled = true
 filters = [ "Rig/Skeleton:bicep_l", "Rig/Skeleton:elbow_l", "Rig/Skeleton:forearm_l", "Rig/Skeleton:hand_index_1_l", "Rig/Skeleton:hand_index_2_l", "Rig/Skeleton:hand_index_3_l", "Rig/Skeleton:hand_index_controller_l", "Rig/Skeleton:hand_l", "Rig/Skeleton:hand_middle_1_l", "Rig/Skeleton:hand_middle_2_l", "Rig/Skeleton:hand_middle_3_l", "Rig/Skeleton:hand_middle_controller_l", "Rig/Skeleton:hand_pinky_1_l", "Rig/Skeleton:hand_pinky_2_l", "Rig/Skeleton:hand_pinky_3_l", "Rig/Skeleton:hand_pinky_controller_l", "Rig/Skeleton:hand_ring_1_l", "Rig/Skeleton:hand_ring_2_l", "Rig/Skeleton:hand_ring_3_l", "Rig/Skeleton:hand_ring_controller_l", "Rig/Skeleton:hand_thumb_1_l", "Rig/Skeleton:hand_thumb_2_l", "Rig/Skeleton:hand_thumb_3_l", "Rig/Skeleton:hand_thumb_controller_l" ]
 
-[sub_resource type="AnimationNodeBlend2" id=4]
+[sub_resource type="AnimationNodeBlend2" id=6]
 filter_enabled = true
 filters = [ "AnimationTree", "Rig/Projectile_Position/cast_glow:scale", "Rig/Projectile_Position/cast_glow:translation", "Rig/Projectile_Position/cast_glow:visible", "Rig/Projectile_Position:translation", "Rig/Skeleton/Bow_IK/Hand_R_Cont/Hand_R_Position:rotation_degrees", "Rig/Skeleton/Bow_IK/Hand_R_Cont/Hand_R_Position:translation", "Rig/Skeleton/Bow_IK/Projectile_Position:rotation_degrees", "Rig/Skeleton/Bow_IK/Projectile_Position:translation", "Rig/Skeleton:bicep_r", "Rig/Skeleton:elbow_r", "Rig/Skeleton:forearm_r", "Rig/Skeleton:hand_index_1_r", "Rig/Skeleton:hand_index_2_r", "Rig/Skeleton:hand_index_3_r", "Rig/Skeleton:hand_index_controller_r", "Rig/Skeleton:hand_middle_1_r", "Rig/Skeleton:hand_middle_2_r", "Rig/Skeleton:hand_middle_3_r", "Rig/Skeleton:hand_middle_controller_r", "Rig/Skeleton:hand_pinky_1_r", "Rig/Skeleton:hand_pinky_2_r", "Rig/Skeleton:hand_pinky_3_r", "Rig/Skeleton:hand_pinky_controller_r", "Rig/Skeleton:hand_r", "Rig/Skeleton:hand_ring_1_r", "Rig/Skeleton:hand_ring_2_r", "Rig/Skeleton:hand_ring_3_r", "Rig/Skeleton:hand_ring_controller_r", "Rig/Skeleton:hand_thumb_1_r", "Rig/Skeleton:hand_thumb_2_r", "Rig/Skeleton:hand_thumb_3_r", "Rig/Skeleton:hand_thumb_controller_r", "State_Machine_Action/Throw_Item" ]
 
-[sub_resource type="AnimationNodeAnimation" id=5]
+[sub_resource type="AnimationNodeAnimation" id=7]
 animation = "Casting_Magic_Orb"
 
-[sub_resource type="AnimationNodeAnimation" id=6]
+[sub_resource type="AnimationNodeAnimation" id=8]
 animation = "Draw_Arrow"
 
-[sub_resource type="AnimationNodeStateMachine" id=7]
-states/Casting_Magic_Orb/node = SubResource( 5 )
+[sub_resource type="AnimationNodeStateMachine" id=9]
+states/Casting_Magic_Orb/node = SubResource( 7 )
 states/Casting_Magic_Orb/position = Vector2( 549, 293 )
-states/Draw_Arrow/node = SubResource( 6 )
+states/Draw_Arrow/node = SubResource( 8 )
 states/Draw_Arrow/position = Vector2( 549, 195 )
 graph_offset = Vector2( -180.592, 141.12 )
 
-[sub_resource type="AnimationNodeAnimation" id=8]
+[sub_resource type="AnimationNodeAnimation" id=10]
 animation = "Bow_Hold"
 
-[sub_resource type="AnimationNodeStateMachine" id=9]
-states/Bow_Hold/node = SubResource( 8 )
+[sub_resource type="AnimationNodeStateMachine" id=11]
+states/Bow_Hold/node = SubResource( 10 )
 states/Bow_Hold/position = Vector2( 388, 191 )
 
-[sub_resource type="AnimationNodeAnimation" id=10]
+[sub_resource type="AnimationNodeAnimation" id=12]
 animation = "Fall"
 
-[sub_resource type="AnimationNodeAnimation" id=11]
+[sub_resource type="AnimationNodeAnimation" id=13]
 animation = "Jump"
 
-[sub_resource type="AnimationNodeAnimation" id=12]
+[sub_resource type="AnimationNodeAnimation" id=14]
 animation = "Land"
 
-[sub_resource type="AnimationNodeAnimation" id=13]
+[sub_resource type="AnimationNodeAnimation" id=15]
 animation = "Ledge_Climb"
 
-[sub_resource type="AnimationNodeAnimation" id=14]
+[sub_resource type="AnimationNodeAnimation" id=16]
 animation = "Ledge_Hang"
 
-[sub_resource type="AnimationNodeAnimation" id=15]
+[sub_resource type="AnimationNodeAnimation" id=17]
 animation = "Ledge_Move_Left"
 
-[sub_resource type="AnimationNodeAnimation" id=16]
+[sub_resource type="AnimationNodeAnimation" id=18]
 animation = "Ledge_Move_Right"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=17]
-blend_point_0/node = SubResource( 15 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=19]
+blend_point_0/node = SubResource( 17 )
 blend_point_0/pos = -1.0
-blend_point_1/node = SubResource( 16 )
+blend_point_1/node = SubResource( 18 )
 blend_point_1/pos = 1.0
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=18]
-blend_point_0/node = SubResource( 14 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=20]
+blend_point_0/node = SubResource( 16 )
 blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 17 )
+blend_point_1/node = SubResource( 19 )
 blend_point_1/pos = 1.0
 
-[sub_resource type="AnimationNodeTimeScale" id=19]
+[sub_resource type="AnimationNodeTimeScale" id=21]
 
-[sub_resource type="AnimationNodeBlendTree" id=20]
+[sub_resource type="AnimationNodeBlendTree" id=22]
 graph_offset = Vector2( -331, 38 )
-nodes/BlendSpace1D/node = SubResource( 18 )
+nodes/BlendSpace1D/node = SubResource( 20 )
 nodes/BlendSpace1D/position = Vector2( -100, 120 )
-nodes/TimeScale/node = SubResource( 19 )
+nodes/TimeScale/node = SubResource( 21 )
 nodes/TimeScale/position = Vector2( 120, 120 )
 node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
 
-[sub_resource type="AnimationNodeAnimation" id=21]
+[sub_resource type="AnimationNodeAnimation" id=23]
 animation = "Swim_Idle"
 
-[sub_resource type="AnimationNodeAnimation" id=22]
+[sub_resource type="AnimationNodeAnimation" id=24]
 animation = "Swim_Forward"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=23]
-blend_point_0/node = SubResource( 21 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=25]
+blend_point_0/node = SubResource( 23 )
 blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 22 )
+blend_point_1/node = SubResource( 24 )
 blend_point_1/pos = 1.0
 
-[sub_resource type="AnimationNodeTimeScale" id=24]
+[sub_resource type="AnimationNodeTimeScale" id=26]
 
-[sub_resource type="AnimationNodeBlendTree" id=25]
+[sub_resource type="AnimationNodeBlendTree" id=27]
 graph_offset = Vector2( -738, 49 )
-nodes/BlendSpace1D/node = SubResource( 23 )
+nodes/BlendSpace1D/node = SubResource( 25 )
 nodes/BlendSpace1D/position = Vector2( -120, 100 )
-nodes/TimeScale/node = SubResource( 24 )
+nodes/TimeScale/node = SubResource( 26 )
 nodes/TimeScale/position = Vector2( 80, 100 )
 node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
 
-[sub_resource type="AnimationNodeAnimation" id=26]
+[sub_resource type="AnimationNodeAnimation" id=28]
 animation = "Idle"
 
-[sub_resource type="AnimationNodeAnimation" id=27]
+[sub_resource type="AnimationNodeAnimation" id=29]
 animation = "Bow_Stance"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=28]
-blend_point_0/node = SubResource( 26 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=30]
+blend_point_0/node = SubResource( 28 )
 blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 27 )
+blend_point_1/node = SubResource( 29 )
 blend_point_1/pos = -1.0
 
-[sub_resource type="AnimationNodeAnimation" id=29]
+[sub_resource type="AnimationNodeAnimation" id=31]
 animation = "Walk"
 
-[sub_resource type="AnimationNodeAnimation" id=30]
+[sub_resource type="AnimationNodeAnimation" id=32]
 animation = "Run"
 
-[sub_resource type="AnimationNodeAnimation" id=31]
+[sub_resource type="AnimationNodeAnimation" id=33]
 animation = "Bow_Walk"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=32]
-blend_point_0/node = SubResource( 29 )
-blend_point_0/pos = 0.0
-blend_point_1/node = SubResource( 30 )
-blend_point_1/pos = 1.0
-blend_point_2/node = SubResource( 31 )
-blend_point_2/pos = -1.0
-
-[sub_resource type="AnimationNodeBlendSpace1D" id=33]
-blend_point_0/node = SubResource( 28 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=34]
+blend_point_0/node = SubResource( 31 )
 blend_point_0/pos = 0.0
 blend_point_1/node = SubResource( 32 )
 blend_point_1/pos = 1.0
+blend_point_2/node = SubResource( 33 )
+blend_point_2/pos = -1.0
 
-[sub_resource type="AnimationNodeTimeScale" id=34]
+[sub_resource type="AnimationNodeBlendSpace1D" id=35]
+blend_point_0/node = SubResource( 30 )
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource( 34 )
+blend_point_1/pos = 1.0
 
-[sub_resource type="AnimationNodeBlendTree" id=35]
+[sub_resource type="AnimationNodeTimeScale" id=36]
+
+[sub_resource type="AnimationNodeBlendTree" id=37]
 graph_offset = Vector2( -71, 68 )
-nodes/BlendSpace1D/node = SubResource( 33 )
+nodes/BlendSpace1D/node = SubResource( 35 )
 nodes/BlendSpace1D/position = Vector2( 360, 160 )
-nodes/TimeScale/node = SubResource( 34 )
+nodes/TimeScale/node = SubResource( 36 )
 nodes/TimeScale/position = Vector2( 560, 160 )
 nodes/output/position = Vector2( 740, 160 )
 node_connections = [ "output", 0, "TimeScale", "TimeScale", 0, "BlendSpace1D" ]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=36]
-xfade_time = 0.25
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=37]
-xfade_time = 0.25
-
 [sub_resource type="AnimationNodeStateMachineTransition" id=38]
-xfade_time = 0.07
+xfade_time = 0.25
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=39]
-xfade_time = 0.08
+xfade_time = 0.25
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=40]
-xfade_time = 0.08
+xfade_time = 0.07
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=41]
-xfade_time = 0.25
+xfade_time = 0.08
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=42]
-xfade_time = 0.25
-priority = 2
+xfade_time = 0.08
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=43]
+xfade_time = 0.25
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=44]
 xfade_time = 0.25
+priority = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=45]
-xfade_time = 0.1
-priority = 0
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=46]
-xfade_time = 0.05
-priority = 2
+xfade_time = 0.25
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=47]
 xfade_time = 0.1
+priority = 0
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=48]
+xfade_time = 0.05
+priority = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=49]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=50]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=51]
 xfade_time = 0.05
 
-[sub_resource type="AnimationNodeStateMachine" id=50]
-states/Fall/node = SubResource( 10 )
+[sub_resource type="AnimationNodeStateMachine" id=52]
+states/Fall/node = SubResource( 12 )
 states/Fall/position = Vector2( 382, -170 )
-states/Jump/node = SubResource( 11 )
+states/Jump/node = SubResource( 13 )
 states/Jump/position = Vector2( 165.779, -170 )
-states/Land/node = SubResource( 12 )
+states/Land/node = SubResource( 14 )
 states/Land/position = Vector2( 590, -170 )
-states/Ledge_Climb/node = SubResource( 13 )
+states/Ledge_Climb/node = SubResource( 15 )
 states/Ledge_Climb/position = Vector2( 342, -333 )
-states/Ledge_Hang/node = SubResource( 20 )
+states/Ledge_Hang/node = SubResource( 22 )
 states/Ledge_Hang/position = Vector2( 342, -252.469 )
-states/Swim/node = SubResource( 25 )
+states/Swim/node = SubResource( 27 )
 states/Swim/position = Vector2( 165.779, 66.368 )
-states/Walk/node = SubResource( 35 )
+states/Walk/node = SubResource( 37 )
 states/Walk/position = Vector2( 165.779, -72 )
-transitions = [ "Walk", "Fall", SubResource( 36 ), "Jump", "Fall", SubResource( 37 ), "Walk", "Jump", SubResource( 38 ), "Land", "Walk", SubResource( 39 ), "Fall", "Land", SubResource( 40 ), "Walk", "Swim", SubResource( 41 ), "Fall", "Swim", SubResource( 42 ), "Swim", "Fall", SubResource( 43 ), "Jump", "Swim", SubResource( 44 ), "Swim", "Walk", SubResource( 45 ), "Fall", "Ledge_Hang", SubResource( 46 ), "Ledge_Hang", "Fall", SubResource( 47 ), "Ledge_Hang", "Ledge_Climb", SubResource( 48 ), "Swim", "Ledge_Hang", SubResource( 49 ) ]
+transitions = [ "Walk", "Fall", SubResource( 38 ), "Jump", "Fall", SubResource( 39 ), "Walk", "Jump", SubResource( 40 ), "Land", "Walk", SubResource( 41 ), "Fall", "Land", SubResource( 42 ), "Walk", "Swim", SubResource( 43 ), "Fall", "Swim", SubResource( 44 ), "Swim", "Fall", SubResource( 45 ), "Jump", "Swim", SubResource( 46 ), "Swim", "Walk", SubResource( 47 ), "Fall", "Ledge_Hang", SubResource( 48 ), "Ledge_Hang", "Fall", SubResource( 49 ), "Ledge_Hang", "Ledge_Climb", SubResource( 50 ), "Swim", "Ledge_Hang", SubResource( 51 ) ]
 graph_offset = Vector2( -186.221, -363.469 )
 
-[sub_resource type="AnimationNodeAnimation" id=51]
+[sub_resource type="AnimationNodeAnimation" id=53]
 animation = "Throw_Item"
 
-[sub_resource type="AnimationNodeStateMachine" id=52]
-states/Throw_Item/node = SubResource( 51 )
+[sub_resource type="AnimationNodeStateMachine" id=54]
+states/Throw_Item/node = SubResource( 53 )
 states/Throw_Item/position = Vector2( 553, 288 )
 
-[sub_resource type="AnimationNodeTimeScale" id=53]
+[sub_resource type="AnimationNodeTimeScale" id=55]
 
-[sub_resource type="AnimationNodeBlendTree" id=54]
+[sub_resource type="AnimationNodeBlendTree" id=56]
 graph_offset = Vector2( -1050, 61 )
-nodes/MovexAction/node = SubResource( 2 )
+nodes/MovexAction/node = SubResource( 4 )
 nodes/MovexAction/position = Vector2( -260, 120 )
-nodes/MovexLeftArm/node = SubResource( 3 )
+nodes/MovexLeftArm/node = SubResource( 5 )
 nodes/MovexLeftArm/position = Vector2( -740, -80 )
-nodes/MovexRightArm/node = SubResource( 4 )
+nodes/MovexRightArm/node = SubResource( 6 )
 nodes/MovexRightArm/position = Vector2( -500, -100 )
-nodes/StateMachineAction/node = SubResource( 7 )
+nodes/StateMachineAction/node = SubResource( 9 )
 nodes/StateMachineAction/position = Vector2( -740, 260 )
-nodes/StateMachineLeftArm/node = SubResource( 9 )
+nodes/StateMachineLeftArm/node = SubResource( 11 )
 nodes/StateMachineLeftArm/position = Vector2( -980, 100 )
-nodes/StateMachineMove/node = SubResource( 50 )
+nodes/StateMachineMove/node = SubResource( 52 )
 nodes/StateMachineMove/position = Vector2( -960, -80 )
-nodes/StateMachineRightArm/node = SubResource( 52 )
+nodes/StateMachineRightArm/node = SubResource( 54 )
 nodes/StateMachineRightArm/position = Vector2( -740, 100 )
-nodes/TimeScaleAction/node = SubResource( 53 )
+nodes/TimeScaleAction/node = SubResource( 55 )
 nodes/TimeScaleAction/position = Vector2( -500, 260 )
 nodes/output/position = Vector2( -60, 120 )
-node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexRightArm", "MovexAction", 1, "TimeScaleAction", "TimeScaleAction", 0, "StateMachineAction", "MovexRightArm", 0, "MovexLeftArm", "MovexRightArm", 1, "StateMachineRightArm", "MovexLeftArm", 0, "StateMachineMove", "MovexLeftArm", 1, "StateMachineLeftArm" ]
-
-[sub_resource type="AnimationNodeStateMachinePlayback" id=55]
-
-[sub_resource type="AnimationNodeStateMachinePlayback" id=56]
+node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexRightArm", "MovexAction", 1, "TimeScaleAction", "TimeScaleAction", 0, "StateMachineAction", "MovexLeftArm", 0, "StateMachineMove", "MovexLeftArm", 1, "StateMachineLeftArm", "MovexRightArm", 0, "MovexLeftArm", "MovexRightArm", 1, "StateMachineRightArm" ]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=57]
-resource_local_to_scene = false
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=58]
 
-[sub_resource type="ShaderMaterial" id=59]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=59]
+resource_local_to_scene = false
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=60]
+
+[sub_resource type="ShaderMaterial" id=61]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=60]
+[sub_resource type="GradientTexture" id=62]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=61]
+[sub_resource type="ShaderMaterial" id=63]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 59 )
+next_pass = SubResource( 61 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/highlight_color = Color( 0, 0, 0, 1 )
@@ -2472,20 +2473,20 @@ shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 41 )
-shader_param/light_ramp = SubResource( 60 )
+shader_param/light_ramp = SubResource( 62 )
 
-[sub_resource type="ShaderMaterial" id=62]
+[sub_resource type="ShaderMaterial" id=64]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=63]
+[sub_resource type="GradientTexture" id=65]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=64]
+[sub_resource type="ShaderMaterial" id=66]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 62 )
+next_pass = SubResource( 64 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/highlight_color = Color( 0, 0, 0, 1 )
@@ -2494,41 +2495,41 @@ shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 39 )
-shader_param/light_ramp = SubResource( 63 )
+shader_param/light_ramp = SubResource( 65 )
 
-[sub_resource type="ShaderMaterial" id=65]
+[sub_resource type="ShaderMaterial" id=67]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=66]
+[sub_resource type="GradientTexture" id=68]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=67]
+[sub_resource type="ShaderMaterial" id=69]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 65 )
+next_pass = SubResource( 67 )
 shader = ExtResource( 37 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/eye_light_default = Vector3( 0.2, 0.2, 0.2 )
 shader_param/texturemap = ExtResource( 36 )
-shader_param/light_ramp = SubResource( 66 )
+shader_param/light_ramp = SubResource( 68 )
 
-[sub_resource type="ShaderMaterial" id=68]
+[sub_resource type="ShaderMaterial" id=70]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="Gradient" id=69]
+[sub_resource type="Gradient" id=71]
 offsets = PoolRealArray( 0.597015, 0.60199 )
 
-[sub_resource type="GradientTexture" id=70]
-gradient = SubResource( 69 )
+[sub_resource type="GradientTexture" id=72]
+gradient = SubResource( 71 )
 
-[sub_resource type="ShaderMaterial" id=71]
+[sub_resource type="ShaderMaterial" id=73]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 68 )
+next_pass = SubResource( 70 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/highlight_color = Color( 0, 0, 0, 1 )
@@ -2537,20 +2538,20 @@ shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 42 )
-shader_param/light_ramp = SubResource( 70 )
+shader_param/light_ramp = SubResource( 72 )
 
-[sub_resource type="ShaderMaterial" id=72]
+[sub_resource type="ShaderMaterial" id=74]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=73]
+[sub_resource type="GradientTexture" id=75]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=74]
+[sub_resource type="ShaderMaterial" id=76]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 72 )
+next_pass = SubResource( 74 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/highlight_color = Color( 0, 0, 0, 1 )
@@ -2559,20 +2560,20 @@ shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 43 )
-shader_param/light_ramp = SubResource( 73 )
+shader_param/light_ramp = SubResource( 75 )
 
-[sub_resource type="ShaderMaterial" id=75]
+[sub_resource type="ShaderMaterial" id=77]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=76]
+[sub_resource type="GradientTexture" id=78]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=77]
+[sub_resource type="ShaderMaterial" id=79]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 75 )
+next_pass = SubResource( 77 )
 shader = ExtResource( 38 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/highlight_color = Color( 0, 0, 0, 1 )
@@ -2581,45 +2582,45 @@ shader_param/highlighted = false
 shader_param/transparent = false
 shader_param/shaded = true
 shader_param/texturemap = ExtResource( 40 )
-shader_param/light_ramp = SubResource( 76 )
+shader_param/light_ramp = SubResource( 78 )
 
-[sub_resource type="ShaderMaterial" id=78]
+[sub_resource type="ShaderMaterial" id=80]
 shader = ExtResource( 35 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="GradientTexture" id=79]
+[sub_resource type="GradientTexture" id=81]
 gradient = ExtResource( 44 )
 
-[sub_resource type="ShaderMaterial" id=80]
+[sub_resource type="ShaderMaterial" id=82]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 78 )
+next_pass = SubResource( 80 )
 shader = ExtResource( 37 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
 shader_param/eye_light_default = Vector3( 0.2, 0.2, 0.2 )
 shader_param/texturemap = ExtResource( 36 )
-shader_param/light_ramp = SubResource( 79 )
+shader_param/light_ramp = SubResource( 81 )
 
-[sub_resource type="SphereMesh" id=81]
+[sub_resource type="SphereMesh" id=83]
 
-[sub_resource type="CapsuleShape" id=82]
+[sub_resource type="CapsuleShape" id=84]
 radius = 0.5
 height = 5.35
 
-[sub_resource type="SphereShape" id=83]
+[sub_resource type="SphereShape" id=85]
 
-[sub_resource type="CubeMesh" id=84]
+[sub_resource type="CubeMesh" id=86]
 
-[sub_resource type="CubeMesh" id=85]
+[sub_resource type="CubeMesh" id=87]
 size = Vector3( 2, 2, 5 )
 
-[sub_resource type="SpatialMaterial" id=86]
+[sub_resource type="SpatialMaterial" id=88]
 albedo_color = Color( 0.752941, 0.752941, 0.752941, 1 )
 
-[sub_resource type="SphereMesh" id=87]
+[sub_resource type="SphereMesh" id=89]
 
-[sub_resource type="SpatialMaterial" id=88]
+[sub_resource type="SpatialMaterial" id=90]
 emission_enabled = true
 emission = Color( 0, 1, 0.180392, 1 )
 emission_energy = 1.0
@@ -2653,22 +2654,22 @@ anims/Ledge_Hang = ExtResource( 21 )
 anims/Ledge_Move_Left = ExtResource( 58 )
 anims/Ledge_Move_Right = ExtResource( 59 )
 anims/None = ExtResource( 52 )
-anims/Run = SubResource( 89 )
+anims/Run = SubResource( 2 )
 anims/Swim_Forward = ExtResource( 12 )
 anims/Swim_Idle = ExtResource( 29 )
 anims/Throw_Item = ExtResource( 1 )
-anims/Walk = SubResource( 90 )
+anims/Walk = SubResource( 3 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 54 )
+tree_root = SubResource( 56 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/MovexAction/blend_amount = 0.0
 parameters/MovexLeftArm/blend_amount = 0.0
 parameters/MovexRightArm/blend_amount = 0.0
-parameters/StateMachineAction/playback = SubResource( 55 )
-parameters/StateMachineLeftArm/playback = SubResource( 56 )
-parameters/StateMachineMove/playback = SubResource( 57 )
+parameters/StateMachineAction/playback = SubResource( 57 )
+parameters/StateMachineLeftArm/playback = SubResource( 58 )
+parameters/StateMachineMove/playback = SubResource( 59 )
 parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/blend_position = 0.0
 parameters/StateMachineMove/Ledge_Hang/BlendSpace1D/1/blend_position = -0.9922
 parameters/StateMachineMove/Ledge_Hang/TimeScale/scale = 1.0
@@ -2678,7 +2679,7 @@ parameters/StateMachineMove/Walk/BlendSpace1D/blend_position = 0.0
 parameters/StateMachineMove/Walk/BlendSpace1D/0/blend_position = 0
 parameters/StateMachineMove/Walk/BlendSpace1D/1/blend_position = 0
 parameters/StateMachineMove/Walk/TimeScale/scale = 1.0
-parameters/StateMachineRightArm/playback = SubResource( 58 )
+parameters/StateMachineRightArm/playback = SubResource( 60 )
 parameters/TimeScaleAction/scale = 1.0
 script = ExtResource( 10 )
 
@@ -2711,6 +2712,9 @@ translate_amount = Vector3( 0, 0, -0.3 )
 
 [node name="Swim" type="Node" parent="State_Machine_Move"]
 script = ExtResource( 45 )
+
+[node name="Dive" type="Node" parent="State_Machine_Move"]
+script = ExtResource( 27 )
 
 [node name="Death" type="Node" parent="State_Machine_Move"]
 script = ExtResource( 15 )
@@ -2748,23 +2752,23 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.89, 0 )
 [node name="Rig" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.11, 0 )
 
-[node name="Skeleton" parent="Rig" index="0"]
+[node name="Skeleton" parent="Rig" index="1"]
 bones/40/bound_children = [ NodePath("Hand_L") ]
 bones/65/bound_children = [ NodePath("Hand_R") ]
 bones/95/bound_children = [ NodePath("Foot_Floor_R") ]
 bones/96/bound_children = [ NodePath("Foot_Floor_L") ]
 
 [node name="Body Simplified" parent="Rig/Skeleton" index="0"]
-material/0 = SubResource( 61 )
-material/1 = SubResource( 64 )
-material/2 = SubResource( 67 )
-material/3 = SubResource( 71 )
-material/4 = SubResource( 74 )
+material/0 = SubResource( 63 )
+material/1 = SubResource( 66 )
+material/2 = SubResource( 69 )
+material/3 = SubResource( 73 )
+material/4 = SubResource( 76 )
 
 [node name="Head" parent="Rig/Skeleton" index="1"]
-material/0 = SubResource( 77 )
-material/1 = SubResource( 80 )
-material/2 = SubResource( 64 )
+material/0 = SubResource( 79 )
+material/1 = SubResource( 82 )
+material/2 = SubResource( 66 )
 
 [node name="Camera_Rig_Pos" type="Position3D" parent="Rig/Skeleton" index="2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
@@ -2827,7 +2831,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.3, 3.2 )
 script = ExtResource( 33 )
 
 [node name="Hand_L" type="BoneAttachment" parent="Rig/Skeleton" index="5"]
-transform = Transform( 0.051247, 0.0231693, 0.998416, 0.303597, -0.952779, 0.00652711, 0.951421, 0.302781, -0.0558609, 0.816073, 2.81692, -0.0383385 )
+transform = Transform( -0.0393619, 0.730879, 0.681371, 0.0369263, -0.68037, 0.731938, 0.998543, 0.0539704, -0.000208249, 2.16054, 3.49606, -0.161456 )
 bone_name = "hand_l"
 
 [node name="Bow_Position" type="Position3D" parent="Rig/Skeleton/Hand_L"]
@@ -2837,7 +2841,7 @@ transform = Transform( 0.999998, -2.6077e-08, 2.7474e-08, 3.72529e-08, 0.999998,
 visible = false
 
 [node name="Hand_R" type="BoneAttachment" parent="Rig/Skeleton" index="6"]
-transform = Transform( -0.21571, 0.0437224, -0.975476, -0.411958, -0.909812, 0.0503186, -0.885302, 0.41271, 0.214267, -0.792397, 2.88506, 0.226384 )
+transform = Transform( -0.0393618, -0.730879, -0.68137, -0.0369249, -0.680369, 0.731939, -0.998542, 0.0539695, -0.000207265, -2.16054, 3.49607, -0.161459 )
 bone_name = "hand_r"
 
 [node name="Arrow_Position" type="Position3D" parent="Rig/Skeleton/Hand_R"]
@@ -2854,7 +2858,7 @@ transform = Transform( 1, 1.62982e-08, -2.42144e-07, -1.62981e-08, 1, 2.6077e-07
 visible = false
 
 [node name="Foot_Floor_L" type="BoneAttachment" parent="Rig/Skeleton" index="7"]
-transform = Transform( -0.999349, -0.0360769, -1.09499e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.0828479, 0.20116, -0.0170208 )
+transform = Transform( -0.999349, -0.0360769, -1.09496e-05, 0.0182652, -0.506217, 0.862212, -0.0311115, 0.861651, 0.506546, 0.24332, 0.205547, -0.140259 )
 bone_name = "foot_floor_ik_l"
 
 [node name="Foot_L_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_L"]
@@ -2863,7 +2867,7 @@ enabled = true
 cast_to = Vector3( 0, -2.34, 0 )
 
 [node name="Foot_Floor_R" type="BoneAttachment" parent="Rig/Skeleton" index="8"]
-transform = Transform( -0.999349, 0.0360769, 1.09499e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.222094, 0.653814, -0.596427 )
+transform = Transform( -0.999349, 0.0360769, 1.09496e-05, -0.0182652, -0.506217, 0.862212, 0.0311115, 0.861651, 0.506546, -0.24332, 0.205547, -0.140259 )
 bone_name = "foot_floor_ik_r"
 
 [node name="Foot_R_Raycast" type="RayCast" parent="Rig/Skeleton/Foot_Floor_R"]
@@ -2910,7 +2914,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 2 )
 
 [node name="Cast_Glow" type="MeshInstance" parent="Rig/Projectile_Position"]
 transform = Transform( 0.001, 0, 0, 0, 0.001, 0, 0, 0, 0.001, 0, 0, 0 )
-mesh = SubResource( 81 )
+mesh = SubResource( 83 )
 material/0 = ExtResource( 18 )
 
 [node name="Raycast_Floor" type="RayCast" parent="Rig"]
@@ -2923,7 +2927,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.26956, -0.042 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.175, -0.042 )
-shape = SubResource( 82 )
+shape = SubResource( 84 )
 
 [node name="Targetting_Area" type="Area" parent="."]
 transform = Transform( 176, 0, 0, 0, 176, 0, 0, 0, 176, 0, 4.89, 0 )
@@ -2932,7 +2936,7 @@ collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape" parent="Targetting_Area"]
-shape = SubResource( 83 )
+shape = SubResource( 85 )
 
 [node name="Interact_System" parent="." instance=ExtResource( 53 )]
 input_ray_pickable = false
@@ -2955,26 +2959,28 @@ layer = 0
 [node name="Ledge" type="MeshInstance" parent="Temp"]
 transform = Transform( 2, 0, 0, 0, 0.1, 0, 0, 0, 2, 0, 7.19104, 0 )
 visible = false
-mesh = SubResource( 84 )
+mesh = SubResource( 86 )
 material/0 = null
 
 [node name="Wall" type="MeshInstance" parent="Temp"]
 transform = Transform( 5, 0, 8.9407e-08, 0, 5, 0, 4.29153e-06, 0, 1, 0, 2.257, 3 )
 visible = false
-mesh = SubResource( 85 )
-material/0 = SubResource( 86 )
+mesh = SubResource( 87 )
+material/0 = SubResource( 88 )
 
 [node name="Debug" type="Node" parent="."]
 
 [node name="Velocity_Start" type="MeshInstance" parent="Debug"]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-mesh = SubResource( 87 )
-material/0 = SubResource( 88 )
+visible = false
+mesh = SubResource( 89 )
+material/0 = SubResource( 90 )
 
 [node name="Velocity_End" type="MeshInstance" parent="Debug"]
 transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0 )
-mesh = SubResource( 87 )
-material/0 = SubResource( 88 )
+visible = false
+mesh = SubResource( 89 )
+material/0 = SubResource( 90 )
 [connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
 [connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
 [connection signal="is_falling" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_is_falling"]
@@ -2986,8 +2992,8 @@ material/0 = SubResource( 88 )
 [connection signal="max_health_changed" from="Attributes/Health" to="UI_Layer/UI_In_Game" method="_on_Health_max_health_changed"]
 [connection signal="move_state_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_changed"]
 [connection signal="move_state_stack_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_stack_changed"]
-[connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]
 [connection signal="action_state_changed" from="State_Machine_Action" to="State_Machine_Move" method="_on_State_Machine_Action_action_state_changed"]
+[connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]
 [connection signal="action_state_stack_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_stack_changed"]
 [connection signal="break_target" from="Camera_Rig" to="." method="_on_Camera_Rig_break_target"]
 [connection signal="camera_direction_changed" from="Camera_Rig" to="." method="_on_Camera_Rig_camera_direction_changed"]

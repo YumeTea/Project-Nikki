@@ -10,6 +10,7 @@ uniform vec2 aspect_ratio = vec2(1.0, 1.0);
 uniform bool transparent = true;
 
 //Edge Variables
+uniform vec4 water_color : hint_color;
 uniform float fresnel_power : hint_range(0, 2) = 1;
 uniform float edge_intensity : hint_range(0, 2) = 1;
 
@@ -53,9 +54,9 @@ void fragment() {
 	depth = PROJECTION_MATRIX[3][2] / (depth + PROJECTION_MATRIX[2][2]);
 	depth += VERTEX.z;
 	
-	depth = pow(1.0 - clamp(depth, 0, 1), fresnel_power) * edge_intensity;
+	depth = pow(clamp(depth, 0, 1), fresnel_power) * edge_intensity;
 	
-	ALBEDO = mix(ALBEDO, vec3(1.0), depth);
+	ALBEDO = mix(ALBEDO, water_color.rgb, depth);
 	
 	//Transparency
 	if (transparent == true) {

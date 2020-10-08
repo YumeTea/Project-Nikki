@@ -97,7 +97,7 @@ func walk_third_person(delta):
 		elif strafe_locked:
 			walk_strafe(delta)
 	else:
-		velocity.y += gravity * weight * delta
+		velocity_gravity.y += gravity * weight * delta
 	
 	blend_move_anim()
 
@@ -129,7 +129,7 @@ func walk_first_person(delta):
 		else:
 			walk_strafe(delta) #if trying to turn to where neck is over focus angle lim, strafe walk instead
 	else:
-		velocity.y += gravity * weight * delta
+		velocity_gravity.y += gravity * weight * delta
 	
 	blend_move_anim()
 
@@ -150,12 +150,7 @@ func walk_free(delta):
 	
 	###Turn radius limiting
 	if is_moving:
-		#Turn radius control left
-		if turn_angle.y < (-deg2rad(turn_radius)):
-			turn_angle.y = (-deg2rad(turn_radius))
-		#Turn radius control right
-		elif turn_angle.y > (deg2rad(turn_radius)):
-			turn_angle.y = (deg2rad(turn_radius))
+		turn_angle.y = clamp(turn_angle.y, -turn_radius, turn_radius)
 		#Change direction and velocity to match new facing direction
 		direction_angle.y = facing_angle.y + turn_angle.y
 		direction = direction.rotated(Vector3(0,1,0), -(input_direction_angle - direction_angle.y))
@@ -165,12 +160,7 @@ func walk_free(delta):
 	
 	###Quick turn radius limiting
 	if quick_turn:
-		#Quick turn radius control left
-		if turn_angle.y < (-deg2rad(quick_turn_radius)):
-			turn_angle.y = (-deg2rad(quick_turn_radius))
-		#Quick turn radius control right
-		elif turn_angle.y > (deg2rad(quick_turn_radius)):
-			turn_angle.y = (deg2rad(quick_turn_radius))
+		turn_angle.y = clamp(turn_angle.y, -quick_turn_radius, quick_turn_radius)
 		#Stop quick turning once facing angle matches input direction angle
 		if is_equal_approx(turn_angle.y, 0.0):
 			is_moving = true
@@ -206,8 +196,6 @@ func walk_locked_third_person(delta):
 			turn_angle.y = turn_angle.y/centering_time_left
 	else:
 		turn_angle.y = 0
-		
-	emit_signal("center_view", turn_angle.y)
 	
 	calculate_movement_velocity(delta)
 	
@@ -252,8 +240,6 @@ func walk_locked_first_person(delta):
 		turn_angle.y = bound_angle(turn_angle.y)
 		if !centered:
 			turn_angle.y = turn_angle.y/centering_time_left
-		
-	emit_signal("center_view", turn_angle.y)
 	
 	calculate_movement_velocity(delta)
 	
@@ -290,12 +276,7 @@ func walk_strafe(delta):
 	turn_angle.y = bound_angle(turn_angle.y)
 	
 	###Turn radius limiting
-	#Turn radius control left
-	if turn_angle.y < (-deg2rad(turn_radius)):
-		turn_angle.y = (-deg2rad(turn_radius))
-	#Turn radius control right
-	if turn_angle.y > (deg2rad(turn_radius)):
-		turn_angle.y = (deg2rad(turn_radius))
+	turn_angle.y = clamp(turn_angle.y, -turn_radius, turn_radius)
 	
 	
 	###Player Rotation

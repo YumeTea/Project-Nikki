@@ -72,11 +72,11 @@ func exit():
 
 #Creates output based on the input event passed in
 func handle_input(event):
-	direction = get_input_direction()
-	facing_direction = get_node_direction(Rig)
-	var facing_dot_direction = facing_direction.dot(direction)
-	
 	if event.is_action_pressed("jump") and event.get_device() == 0:
+		direction = get_input_direction()
+		facing_direction = get_node_direction(Rig)
+		var facing_dot_direction = facing_direction.dot(direction)
+		
 		if facing_dot_direction < -0.333:
 			emit_signal("finished", "fall")
 		elif at_ledge:

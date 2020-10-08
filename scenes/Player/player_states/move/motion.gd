@@ -166,42 +166,33 @@ func update(delta):
 	direction = get_input_direction()
 	
 	###Player Motion
-	#Gravity
-	if(owner.is_on_floor()) and floor_angle <= floor_angle_max and snap_vector != Vector3(0,0,0):
-		if velocity_gravity.y > gravity * weight * delta or is_equal_approx(velocity_gravity.y, gravity * weight * delta):
-			velocity_gravity = Vector3(0,0,0)
-	
+	#Landing velocity storage
 	if state_move == "Fall":
 		landing_speed = velocity_gravity.y
 	if state_move in ["Ledge_Hang", "Swim"]:
 		landing_speed = 0.0
 	
-	velocity_gravity = Player.move_and_slide_with_snap(velocity_gravity, snap_vector, Vector3.UP, true, 1, floor_angle_max, false)
+	#Gravity Velocity
+	if (owner.is_on_floor()) and floor_angle <= floor_angle_max and snap_vector != Vector3(0,0,0):
+		#Store current location
+		var start_point = Player.global_transform.origin
+		
+		#Apply gravity velocity
+		velocity_gravity = Player.move_and_slide_with_snap(velocity_gravity, snap_vector, Vector3.UP, true, 1, floor_angle_max, false)
+		
+		#Move player back and zero out gravity velocity
+		Player.global_transform.origin = start_point
+		velocity_gravity = Vector3(0,0,0)
+	else:
+		velocity_gravity = Player.move_and_slide_with_snap(velocity_gravity, snap_vector, Vector3.UP, true, 1, floor_angle_max, false)
 	
-	
-	
-	
-	
-	
-	
-	
-	#Input Movement
+	#Input Movement Velocity
 	velocity = Player.move_and_slide_with_snap(velocity, snap_vector, Vector3.UP, true, 1, floor_angle_max, false)
-	
 	
 	###DEBUG###
 	owner.get_node("Debug/Velocity_Start").global_transform.origin = owner.global_transform.origin
 	owner.get_node("Debug/Velocity_Start").global_transform.origin.y += 4.0
 	owner.get_node("Debug/Velocity_End").global_transform.origin = owner.get_node("Debug/Velocity_Start").global_transform.origin + velocity
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	###Player Slope Adjustment
 	adjust_to_ground()
@@ -234,13 +225,13 @@ func get_input_direction():
 	direction = Vector3() #Resets direction of player to default
 	
 	###Camera Direction
-	var aim = camera.get_global_transform().basis.get_euler()
+	var aim = calculate_global_y_rotation(camera_direction)
 	
 	###Directional Input
 	direction.z -= left_joystick_axis.y
 	direction.x -= left_joystick_axis.x
 	
-	direction = direction.rotated(Vector3(0,1,0), (aim.y + PI))
+	direction = direction.rotated(Vector3(0,1,0), (aim))
 	
 	direction.y = 0
 	
@@ -361,15 +352,15 @@ func calculate_movement_velocity(delta):
 	var floor_angle = Raycast_Floor.get_collision_normal().angle_to(Vector3.UP)
 	var floor_normal = Raycast_Floor.get_collision_normal()
 
-	#Up Direction
-	if (owner.is_on_floor() or snap_vector_is_colliding()) and floor_angle <= floor_angle_max: #Special gravity if on slope and slope is within floor_angle_max
-		snap_vector = -floor_normal #Player will fall toward valid slopes, essentially sticking to them
-	else: #Default gravity on floors over floor_angle_max
-		snap_vector = -Vector3.UP
+	#Snap Vector
+	if (owner.is_on_floor() or snap_vector_is_colliding()) and floor_angle <= floor_angle_max:
+		snap_vector = -floor_normal #Snap vector is opposite floor normal on walkable slopes
+	else: #Default snap vector
+		snap_vector = snap_vector_default
 	
 	#Slope Velocity Modifier
 	var slope_modifier
-	
+
 	if Raycast_Floor.is_colliding() and direction != Vector3(0,0,0):
 		#Uphill
 		if direction.angle_to(floor_normal) >= deg2rad(90):
@@ -386,7 +377,6 @@ func calculate_movement_velocity(delta):
 			slope_modifier = velocity.normalized().dot(floor_normal)
 			slope_modifier *= slope_influence
 			
-			print(slope_modifier)
 			
 			if landing_speed < gravity * weight * delta:
 				velocity += velocity.normalized() * -landing_speed * slope_modifier
@@ -492,13 +482,58 @@ func calculate_swim_velocity(delta):
 		velocity.z = 0.0
 	
 	if Player.global_transform.origin.y < surfaced_height:
-		velocity.y += surface_accel * delta
-		if velocity.y > surface_speed:
-			velocity.y = surface_speed
+		#Accelerate towards surface
+		velocity_gravity.y += surface_accel * delta
+		if velocity_gravity.y > surface_speed:
+			velocity_gravity.y = surface_speed
+		if Player.global_transform.origin.y + (velocity_gravity.y * delta) > surfaced_height:
+			Player.global_transform.origin.y = surfaced_height #Player sticks to surface, no bobbing
+			velocity_gravity = Vector3(0,0,0)
 	else:
+		#Stick to surface height
 		Player.global_transform.origin.y = surfaced_height
+		velocity_gravity = Vector3(0,0,0)
+
+
+func calculate_dive_velocity(delta):
+	var temp_velocity = velocity
 	
-	#Gravity
+	#3D Direction
+	if direction != Vector3(0,0,0) and direction != Vector3.UP:
+		direction = direction.rotated(direction.cross(Vector3.UP).normalized(), camera_angle_global.x)
+	else:
+		direction = Vector3(0,0,0)
+	
+	###Target Velocity
+	var target_velocity = direction * speed_swim
+	#Speed Cap
+	if abs(target_velocity.length()) > speed_default:
+		target_velocity = target_velocity.normalized() * speed_default
+	
+	###Determine the type of acceleration
+	var acceleration
+	if direction.dot(temp_velocity) > 0 or temp_velocity == Vector3(0,0,0):
+		acceleration = ACCEL
+	else:
+		acceleration = DEACCEL
+	
+	#Calculate a portion of the distance to go
+	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
+	
+	if Player.global_transform.origin.y + (temp_velocity.y * delta) > surfaced_height:
+		Player.global_transform.origin.y = surfaced_height #Player sticks to surface, no bobbing
+		temp_velocity.y = 0.0
+	
+	###Final Velocity
+	if temp_velocity.length() > 0.01:
+		velocity.x = temp_velocity.x
+		velocity.y = temp_velocity.y
+		velocity.z = temp_velocity.z
+	else:
+		velocity.x = 0.0
+		velocity.y = 0.0
+		velocity.z = 0.0
+	
 	velocity_gravity = Vector3(0,0,0)
 
 
@@ -743,6 +778,11 @@ func _on_State_Machine_Move_initialized_values_dic_set(init_values_dic):
 
 func _on_State_Machine_Move_state_changed(move_state):
 	state_move = move_state
+	
+	if state_move in strafe_locked_states:
+		strafe_locked = true
+	elif !(state_action in strafe_locked_states):
+		strafe_locked = false
 
 
 func _on_State_Machine_Action_state_changed(action_state):
@@ -779,9 +819,11 @@ func _on_Camera_Rig_view_locked(is_view_locked, _time_left):
 		centering_view = is_view_locked
 		strafe_locked = is_view_locked
 		centered = false
-	elif !(state_action in strafe_locked_states): #only turn off strafe locked if outside a strafe locked state
+	elif !(state_move in strafe_locked_states) and !(state_action in strafe_locked_states): #only turn off strafe locked if outside a strafe locked state
 		centering_view = is_view_locked
 		strafe_locked = is_view_locked
+	else:
+		centering_view = is_view_locked
 
 
 func _on_Camera_Rig_enter_new_view(string):
@@ -796,7 +838,7 @@ func _on_Ledge_Grab_System_ledge_grab_point(transform, normal):
 	ledge_grab_transform = transform
 	wall_normal = normal
 	
-	if (state_move in ["Fall", "Swim"]) and Ledge_Grab_System.get_node("Timer").is_stopped():
+	if (state_move in ["Fall", "Swim", "Dive"]) and Ledge_Grab_System.get_node("Timer").is_stopped():
 		emit_signal("finished", "ledge_hang")
 
 

@@ -28,6 +28,7 @@ var swim_states = [
 	"Swim"
 ]
 var strafe_locked_states = [
+	"Dive",
 	"Bow",
 	"Throw_Item",
 ]
@@ -69,9 +70,9 @@ const surface_accel = 48
 const ACCEL = 4
 const DEACCEL = 16
 
-const turn_radius = 5 #in degrees
-const quick_turn_radius = 12 #in degrees
-const uturn_radius = 2 	#in degrees
+const turn_radius = deg2rad(5)
+const quick_turn_radius = deg2rad(12)
+const uturn_radius = deg2rad(2)
 
 #Move variables
 var speed = speed_default
@@ -161,13 +162,13 @@ func calculate_global_y_rotation(direction):
 
 func align_up(node_basis, normal):
 	var result = Basis()
-
+	
 	result.x = normal.cross(node_basis.z)
 	result.y = normal
 	result.z = node_basis.x.cross(normal)
-
+	
 	result = result.orthonormalized()
-
+	
 	return result
 
 

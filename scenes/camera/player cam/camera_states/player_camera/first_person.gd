@@ -193,19 +193,6 @@ func rotate_camera_angle_limited(input_change):
 	else: #Add facing angle change to focus_angle
 		focus_angle.y += facing_angle_change.y
 	
-	###X Focus Angle Limiting
-	facing_angle_change.x = previous_facing_angle.x - facing_angle.x
-	facing_angle_change.x = bound_angle(facing_angle_change.x)
-	
-	#If facing angle goes outside focus cone, rotate pivot
-	if(focus_angle.x + facing_angle_change.x) > focus_angle_lim.x or (focus_angle.x + facing_angle_change.x) < -focus_angle_lim.x:
-		focus_angle_change.x = (focus_angle_lim.x * sign(focus_angle.x)) - focus_angle.x
-		turn_angle.x = -((focus_angle.x + facing_angle_change.x) - (focus_angle_lim.x * sign(focus_angle.x)))
-		focus_angle.x += focus_angle_change.x
-		
-		Pivot.rotate_x(turn_angle.x)
-	else: #Add facing angle change to focus_angle
-		focus_angle.x += facing_angle_change.x
 	
 	###Focus Input Handling (Actual rotation based on input)
 	if input_change.length() > 0:
