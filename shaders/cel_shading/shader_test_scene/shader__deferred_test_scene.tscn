@@ -75,18 +75,18 @@ next_pass = SubResource( 9 )
 shader = SubResource( 10 )
 shader_param/shadow_color = Color( 0.9, 0.9, 0.9, 1 )
 
-[sub_resource type="ShaderMaterial" id=17]
+[sub_resource type="ShaderMaterial" id=12]
 shader = ExtResource( 1 )
 shader_param/outline_color = Color( 0, 0, 0, 1 )
 shader_param/outline_width = 1.0
 
-[sub_resource type="ViewportTexture" id=18]
+[sub_resource type="ViewportTexture" id=13]
 viewport_path = NodePath("ToonLightDataView/Viewport")
 
-[sub_resource type="ShaderMaterial" id=19]
+[sub_resource type="ShaderMaterial" id=14]
 resource_local_to_scene = true
 render_priority = 1
-next_pass = SubResource( 17 )
+next_pass = SubResource( 12 )
 shader = ExtResource( 5 )
 shader_param/key_light_color = null
 shader_param/shadow_color = null
@@ -95,7 +95,7 @@ shader_param/rim_light_color = null
 shader_param/specular_softness = 0.642
 shader_param/specular_size = 1.0
 shader_param/specular_color = Color( 0.77, 0.77, 0.77, 0.77 )
-shader_param/light_data = SubResource( 18 )
+shader_param/light_data = SubResource( 13 )
 
 [node name="Spatial" type="Spatial"]
 
@@ -191,7 +191,7 @@ material/0 = SubResource( 11 )
 [node name="Sphere" type="MeshInstance" parent="Scene Objects"]
 transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 5.84351, 1.42903, -4.44786 )
 mesh = SubResource( 2 )
-material/0 = SubResource( 19 )
+material/0 = SubResource( 14 )
 
 [node name="LightRemote" type="RemoteTransform" parent="Scene Objects/Sphere"]
 remote_path = NodePath("../../../ToonLightDataView/Viewport/Sphere")

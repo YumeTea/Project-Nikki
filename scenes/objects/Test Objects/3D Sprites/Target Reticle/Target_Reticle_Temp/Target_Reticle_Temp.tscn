@@ -4,7 +4,6 @@
 [ext_resource path="res://scenes/objects/Test Objects/3D Sprites/Target Reticle/Reticle Locked.png" type="Texture" id=2]
 [ext_resource path="res://scenes/objects/Test Objects/3D Sprites/Target Reticle/Target_Reticle_Temp/target_reticle_temp.gd" type="Script" id=3]
 
-
 [sub_resource type="QuadMesh" id=1]
 
 [sub_resource type="SpatialMaterial" id=2]

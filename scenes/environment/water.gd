@@ -34,3 +34,16 @@ func _on_Water_body_exited(body):
 		if actor == body:
 			actor._exited_area(type)
 
+
+
+func _on_Water_area_entered(area):
+	if area == Global.get_Free_Cam():
+		area._entered_area(type, surface_height)
+
+
+func _on_Water_area_exited(area):
+		if area == Global.get_Free_Cam():
+			area._exited_area(type)
+
+
+

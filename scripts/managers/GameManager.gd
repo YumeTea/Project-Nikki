@@ -112,7 +112,7 @@ func spawn_player(gate_idx):
 	
 	#Fade in on free cam and set spawn player flag to false
 	if Global.get_Free_Cam():
-		Global.get_Free_Cam().get_node("Overlay/AnimationPlayer").play("Fade_In")
+		Global.get_Free_Cam().get_node("AnimationPlayer").play("Fade_In")
 		spawn_player = false
 		
 		SaveManager.save_object_data(Global.get_Player())
@@ -126,12 +126,12 @@ func void_player():
 			#Save player values on voiding
 			SaveManager.save_object_data(Global.get_Player())
 			
-			Global.get_Free_Cam().get_node("Overlay/AnimationPlayer").play("Fade_Out")
+			Global.get_Free_Cam().get_node("AnimationPlayer").play("Fade_Out")
 			void_player = true
 			player_voided = true
 			emit_signal("player_voided")
 		#Wait for fade out to complete before removing player
-		if Global.get_Free_Cam().get_node("Overlay/AnimationPlayer").is_playing():
+		if Global.get_Free_Cam().get_node("AnimationPlayer").is_playing():
 			return
 		#Remove player relevant nodes and set flags to respawn player
 		else:
@@ -156,8 +156,8 @@ func transit_to_scene(scene_type, gate_idx):
 	
 	if Global.get_Player():
 		if Global.get_Free_Cam():
-			if !Global.get_Free_Cam().get_node("Overlay/AnimationPlayer").is_playing():
-				Global.get_Free_Cam().get_node("Overlay/AnimationPlayer").play("Fade_In")
+			if !Global.get_Free_Cam().get_node("AnimationPlayer").is_playing():
+				Global.get_Free_Cam().get_node("AnimationPlayer").play("Fade_In")
 			
 			if !Global.get_Free_Cam().faded_out:
 				return true
@@ -175,7 +175,7 @@ func transit_from_scene():
 				#Save player values on leaving scene
 				SaveManager.save_object_data(Global.get_Player())
 				
-				Global.get_Free_Cam().get_node("Overlay/AnimationPlayer").play("Fade_Out")
+				Global.get_Free_Cam().get_node("AnimationPlayer").play("Fade_Out")
 				
 				SceneManager.transiting = true
 			

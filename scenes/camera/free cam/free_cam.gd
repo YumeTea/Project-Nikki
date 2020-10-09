@@ -87,6 +87,17 @@ func bound_angle(angle):
 	return angle
 
 
+func _entered_area(area_type, surface_height):
+	if area_type == "Water":
+		$AnimationPlayer.play("Water_Enter")
+		
+
+
+func _exited_area(area_type):
+	if area_type == "Water":
+		$AnimationPlayer.play("Water_Exit")
+
+
 func _on_view_blocked(is_obscured):
 	view_obscured = is_obscured
 

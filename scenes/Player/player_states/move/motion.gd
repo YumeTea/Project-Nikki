@@ -74,10 +74,13 @@ var direction = Vector3(0,0,0)
 var direction_angle = Vector2(0,0)
 var velocity = Vector3(0,0,0)
 var velocity_gravity = Vector3(0,0,0)
-var velocity_horizontal : float
-var acceleration_horizontal : float
 const gravity = -9.8
 const weight = 5
+#Measurments
+var velocity_3d : float
+var velocity_horizontal : float
+var acceleration_3d : float
+var acceleration_horizontal : float
 #Walk Variables
 var up_direction = Vector3(0,1,0)
 var floor_angle : float
@@ -202,7 +205,9 @@ func update(delta):
 	
 	###Motion Value Assignments
 	position = Player.global_transform.origin
+	acceleration_3d = velocity.length() - velocity_3d
 	acceleration_horizontal = Vector2(velocity.x, velocity.z).length() - velocity_horizontal
+	velocity_3d = velocity.length()
 	velocity_horizontal = Vector2(velocity.x, velocity.z).length()
 	height = position.y
 	
@@ -500,7 +505,10 @@ func calculate_dive_velocity(delta):
 	
 	#3D Direction
 	if direction != Vector3(0,0,0) and direction != Vector3.UP:
-		direction = direction.rotated(direction.cross(Vector3.UP).normalized(), camera_angle_global.x)
+		if direction.dot(Vector3(facing_direction.x, 0.0, facing_direction.z).normalized()) >= 0.0:
+			direction = direction.rotated(direction.cross(Vector3.UP).normalized(), camera_angle_global.x)
+		else:
+			direction = direction.rotated(direction.cross(Vector3.UP).normalized(), -camera_angle_global.x)
 	else:
 		direction = Vector3(0,0,0)
 	

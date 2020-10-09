@@ -2,11 +2,15 @@ extends "res://scenes/Player/player_states/move/in_water/in_water.gd"
 
 """
 Direction_angle may be unused
+Camera Rig position is bad looking down while swimming down in first person
 """
 
 #Animation Variables
 var swim_anim_speed_max = 1.5
 const blend_lower_lim = 5.0 #Velocity where idle changes to all dive_forward
+
+#Rig Rotation Variables
+#var head_height = 6.35 #pivot first person local height is 5.69
 
 
 func initialize(init_values_dic):
@@ -24,9 +28,9 @@ func enter():
 	connect_player_signals()
 	
 	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
-		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Swim")
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Dive")
 	else:
-		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Swim")
+		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Dive")
 	
 	.enter()
 
@@ -53,9 +57,6 @@ func handle_input(event):
 
 #Acts as the _process method would
 func update(delta):
-	if Player.global_transform.origin.y >= surfaced_height + (surface_speed * 1.01 * delta):
-		emit_signal("finished", "previous")
-	
 	if view_mode == "third_person":
 		dive_third_person(delta)
 	if view_mode == "first_person":
@@ -66,7 +67,7 @@ func update(delta):
 	.update(delta)
 	
 	if height >= surfaced_height:
-		emit_signal("finished", "swim")
+		emit_signal("finished", "previous")
 
 
 func on_animation_started(_anim_name):
@@ -272,60 +273,60 @@ func blend_move_anim():
 	var tween_time = 0.5
 	
 	
-	move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position")
+	move_blend_position = owner.get_node("AnimationTree").get("parameters/StateMachineMove/Dive/BlendSpace1D/blend_position")
 	
 	###Blend position tweening
 	#Going from Idle to Swim_Forward
-	if direction.length() > 0.0 and !is_equal_approx(move_blend_position, 1.0) and !active_tweens.has("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position"):
+	if direction.length() > 0.0 and !is_equal_approx(move_blend_position, 1.0) and !active_tweens.has("parameters/StateMachineMove/Dive/BlendSpace1D/blend_position"):
 		var seconds = (1.0 - move_blend_position) * tween_time
-		#Transition to Swim
-		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Swim/BlendSpace1D/blend_position", move_blend_position, 1.0, seconds, Tween.TRANS_LINEAR)
+		#Transition to Dive
+		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Dive/BlendSpace1D/blend_position", move_blend_position, 1.0, seconds, Tween.TRANS_LINEAR)
 		owner.get_node("Tween").start()
 		
-		add_active_tween("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position")
+		add_active_tween("parameters/StateMachineMove/Dive/BlendSpace1D/blend_position")
 	#Going from Swim_Forward to Idle
-	elif direction.length() == 0.0 and acceleration_horizontal < 0.0 and !is_equal_approx(move_blend_position, 0.0):
-		if active_tweens.has("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position"):
-			owner.get_node("Tween").stop(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Swim/BlendSpace1D/blend_position")
+	elif direction.length() == 0.0 and acceleration_3d < 0.0 and !is_equal_approx(move_blend_position, 0.0):
+		if active_tweens.has("parameters/StateMachineMove/Dive/BlendSpace1D/blend_position"):
+			owner.get_node("Tween").stop(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Dive/BlendSpace1D/blend_position")
 		
 		var seconds = (move_blend_position) * tween_time
-		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Swim/BlendSpace1D/blend_position", move_blend_position, 0.0, seconds, Tween.TRANS_LINEAR)
+		owner.get_node("Tween").interpolate_property(owner.get_node("AnimationTree"), "parameters/StateMachineMove/Dive/BlendSpace1D/blend_position", move_blend_position, 0.0, seconds, Tween.TRANS_LINEAR)
 		owner.get_node("Tween").start()
 		
-		if !active_tweens.has("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position"):
-			add_active_tween("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position")
+		if !active_tweens.has("parameters/StateMachineMove/Dive/BlendSpace1D/blend_position"):
+			add_active_tween("parameters/StateMachineMove/Dive/BlendSpace1D/blend_position")
 	else:
-		remove_active_tween("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position")
+		remove_active_tween("parameters/StateMachineMove/Dive/BlendSpace1D/blend_position")
 	
-	blend_swim_anim(move_blend_position)
+	blend_dive_anim(move_blend_position)
 
 
-func blend_swim_anim(current_blend_position):
+func blend_dive_anim(current_blend_position):
 	var time_scale
-	var swim_time_scale
+	var dive_time_scale
 	
 	
-	#Swim_Idle time scale
+	#Dive_Idle time scale
 	if is_equal_approx(current_blend_position, 0.0):
 		current_blend_position = 0.0
 		
-		swim_time_scale = 1.0
+		dive_time_scale = 1.0
 		
-		time_scale = swim_time_scale
+		time_scale = dive_time_scale
 	#Swim_Forward time scale
 	elif current_blend_position > 0.0:
-		swim_time_scale = (velocity_horizontal / speed_swim) * swim_anim_speed_max
+		dive_time_scale = (velocity.length() / speed_swim) * swim_anim_speed_max
 		
-		time_scale = swim_time_scale
+		time_scale = dive_time_scale
 	
 	#Set blend position and time_scale in anim nodes
-	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Swim/BlendSpace1D/blend_position", current_blend_position)
-	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Swim/TimeScale/scale", time_scale)
+	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Dive/BlendSpace1D/blend_position", current_blend_position)
+	owner.get_node("AnimationTree").set("parameters/StateMachineMove/Dive/TimeScale/scale", time_scale)
 
 
 func rig_rotate_x_local(angle):
 	var transform = Rig.transform
-	transform.origin.y -= player_height / 2.0
+	transform.origin.y -= player_height
 	Rig.transform = transform.rotated(facing_direction.cross(Vector3.UP).normalized(), angle)
-	Rig.transform.origin.y += player_height / 2.0
+	Rig.transform.origin.y += player_height
 

@@ -193,7 +193,6 @@ func rotate_camera_angle_limited(input_change):
 	else: #Add facing angle change to focus_angle
 		focus_angle.y += facing_angle_change.y
 	
-	
 	###Focus Input Handling (Actual rotation based on input)
 	if input_change.length() > 0:
 		var angle_change = Vector2()

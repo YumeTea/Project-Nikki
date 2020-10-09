@@ -37,5 +37,7 @@ material/0 = ExtResource( 1 )
 visible = false
 mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
+[connection signal="area_entered" from="." to="." method="_on_Water_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_Water_area_exited"]
 [connection signal="body_entered" from="." to="." method="_on_Water_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_Water_body_exited"]

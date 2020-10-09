@@ -9,36 +9,47 @@ signal initialized_values_dic_set(init_values_dic)
 var initialized_values = {
 	"active_tweens": [],
 	
+	#Physics
 	"direction": Vector3(),
 	"velocity": Vector3(),
 	"velocity_gravity": Vector3(),
-	"velocity_horizontal": Vector2(),
 	"speed": 0.0,
 	"landing_speed": 0.0,
 	
+	#Measurments
+	"velocity_3d": 0.0,
+	"velocity_horizontal": 0.0,
+	"acceleration_3d": 0.0,
+	"acceleration_horizontal": 0.0,
+	
+	#Ledge/Wall Variables
 	"ledge_height": 0.0,
 	"ledge_grab_transform": Transform(),
 	"wall_normal": Vector3(),
 	
+	#Look Variables
+	"view_mode": "third_person",
 	"facing_direction": Vector3(),
 	"camera_direction": Vector3(),
 	"targetting": false,
 	"focus_object": null,
+	"centered": false,
+	"centering_time_left": 0,
 	
+	#Player Flags
 	"is_moving": false,
 	"is_falling": false,
 	"in_water": false,
 	"can_void": true,
 	
+	#Swim Variables
 	"surface_height": 0.0,
 	"surfaced_height": 0.0,
 	
-	"view_mode": "third_person",
-	"centered": false,
-	"centering_time_left": 0,
-	
+	#Action State
 	"state_action": null,
 	
+	#Input Variables
 	"strafe_locked": false,
 	"rotate_to_focus": false,
 	"left_joystick_axis": Vector2(),
@@ -81,13 +92,13 @@ func _change_state(state_name): #state_machine.gd does the generalized work
 		states_stack.pop_front()
 	if state_name in ["fall"] and current_state in [$Jump, $Fall, $Ledge_Hang, $Ledge_Climb, $Swim]:
 		states_stack.pop_front()
-	if state_name in ["swim"] and current_state in [$Jump, $Fall, $Dive]:
+	if state_name in ["swim"] and current_state in [$Jump, $Fall]:
 		states_stack.pop_front()
 	if state_name in ["void"] and current_state in [$Jump, $Fall, $Swim]:
 		states_stack.pop_front()
 		
 	##Stack states that stack
-	if state_name in ["fall", "jump", "swim"]: #code for push automaton; "pushes" state_name onto top of state stack
+	if state_name in ["fall", "jump", "swim", "dive"]: #code for push automaton; "pushes" state_name onto top of state stack
 		states_stack.push_front(states_map[state_name])
 		
 	##Previous State initialization

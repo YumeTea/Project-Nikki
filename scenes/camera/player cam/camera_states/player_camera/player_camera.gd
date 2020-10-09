@@ -244,9 +244,8 @@ func calculate_focus_angle():
 	
 	#X
 	camera_angle_global.x = calculate_local_x_rotation((get_node_direction(Pivot)))
-	facing_angle.x = calculate_local_x_rotation(get_node_direction(Player.get_node("Rig")))
 	
-	angle.x = camera_angle_global.x - facing_angle.x
+	angle.x = camera_angle_global.x
 	angle.x = stepify(bound_angle(angle.x), 0.0001)
 	
 	#Y

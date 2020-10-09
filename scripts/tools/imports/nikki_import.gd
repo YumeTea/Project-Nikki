@@ -21,7 +21,7 @@ var body_materials = [
 var ANIM_FOLDER : String = "res://models/characters/Nikki/model/anims/"
 var ANIM_FOLDER_TEMP : String = "res://models/characters/Nikki/model/temp/anim"
 var CHARACTER_MODEL_SAVE_PATH : String = "res://models/characters/Nikki/model/Nikki Character Model.tscn"
-
+var PLAYER_SCENE_PATH : String = "res://scenes/Player/player/Player.tscn"
 
 
 func post_import(scene):
@@ -107,8 +107,9 @@ func post_import(scene):
 			if error != OK:
 				print("error saving anim in nikki_import.gd")
 	
-	#Delete AnimationPlayer
+	#Delete AnimationPlayer and Rig dupe
 	scene.get_node("AnimationPlayer").free()
+	scene.get_node("Rig").free()
 	
 	###SCENE SAVING###
 	#Save character model scene
@@ -119,6 +120,28 @@ func post_import(scene):
 		var error : int = ResourceSaver.save(CHARACTER_MODEL_SAVE_PATH, scene_resource)
 		if error != OK:
 			print("error saving %s" % scene.name)
+	
+	
+#	###PLAYER ANIMATIONPLAYER OVERWRITE###
+#	var player_scene = load(PLAYER_SCENE_PATH).instance()
+#	var player_anim_player = player_scene.get_node("AnimationPlayer")
+#
+#	#Replace all preloaded anims with their new version
+#	for anim in player_anim_player.get_animation_list():
+#		player_anim_player.remove_animation(anim)
+#
+#		var anim_overwrite = load(ANIM_FOLDER.plus_file("%s.anim" % anim))
+#
+#		player_anim_player.add_animation(anim, anim_overwrite)
+#
+#	#Save Player scene
+#	scene_resource = PackedScene.new()
+#
+#	result = scene_resource.pack(player_scene)
+#	if result == OK:
+#		var error : int = ResourceSaver.save(PLAYER_SCENE_PATH, scene_resource)
+#		if error != OK:
+#			print("error saving %s" % player_scene.name)
 	
 	
 	return scene
