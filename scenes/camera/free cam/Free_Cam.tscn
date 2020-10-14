@@ -1,11 +1,8 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://scenes/camera/free cam/free_cam.gd" type="Script" id=1]
 [ext_resource path="res://shaders/camera_overlay/camera_overlay_black_fade.shader" type="Shader" id=2]
-[ext_resource path="res://Dh7Ua5tX0AA2Ynd.jpg" type="Texture" id=3]
 [ext_resource path="res://shaders/camera_overlay/camera_overlay_underwater.shader" type="Shader" id=4]
-[ext_resource path="res://scenes/creatures/Bone_Swan.tscn" type="PackedScene" id=5]
-[ext_resource path="res://models/characters/Nikki/model/Nikki Character Model.tscn" type="PackedScene" id=6]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Fade_In"
@@ -98,13 +95,12 @@ subdivide_width = 24
 subdivide_depth = 8
 
 [sub_resource type="ViewportTexture" id=13]
-viewport_path = NodePath("ViewportContainer/Viewport")
+viewport_path = NodePath("ViewportView/Viewport")
 
-[sub_resource type="ShaderMaterial" id=14]
+[sub_resource type="ShaderMaterial" id=7]
 resource_local_to_scene = true
-render_priority = -1
 shader = ExtResource( 4 )
-shader_param/albedo = Color( 0.0196078, 0.239216, 0.498039, 0.564706 )
+shader_param/albedo = Color( 0.0941176, 0.25098, 1, 0.972549 )
 shader_param/underwater = true
 shader_param/amplitude = Vector2( 0.02, 0.02 )
 shader_param/frequency = Vector2( 2, 3 )
@@ -112,27 +108,13 @@ shader_param/time_factor = Vector2( 1.2, 1.6 )
 shader_param/refraction = 0.08
 shader_param/viewport_texture = SubResource( 13 )
 
-[sub_resource type="ShaderMaterial" id=7]
+[sub_resource type="ShaderMaterial" id=8]
 render_priority = 1
 shader = ExtResource( 2 )
 shader_param/albedo = Color( 0, 0, 0, 0 )
 
-[sub_resource type="QuadMesh" id=8]
-size = Vector2( 5, 3 )
-
-[sub_resource type="SpatialMaterial" id=9]
-albedo_texture = ExtResource( 3 )
-
-[sub_resource type="SphereShape" id=10]
+[sub_resource type="SphereShape" id=9]
 radius = 0.01
-
-[sub_resource type="QuadMesh" id=11]
-size = Vector2( 20, 20 )
-
-[sub_resource type="SpatialMaterial" id=12]
-albedo_color = Color( 0.231373, 0.231373, 0.231373, 1 )
-
-[sub_resource type="World" id=15]
 
 [node name="Free_Cam" type="Area" groups=[
 "actor",
@@ -166,52 +148,40 @@ far = 8192.0
 
 [node name="Overlay_Underwater" type="MeshInstance" parent="Pivot/Camera"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, -1 )
+visible = false
+layers = 4
 mesh = SubResource( 5 )
-material/0 = SubResource( 14 )
+material/0 = SubResource( 7 )
 
 [node name="Overlay_Black_Fade" type="MeshInstance" parent="Pivot/Camera"]
 transform = Transform( 1, 0, 0, 0, 0.0737429, -0.997277, 0, 0.997277, 0.0737429, 0, 0, -1 )
 visible = false
+layers = 4
 mesh = SubResource( 5 )
-material/0 = SubResource( 7 )
+material/0 = SubResource( 8 )
 
-[node name="RemoteTransform" type="RemoteTransform" parent="Pivot/Camera"]
-remote_path = NodePath("../../../ViewportContainer/Viewport/Camera")
-
-[node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.26595 )
-visible = false
-mesh = SubResource( 8 )
-material/0 = SubResource( 9 )
+[node name="ViewportTransform" type="RemoteTransform" parent="Pivot/Camera"]
+remote_path = NodePath("../../../ViewportView/Viewport/Camera_Viewport")
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-shape = SubResource( 10 )
+shape = SubResource( 9 )
 
-[node name="Bone_Swan" parent="." instance=ExtResource( 5 )]
-transform = Transform( -3.25841e-08, 0, 0.2, 0, 0.2, 0, -0.2, 0, -3.25841e-08, 0.176606, -0.268247, -2.65931 )
-
-[node name="Background" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.176606, -0.268247, -4.05931 )
-mesh = SubResource( 11 )
-material/0 = SubResource( 12 )
-
-[node name="NikkiCharacterModel" parent="." instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.63237, -2.29975 )
-visible = false
-
-[node name="ViewportContainer" type="ViewportContainer" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="ViewportView" type="ViewportContainer" parent="."]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+stretch = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Viewport" type="Viewport" parent="ViewportContainer"]
+[node name="Viewport" type="Viewport" parent="ViewportView"]
 size = Vector2( 1920, 1080 )
-world = SubResource( 15 )
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 3
 
-[node name="Camera" type="Camera" parent="ViewportContainer/Viewport"]
+[node name="Camera_Viewport" type="Camera" parent="ViewportView/Viewport"]
+cull_mask = 524283
 current = true
+far = 8192.0

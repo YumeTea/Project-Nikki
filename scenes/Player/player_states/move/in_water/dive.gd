@@ -3,6 +3,7 @@ extends "res://scenes/Player/player_states/move/in_water/in_water.gd"
 """
 Direction_angle may be unused
 Camera Rig position is bad looking down while swimming down in first person
+Camera Overlay switches on/off on every water area transition
 """
 
 #Animation Variables

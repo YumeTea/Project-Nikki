@@ -221,6 +221,7 @@ debug_input={
 3d_physics/layer_1="Level"
 3d_render/layer_2="HUD"
 3d_physics/layer_2="Player"
+3d_render/layer_3="Camera_Overlays"
 3d_physics/layer_3="World Actors"
 3d_physics/layer_19="Hangable"
 

@@ -42,6 +42,9 @@ var active_tweens = []
 ###Player Variables
 onready var player_height = owner.get_node("CollisionShape").shape.height
 
+#Entered Areas Storage
+var areas_entered : Array = []
+
 #Equipment Storage
 var equipped_items = null
 var equipped_weapon = null

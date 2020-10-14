@@ -10,6 +10,9 @@ signal free_cam_position_changed(free_cam_position)
 #Node Storage
 var Player = null
 
+#Entered Areas Storage
+var areas_entered : Array = []
+
 #Camera Movement Variables
 var track_speed = 1.0
 
@@ -87,15 +90,19 @@ func bound_angle(angle):
 	return angle
 
 
-func _entered_area(area_type, surface_height):
-	if area_type == "Water":
+func _entered_area(area, surface_height):
+	areas_entered.append(area)
+	if area.type == "Water":
 		$AnimationPlayer.play("Water_Enter")
-		
 
 
-func _exited_area(area_type):
-	if area_type == "Water":
-		$AnimationPlayer.play("Water_Exit")
+func _exited_area(area):
+	areas_entered.remove(areas_entered.find(area))
+	if area.type == "Water":
+		for area in areas_entered:
+			if area.type == "Water":
+				return
+		$AnimationPlayer.play("Water_Exit") #Remove water overlay if not in a water area
 
 
 func _on_view_blocked(is_obscured):

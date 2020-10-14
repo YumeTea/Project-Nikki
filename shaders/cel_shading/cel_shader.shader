@@ -7,6 +7,9 @@ uniform vec4 albedo : hint_color = vec4(1.0);
 uniform sampler2D texturemap : hint_albedo;
 uniform sampler2D light_ramp : hint_black;
 
+uniform vec4 emission : hint_color;
+uniform float emission_energy : hint_range(0.0, 16.0);
+
 uniform vec4 highlight_color : hint_color = vec4(0.0, 0.57, 0.67, 1.0);
 uniform float highlight_strength : hint_range(0.0, 1.0) = 0.8;
 
@@ -23,23 +26,23 @@ void vertex() {
 }
 
 void fragment() {
-	//Assign texture as albedo if no albedo set in inspector
+	//ALBEDO
 	ALBEDO = texture(texturemap, UV).rgb * albedo.rgb;
 	
+	//EMISSION
 	if (highlighted == true) {
 		vec3 highlight = mix(ALBEDO, highlight_color.rgb, highlight_strength);
 		EMISSION = highlight;
 	}
+	else {
+		if (emission.rgb != vec3(0.0)){
+			EMISSION = emission.rgb;
+		}
+	}
 	
+//	//TRANSPARENCY
 //	if (transparent == true) {
-//		TRANSMISSION = vec3(0.0, 0.0, 0.0);
 //		ALPHA = albedo.a;
-//		ALPHA_SCISSOR = 0.0;
-//	}
-//	else {
-//		TRANSMISSION = vec3(1.0, 1.0, 1.0);
-//		ALPHA = 1.0;
-//		ALPHA_SCISSOR = 1.0
 //	}
 }
 

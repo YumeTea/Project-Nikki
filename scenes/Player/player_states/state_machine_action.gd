@@ -8,6 +8,9 @@ signal initialized_values_dic_set(init_values_dic)
 var initialized_values = {
 	"active_tweens": [],
 	
+	#Entered Areas Storage
+	"areas_entered": [],
+	
 	"targetting": false,
 	"focus_object": null,
 	

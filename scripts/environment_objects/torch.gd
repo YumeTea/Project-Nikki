@@ -126,3 +126,12 @@ func extinguish():
 func _on_Timer_timeout():
 	queue_free()
 
+
+func _entered_area(area_type, surface_height):
+	return
+
+
+func _exited_area(area_type):
+	return
+
+

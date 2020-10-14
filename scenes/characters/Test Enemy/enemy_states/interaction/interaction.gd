@@ -10,13 +10,18 @@ signal input_move_direction_changed(input_direction)
 signal lock_target
 
 ###Node Storage
-var focus_object = null
+###Node Storage
+onready var world = get_tree().current_scene
+onready var Enemy = owner
+onready var head = owner.get_node("Camera_Rig/Pivot/Cam_Position") #should get camera position a different way
+onready var Pivot = owner.get_node("Camera_Rig/Pivot")
+onready var Rig = owner.get_node("Rig")
+onready var Enemy_Collision = owner.get_node("CollisionShape")
+onready var Raycast_Floor = owner.get_node("Rig/Raycast_Floor")
+onready var animation_state_machine_move = owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback")
 
 #AI Input Storage
 var input = {}
-
-#Initialized Values Storage
-var view_mode
 
 #Enemy State Storage
 var state_move
@@ -78,6 +83,9 @@ const uturn_radius = 2 	#in degrees
 
 #Move variables
 var speed = speed_default
+
+#Targetting variables
+var focus_object = null
 
 #Enemy Flags
 var targetting = false
@@ -212,11 +220,11 @@ func is_ai_action_just_pressed(action, input_dic):
 	return false
 
 
-func _on_focus_target_changed(target):
-	if target != null:
-		focus_object = target
-		targetting = true
-	else:
-		focus_object = null
-		targetting = false
+#func _on_focus_object_changed(target):
+#	if target != null:
+#		focus_object = target
+#		targetting = true
+#	else:
+#		focus_object = null
+#		targetting = false
 

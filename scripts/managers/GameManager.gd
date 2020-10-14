@@ -156,11 +156,11 @@ func transit_to_scene(scene_type, gate_idx):
 	
 	if Global.get_Player():
 		if Global.get_Free_Cam():
-			if !Global.get_Free_Cam().get_node("AnimationPlayer").is_playing():
-				Global.get_Free_Cam().get_node("AnimationPlayer").play("Fade_In")
-			
 			if !Global.get_Free_Cam().faded_out:
-				return true
+				return true #return true when transit in complete
+			
+			if !Global.get_Free_Cam().get_node("AnimationPlayer").is_playing():
+				Global.get_Free_Cam().get_node("AnimationPlayer").play("Fade_In") #start fade in once on starting transit in
 			
 		return false
 	

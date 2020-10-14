@@ -15,16 +15,6 @@ signal started_falling(fall_height)
 signal landed(landing_height)
 signal center_view(turn_angle)
 
-###Node Storage
-onready var world = get_tree().current_scene
-onready var Enemy = owner
-onready var head = owner.get_node("Camera_Rig/Pivot/Cam_Position") #should get camera position a different way
-onready var Pivot = owner.get_node("Camera_Rig/Pivot")
-onready var Rig = owner.get_node("Rig")
-onready var Enemy_Collision = owner.get_node("CollisionShape")
-onready var Raycast_Floor = owner.get_node("Rig/Raycast_Floor")
-onready var animation_state_machine_move = owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback")
-
 #Animation Blending Variables
 var move_blend_position : float
 
@@ -47,10 +37,20 @@ var height : float
 var direction = Vector3(0,0,0)
 var direction_angle = Vector2(0,0)
 var velocity = Vector3(0,0,0)
-var velocity_horizontal : float
-var acceleration_horizontal : float
+var velocity_gravity = Vector3(0,0,0)
 const gravity = -9.8
 const weight = 5
+#Measurments
+var velocity_3d : float
+var velocity_horizontal : float
+var acceleration_3d : float
+var acceleration_horizontal : float
+#Walk Variables
+var up_direction = Vector3(0,1,0)
+var floor_angle : float
+const floor_angle_max = deg2rad(50)
+var landing_speed : float = 0.0
+var slope_influence = 0.16
 
 #Input Variables
 var left_joystick_axis = Vector2(0,0)
@@ -180,9 +180,17 @@ func calculate_movement_velocity(delta):
 	###Determine the type of acceleration
 	var acceleration
 	if direction.dot(temp_velocity) > 0 or temp_velocity == Vector3(0,0,0):
+		#XZ Acceleration
 		acceleration = ACCEL
 	else:
+		#XZ Acceleration
 		acceleration = DEACCEL
+		#Y Acceleration
+		if velocity.y > 0.0:
+			if velocity.y + (gravity * weight * delta) > 0.0:
+				velocity.y += (gravity * weight * delta)
+			else:
+				velocity.y = 0.0
 	
 	#Calculate a portion of the distance to go
 	temp_velocity = temp_velocity.linear_interpolate(target_velocity, acceleration * delta)
@@ -195,7 +203,44 @@ func calculate_movement_velocity(delta):
 		velocity.x = 0.0
 		velocity.z = 0.0
 	
-	velocity.y += weight * gravity * delta
+	##Floor Influence
+	var floor_angle = Raycast_Floor.get_collision_normal().angle_to(Vector3.UP)
+	var floor_normal = Raycast_Floor.get_collision_normal()
+
+	#Snap Vector
+	if (owner.is_on_floor() or snap_vector_is_colliding()) and floor_angle <= floor_angle_max:
+		snap_vector = -floor_normal #Snap vector is opposite floor normal on walkable slopes
+	else: #Default snap vector
+		snap_vector = snap_vector_default
+	
+	#Slope Velocity Modifier
+	var slope_modifier
+
+	if Raycast_Floor.is_colliding() and direction != Vector3(0,0,0):
+		#Uphill
+		if direction.angle_to(floor_normal) >= deg2rad(90):
+			var velocity_direction = Vector3(velocity.x, 0.0, velocity.z).normalized()
+			
+			slope_modifier = velocity_direction.cross(floor_normal).length()
+			slope_modifier += (1.0 - slope_modifier) * (1.0 - slope_influence)
+			
+			velocity *= slope_modifier
+			if is_equal_approx(velocity_direction.angle_to(floor_normal), deg2rad(90)):
+				velocity.y = 0.0
+		#Downhill
+		else:
+			slope_modifier = velocity.normalized().dot(floor_normal)
+			slope_modifier *= slope_influence
+			
+			
+			if landing_speed < gravity * weight * delta:
+				velocity += velocity.normalized() * -landing_speed * slope_modifier
+			velocity += -velocity.normalized() * gravity * weight * delta * slope_modifier
+			velocity.y = 0.0
+	
+	#Gravity
+	velocity_gravity.y += weight * gravity * delta
+	landing_speed = 0.0
 
 
 func calculate_aerial_velocity(delta):
@@ -205,9 +250,13 @@ func calculate_aerial_velocity(delta):
 	
 	###Target Velocity
 	var target_velocity = temp_velocity + (direction * speed_aerial)
-	#Speed Cap
-	if abs(target_velocity.length()) > speed_default:
-		target_velocity = target_velocity.normalized() * speed_default
+	
+	if temp_velocity.dot(direction) >= 0.0:
+		if abs(temp_velocity.length()) > speed_default: #Preserve speed if past max speed
+			target_velocity = temp_velocity
+		elif target_velocity.length() > speed_default: #Speed cap at max speed if under max speed
+			target_velocity = target_velocity.normalized() * speed_default
+	
 	
 	###Determine the type of acceleration
 	var acceleration
@@ -224,7 +273,7 @@ func calculate_aerial_velocity(delta):
 		velocity.x = 0.0
 		velocity.z = 0.0
 	
-	velocity.y += weight * gravity * delta
+	velocity_gravity.y += weight * gravity * delta
 
 
 func calculate_ledge_velocity(delta):
@@ -252,7 +301,10 @@ func calculate_ledge_velocity(delta):
 	if temp_velocity.length() <= 0.01:
 		temp_velocity.x = 0.0
 		temp_velocity.z = 0.0
-		
+	
+	#Gravity
+	velocity_gravity = Vector3(0,0,0)
+	
 	return temp_velocity
 
 
@@ -285,11 +337,17 @@ func calculate_swim_velocity(delta):
 		velocity.z = 0.0
 	
 	if Enemy.global_transform.origin.y < surfaced_height:
-		velocity.y += surface_accel * delta
-		if velocity.y > surface_speed:
-			velocity.y = surface_speed
+		#Accelerate towards surface
+		velocity_gravity.y += surface_accel * delta
+		if velocity_gravity.y > surface_speed:
+			velocity_gravity.y = surface_speed
+		if Enemy.global_transform.origin.y + (velocity_gravity.y * delta) > surfaced_height:
+			Enemy.global_transform.origin.y = surfaced_height #Enemy sticks to surface, no bobbing
+			velocity_gravity = Vector3(0,0,0)
 	else:
+		#Stick to surface height
 		Enemy.global_transform.origin.y = surfaced_height
+		velocity_gravity = Vector3(0,0,0)
 
 
 #Returns true if ground snap vector is touching something
@@ -317,12 +375,14 @@ func set_initialized_values(init_values_dic):
 
 
 #####EXTERNAL INPUT FUNCTIONS#####
+
+
 func connect_enemy_signals():
 	#Enemy Signals
 	owner.connect("ai_input_changed", self, "_on_Enemy_ai_input_changed")
 	owner.get_node("AnimationTree").connect("animation_started", self, "on_animation_started")
 	owner.get_node("AnimationTree").connect("animation_finished", self, "on_animation_finished")
-	owner.connect("focus_target", self, "_on_Enemy_focus_target_changed")
+	owner.connect("focus_object_changed", self, "_on_Enemy_focus_object_changed")
 	owner.get_node("State_Machine_Move").connect("initialized_values_dic_set", self, "_on_State_Machine_Move_initialized_values_dic_set")
 	owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_State_Machine_Move_state_changed")
 	owner.get_node("State_Machine_Action").connect("action_state_changed", self, "_on_State_Machine_Action_state_changed")
@@ -340,7 +400,7 @@ func disconnect_enemy_signals():
 	owner.disconnect("ai_input_changed", self, "_on_Enemy_ai_input_changed")
 	owner.get_node("AnimationTree").disconnect("animation_started", self, "on_animation_started")
 	owner.get_node("AnimationTree").disconnect("animation_finished", self, "on_animation_finished")
-	owner.disconnect("focus_target", self, "_on_Enemy_focus_target_changed")
+	owner.disconnect("focus_object_changed", self, "_on_Enemy_focus_object_changed")
 	owner.get_node("State_Machine_Move").disconnect("initialized_values_dic_set", self, "_on_State_Machine_Move_initialized_values_dic_set")
 	owner.get_node("State_Machine_Move").disconnect("move_state_changed", self, "_on_State_Machine_Move_state_changed")
 	owner.get_node("State_Machine_Action").disconnect("action_state_changed", self, "_on_State_Machine_Action_state_changed")
@@ -360,7 +420,7 @@ func _on_Enemy_ai_input_changed(input_dict):
 	input = input_dict
 
 
-func _on_Enemy_focus_target_changed(target_pos_node):
+func _on_Enemy_focus_object_changed(target_pos_node):
 	focus_object = target_pos_node
 
 

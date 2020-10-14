@@ -56,6 +56,8 @@ gradient = ExtResource( 8 )
 next_pass = SubResource( 12 )
 shader = ExtResource( 10 )
 shader_param/albedo = Color( 1, 1, 1, 1 )
+shader_param/emission = null
+shader_param/emission_energy = null
 shader_param/highlight_color = Color( 0, 0.57, 0.67, 1 )
 shader_param/highlight_strength = 0.8
 shader_param/highlighted = false
@@ -219,7 +221,7 @@ collision_mask = 262145
 shape = SubResource( 18 )
 
 [node name="Nav_Wall3" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( -0.000120958, 0, 1, 0, 1, 0, -40, 0, -3.02394e-06, 70.193, 2, 146.916 )
+transform = Transform( -8.46704e-05, 0, 1, 0, 1, 0, -28, 0, -3.02394e-06, 70.193, 2, 157.682 )
 mesh = SubResource( 16 )
 material/0 = null
 
@@ -241,7 +243,7 @@ material/0 = null
 shape = SubResource( 19 )
 
 [node name="Nav_Wall6" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( -3.02394e-05, 0, 1, 0, 1, 0, -10, 0, -3.02394e-06, 89.6143, 2, 120.033 )
+transform = Transform( -3.02394e-05, 0, 1, 0, 1, 0, -10, 0, -3.02394e-06, 89.5497, 2, 115.296 )
 mesh = SubResource( 16 )
 material/0 = null
 
@@ -250,8 +252,18 @@ material/0 = null
 [node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall6/StaticBody"]
 shape = SubResource( 20 )
 
+[node name="Nav_Wall13" type="MeshInstance" parent="Test_Geometry"]
+transform = Transform( -3.02394e-05, 0, 1, 0, 1, 0, -10, 0, -3.02394e-06, 98.1717, 2, 129.183 )
+mesh = SubResource( 16 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Test_Geometry/Nav_Wall13"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Test_Geometry/Nav_Wall13/StaticBody"]
+shape = SubResource( 20 )
+
 [node name="Nav_Wall12" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( -10, 0, -6.11146e-06, 0, 1, 0, 6.11146e-05, 0, -1, 111.529, 2, 193.972 )
+transform = Transform( -10, 0, -6.11146e-06, 0, 1, 0, 6.11146e-05, 0, -1, 106.397, 2, 186.305 )
 mesh = SubResource( 16 )
 material/0 = null
 
@@ -261,7 +273,7 @@ material/0 = null
 shape = SubResource( 20 )
 
 [node name="Nav_Wall8" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( -3.02394e-05, 0, 1, 0, 1, 0, -10, 0, -3.02394e-06, 105.777, 2, 115.211 )
+transform = Transform( -9.07183e-05, 0, 1, 0, 1, 0, -30, 0, -3.02394e-06, 107.347, 2, 135.159 )
 mesh = SubResource( 16 )
 material/0 = null
 
@@ -271,7 +283,7 @@ material/0 = null
 shape = SubResource( 20 )
 
 [node name="Nav_Wall7" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( -10, 0, -6.11146e-06, 0, 1, 0, 6.11146e-05, 0, -1, 91.897, 2, 139.843 )
+transform = Transform( -9, 0, -6.11146e-06, 0, 1, 0, 5.50031e-05, 0, -1, 90.1758, 2, 139.843 )
 mesh = SubResource( 16 )
 material/0 = null
 
@@ -291,7 +303,7 @@ material/0 = null
 shape = SubResource( 22 )
 
 [node name="Nav_Wall9" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( -0.000141442, 0, 1, 0, 1, 0, -45, 0, -3.14315e-06, 100.945, 2, 183.875 )
+transform = Transform( -9.42946e-05, 0, 1, 0, 1, 0, -30, 0, -3.14315e-06, 98.2014, 2, 157.459 )
 mesh = SubResource( 16 )
 material/0 = null
 
@@ -301,7 +313,7 @@ material/0 = null
 shape = SubResource( 22 )
 
 [node name="Nav_Wall11" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( -30, 0, -6.11146e-06, 0, 1, 0, 0.000183344, 0, -1, 70.0808, 2, 186.44 )
+transform = Transform( -30, 0, -6.11146e-06, 0, 1, 0, 0.000183344, 0, -1, 69.0704, 2, 186.44 )
 mesh = SubResource( 16 )
 material/0 = null
 
@@ -311,7 +323,7 @@ material/0 = null
 shape = SubResource( 22 )
 
 [node name="Nav_Wall10" type="MeshInstance" parent="Test_Geometry"]
-transform = Transform( -0.000141442, 0, 1, 0, 1, 0, -45, 0, -3.14315e-06, 115.459, 2, 150.118 )
+transform = Transform( -0.000128869, 0, 1, 0, 1, 0, -41, 0, -3.14315e-06, 115.459, 2, 145.522 )
 mesh = SubResource( 16 )
 material/0 = null
 

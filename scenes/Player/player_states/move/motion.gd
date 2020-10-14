@@ -728,6 +728,8 @@ func set_initialized_values(init_values_dic):
 
 
 #####EXTERNAL INPUT FUNCTIONS#####
+
+
 func connect_player_signals():
 	#Player Signals
 	owner.get_node("AnimationTree").connect("animation_started", self, "on_animation_started")
@@ -857,16 +859,22 @@ func _on_Player_death(death):
 
 ###WORLD SIGNAL FUNCTIONS###
 
-func _on_environment_area_entered(area_type, surface_h):
-	if area_type == "Water":
+
+func _on_environment_area_entered(area, surface_h):
+	areas_entered.append(area)
+	if area.type == "Water":
 		in_water = true
 		surface_height = surface_h
 		surfaced_height = surface_height - player_height
 
 
-func _on_environment_area_exited(area_type):
-	if area_type == "Water":
-		in_water = false
+func _on_environment_area_exited(area):
+	areas_entered.remove(areas_entered.find(area))
+	if area.type == "Water":
+		for area in areas_entered:
+			if area.type == "Water":
+				return
+		in_water = false #Set in_water false if not in any water areas
 
 
 func _on_GameManager_player_respawned():

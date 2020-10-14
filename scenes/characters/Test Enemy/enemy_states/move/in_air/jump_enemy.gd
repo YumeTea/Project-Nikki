@@ -3,7 +3,7 @@ extends "res://scenes/characters/Test Enemy/enemy_states/move/in_air/in_air_enem
 
 #Jump Variables
 var jump_strength = 20
-var slope_influence = 1.1
+var slope_modifier = 0.05
 
 #Jump Flags
 var has_jumped = false
@@ -75,7 +75,12 @@ func aerial_move(delta):
 func jump():
 	if !has_jumped:
 		speed = speed_aerial
-		velocity += jump_velocity(Rig.get_node("Raycast_Floor").get_collision_normal())
+		snap_vector = Vector3(0,0,0)
+		
+		var velocity_jump = jump_velocity(Raycast_Floor.get_collision_normal())
+		velocity.x += velocity_jump.x
+		velocity_gravity.y += velocity_jump.y
+		velocity.z += velocity_jump.z
 		has_jumped = true
 
 
@@ -88,13 +93,14 @@ func jump_velocity(surface_normal):
 		cross = surface_normal.cross(Vector3.UP).normalized()
 		dot = surface_normal.dot(Vector3.UP)
 		
-		var angle = (surface_normal.angle_to(Vector3.UP) / slope_influence)
-		print(rad2deg(angle))
+		var angle 
+		
+		angle = (surface_normal.angle_to(Vector3.UP) * (1.0 - slope_modifier))
 		
 		#rotate wall normal towards y axis
-		var surface_normal_rotated_up = surface_normal.rotated(cross, angle)
+		var jump_direction = surface_normal.rotated(cross, angle)
 	
-		var v = surface_normal_rotated_up * jump_strength
+		var v = jump_direction * jump_strength
 		return v
 	else:
 		var v = Vector3.UP * jump_strength

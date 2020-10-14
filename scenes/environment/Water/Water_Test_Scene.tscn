@@ -1,0 +1,64 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://shaders/water/water.shader" type="Shader" id=1]
+[ext_resource path="res://resources/textures/Water 2.png" type="Texture" id=2]
+[ext_resource path="res://scenes/Player/attacks/items/icosphere/Icosphere.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/camera/free cam/Free_Cam.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/environment/Water/Water.tscn" type="PackedScene" id=5]
+[ext_resource path="res://shaders/camera_overlay/camera_overlay_underwater.shader" type="Shader" id=6]
+
+
+[sub_resource type="ViewportTexture" id=1]
+viewport_path = NodePath("ViewportView/Viewport")
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = ExtResource( 6 )
+shader_param/albedo = Color( 0.0941176, 0.25098, 1, 0.972549 )
+shader_param/underwater = true
+shader_param/amplitude = Vector2( 0.02, 0.02 )
+shader_param/frequency = Vector2( 2, 3 )
+shader_param/time_factor = Vector2( 1.2, 1.6 )
+shader_param/refraction = 0.08
+shader_param/viewport_texture = SubResource( 1 )
+
+[sub_resource type="ViewportTexture" id=3]
+viewport_path = NodePath("Free_Cam/ViewportView/Viewport")
+
+[sub_resource type="ShaderMaterial" id=4]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/albedo = Color( 0, 0, 0, 0.752941 )
+shader_param/tile_factor = Vector2( 0.25, 0.25 )
+shader_param/aspect_ratio = Vector2( 1, 1 )
+shader_param/transparent = true
+shader_param/water_color = Color( 0.0196078, 0.239216, 0.498039, 1 )
+shader_param/fresnel_power = 0.239
+shader_param/edge_intensity = 0.547
+shader_param/wave_amount = Vector2( 5, 5 )
+shader_param/offset_scale = Vector2( 0.1, 0.1 )
+shader_param/time_scale = Vector2( 0.6, 0.9 )
+shader_param/amplitude = Vector2( 4, 4 )
+shader_param/refraction = 0.08
+shader_param/texturemap = ExtResource( 2 )
+shader_param/viewport_texture = SubResource( 3 )
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Free_Cam" parent="." instance=ExtResource( 4 )]
+
+[node name="Overlay_Underwater" parent="Free_Cam/Pivot/Camera" index="0"]
+material/0 = SubResource( 2 )
+
+[node name="Water" parent="." instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.26827 )
+
+[node name="Surface" parent="Water/CollisionShape" index="0"]
+material/0 = SubResource( 4 )
+
+[node name="RigidBody" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.55385 )
+
+[editable path="Free_Cam"]
+
+[editable path="Water"]

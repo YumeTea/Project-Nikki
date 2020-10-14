@@ -38,7 +38,7 @@ func handle_input(event):
 			if equipped_bow != null:
 				emit_signal("finished", "bow")
 	
-	if !(state_move in ["Ledge_Hang", "Ledge_Climb", "Swim"]):
+	if !(state_move in ["Ledge_Hang", "Ledge_Climb", "Swim", "Dive"]):
 		if event.is_action_pressed("use_item") and event.get_device() == 0:
 			if equipped_items["Item"] != null:
 				emit_signal("finished", "throw_item")

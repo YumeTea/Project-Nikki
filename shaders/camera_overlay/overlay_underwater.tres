@@ -3,6 +3,7 @@
 [ext_resource path="res://shaders/camera_overlay/camera_overlay_underwater.shader" type="Shader" id=1]
 
 [resource]
+resource_local_to_scene = true
 render_priority = -1
 shader = ExtResource( 1 )
 shader_param/albedo = Color( 0.0196078, 0.239216, 0.498039, 0.564706 )
@@ -10,4 +11,4 @@ shader_param/underwater = true
 shader_param/amplitude = Vector2( 0.02, 0.02 )
 shader_param/frequency = Vector2( 2, 3 )
 shader_param/time_factor = Vector2( 1.2, 1.6 )
-shader_param/refraction = 0.08
+shader_param/refraction = 0.01

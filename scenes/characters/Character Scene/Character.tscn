@@ -98,6 +98,8 @@ parameters/TimeScale/scale = 1.0
 [node name="Health" type="Node" parent="Attributes"]
 script = ExtResource( 2 )
 
+[node name="State_Machine_AI" type="Node" parent="."]
+
 [node name="State_Machine_Move" type="Node" parent="."]
 
 [node name="State_Machine_Action" type="Node" parent="."]
@@ -121,9 +123,3 @@ collision_mask = 6
 shape = SubResource( 17 )
 
 [node name="Target_Pos" type="Position3D" parent="."]
-[connection signal="focus_target" from="." to="Camera_Rig" method="_on_Character_focus_target"]
-[connection signal="break_target" from="Camera_Rig" to="." method="_on_Camera_Rig_break_target"]
-[connection signal="focus_direction_changed" from="Camera_Rig" to="." method="_on_Camera_Rig_focus_direction_changed"]
-[connection signal="head_moved" from="Camera_Rig" to="." method="_on_Camera_Rig_head_moved"]
-[connection signal="body_entered" from="Targetting_Area" to="." method="_on_Targetting_Area_body_entered"]
-[connection signal="body_exited" from="Targetting_Area" to="." method="_on_Targetting_Area_body_exited"]

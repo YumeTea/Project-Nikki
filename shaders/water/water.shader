@@ -4,6 +4,7 @@ render_mode cull_disabled;
 //Color Variables
 uniform sampler2D texturemap : hint_albedo;
 uniform vec4 albedo : hint_color;
+uniform sampler2D viewport_texture : hint_albedo;
 
 //Texture Variables
 uniform vec2 tile_factor = vec2(1.0, 1.0);
@@ -21,10 +22,8 @@ uniform vec2 offset_scale = vec2(0.1, 0.1);
 uniform vec2 time_scale = vec2(0.6, 0.9);
 uniform vec2 amplitude = vec2(0.4, 0.4);
 
-
-void vertex() {
-	COLOR.a = albedo.a;
-}
+//Refraction Variables
+uniform float refraction = 0.08;
 
 
 void fragment() {
@@ -47,7 +46,7 @@ void fragment() {
 	//Texture
 	ALBEDO = texture(texturemap, tiled_uvs).rgb;
 	
-	//EDGE BRIGHTENING
+	//DEPTH DARKENING
 	float depth = texture(DEPTH_TEXTURE, SCREEN_UV).r * 2.0 - 1.0; // convert depth buffer to -1 to 1 range
 	
 	//Transforms depth into an intersection
@@ -60,12 +59,17 @@ void fragment() {
 	ALBEDO = mix(ALBEDO, water_color.rgb, depth);
 	
 	//Transparency
-	if (transparent == true) {
-		ALPHA = albedo.a;
-	}
-	else {
-		ALPHA = 1.0;
-	}
+	ALPHA = albedo.a;
+	
+//	METALLIC = 0.0;
+//	ROUGHNESS = 0.0;
+	
+	//Refraction
+//	vec3 ref_normal = normalize(mix(NORMAL, TANGENT * NORMALMAP.x + BINORMAL * NORMALMAP.y + NORMAL * NORMALMAP.z, NORMALMAP_DEPTH));
+//	vec2 ref_ofs = SCREEN_UV - ref_normal.xy * refraction;
+//	EMISSION += textureLod(viewport_texture, SCREEN_UV, ROUGHNESS * 8.0).rgb * (1.0 - ALPHA);
+//	ALBEDO *= ALPHA;
+//	ALPHA = 1.0;
 }
 
 

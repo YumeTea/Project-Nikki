@@ -1,11 +1,6 @@
 extends "res://scenes/characters/Test Enemy/enemy_states/interaction/interaction.gd"
 
 
-#Node Storage
-onready var world = get_tree().current_scene
-onready var Enemy = owner
-onready var Rig = owner.get_node("Rig")
-
 #Initialized Values Storage
 var initialized_values = {}
 
@@ -106,7 +101,7 @@ func connect_enemy_signals():
 	owner.connect("ai_input_changed", self, "_on_Enemy_ai_input_changed")
 	owner.get_node("AnimationTree").connect("animation_started", self, "on_animation_started")
 	owner.get_node("AnimationTree").connect("animation_finished", self, "on_animation_finished")
-	owner.connect("focus_target", self, "_on_Enemy_focus_target_changed")
+	owner.connect("focus_object_changed", self, "_on_Enemy_focus_object_changed")
 	owner.get_node("State_Machine_Move").connect("move_state_changed", self, "_on_move_state_changed")
 	owner.get_node("State_Machine_Action").connect("initialized_values_dic_set", self, "_on_State_Machine_Action_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").connect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
@@ -121,7 +116,7 @@ func disconnect_enemy_signals():
 	owner.disconnect("ai_input_changed", self, "_on_Enemy_ai_input_changed")
 	owner.get_node("AnimationTree").disconnect("animation_started", self, "on_animation_started")
 	owner.get_node("AnimationTree").disconnect("animation_finished", self, "on_animation_finished")
-	owner.disconnect("focus_target", self, "_on_Enemy_focus_target_changed")
+	owner.disconnect("focus_object_changed", self, "_on_Enemy_focus_object_changed")
 	owner.get_node("State_Machine_Move").disconnect("move_state_changed", self, "_on_move_state_changed")
 	owner.get_node("State_Machine_Action").disconnect("initialized_values_dic_set", self, "_on_State_Machine_Action_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").disconnect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
@@ -139,7 +134,7 @@ func _on_Enemy_ai_input_changed(input_dict):
 	input = input_dict
 
 
-func _on_Enemy_focus_target_changed(target):
+func _on_Enemy_focus_object_changed(target):
 	if target:
 		focus_object = target
 	else:
