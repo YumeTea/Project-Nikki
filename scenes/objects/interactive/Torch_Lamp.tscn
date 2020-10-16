@@ -196,7 +196,9 @@ transform = Transform( 0.428571, 0, 0, 0, 0.6, 0, 0, 0, 0.428571, 0, 0, 0 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 22 )
 
-[node name="Light" type="OmniLight" parent="CollisionShape"]
+[node name="Light" type="OmniLight" parent="CollisionShape" groups=[
+"light",
+]]
 transform = Transform( 1.42857, 0, 0, 0, 2, 0, 0, 0, 1.42857, 0, 0, 0 )
 light_color = Color( 0.74, 0.74, 0.4736, 1 )
 light_energy = 0.5

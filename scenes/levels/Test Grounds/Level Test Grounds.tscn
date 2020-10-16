@@ -44,7 +44,10 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 87.7595, 3.8147e-06, 165.184 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 111.468, 1, 107.077 )
 
 [node name="Waypoint_3" type="Position3D" parent="Navigation/Routes/Route_1"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -123.172, 26, 78.8382 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4309, 1, 93.5201 )
+
+[node name="Waypoint_4" type="Position3D" parent="Navigation/Routes/Route_1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4309, 1, 192.624 )
 
 [node name="Actors" type="Node" parent="." groups=[
 "group_node",
@@ -71,7 +74,7 @@ collision_layer = 4
 collision_mask = 3
 
 [node name="Enemy" parent="Actors" instance=ExtResource( 10 )]
-transform = Transform( -1, 0, -4.37114e-07, 0, 1, 0, 4.37114e-07, 0, -1, 88.1558, 4.08358, 163.885 )
+transform = Transform( -1, 0, -4.37114e-07, 0, 1, 0, 4.37114e-07, 0, -1, 88.1558, 1.08358, 163.885 )
 assigned_route = "Route_1"
 
 [node name="Collectibles" type="Node" parent="." groups=[

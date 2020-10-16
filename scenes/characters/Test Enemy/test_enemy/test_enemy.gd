@@ -62,25 +62,25 @@ func is_ai_action_released(action, input_dic):
 	return false
 
 
+#Returns true if action is in input_current but not in input_previous
 func is_ai_action_just_pressed(action, input_dic):
 	for input_name in input_dic["input_current"]:
 		if typeof(input_dic["input_current"][input_name]) == typeof(action):
 			if input["input_current"][input_name] == action:
-				if input["input_current"][input_name] == input["input_previous"][input_name]:
+				if input["input_current"][input_name] != input["input_previous"][input_name]:
 					return true
-	
-	return false
+				else:
+					return false
 
 
 ###SIGNAL FUNCTIONS###
 
 
-func _on_State_Machine_AI_input_changed(input_dic):
-	emit_signal("ai_input_changed", input_dic)
+func _on_State_Machine_AI_input_changed(input_dict):
+	emit_signal("ai_input_changed", input_dict)
 
 
 func _on_State_Machine_AI_focus_object_changed(focus_object):
-#	print(focus_object)
 	emit_signal("focus_object_changed", focus_object)
 
 

@@ -13,6 +13,7 @@ signal lock_target
 ###Node Storage
 onready var world = get_tree().current_scene
 onready var Enemy = owner
+onready var Camera_Rig = owner.get_node("Camera_Rig")
 onready var head = owner.get_node("Camera_Rig/Pivot/Cam_Position") #should get camera position a different way
 onready var Pivot = owner.get_node("Camera_Rig/Pivot")
 onready var Rig = owner.get_node("Rig")
@@ -24,8 +25,8 @@ onready var animation_state_machine_move = owner.get_node("AnimationTree").get("
 var input = {}
 
 #Enemy State Storage
-var state_move
-var state_action
+onready var state_move = owner.get_node("State_Machine_Move").START_STATE
+onready var state_action = owner.get_node("State_Machine_Action").START_STATE
 var ground_states = [
 	"Walk",
 ]
@@ -210,21 +211,15 @@ func is_ai_action_released(action, input_dic):
 	return false
 
 
+#Returns true if action is in input_current but not in input_previous
 func is_ai_action_just_pressed(action, input_dic):
 	for input_name in input_dic["input_current"]:
 		if typeof(input_dic["input_current"][input_name]) == typeof(action):
 			if input["input_current"][input_name] == action:
-				if input["input_current"][input_name] == input["input_previous"][input_name]:
+				if input["input_current"][input_name] != input["input_previous"][input_name]:
 					return true
+				else:
+					return false
 	
 	return false
-
-
-#func _on_focus_object_changed(target):
-#	if target != null:
-#		focus_object = target
-#		targetting = true
-#	else:
-#		focus_object = null
-#		targetting = false
 

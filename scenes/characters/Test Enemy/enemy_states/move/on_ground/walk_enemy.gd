@@ -166,47 +166,6 @@ func walk_free(delta):
 		Rig.rotate_y(turn_angle.y)
 
 
-#Locks rig to target or rig facing angle (assumes locked camera control)
-func walk_locked_third_person(delta):
-	direction = get_input_direction()
-	facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
-	camera_angle_global.y = calculate_global_y_rotation(camera_direction)
-	
-	direction_angle.y = calculate_global_y_rotation(direction)
-	
-	if centering_time_left <= 0:
-		centered = true
-		
-	
-	#Calculate turn angle based on target angle
-	if focus_object != null:
-		var target_position = focus_object.get_global_transform().origin
-		var target_angle = calculate_global_y_rotation(Enemy.get_global_transform().origin.direction_to(target_position))
-		
-		turn_angle.y = target_angle - facing_angle.y
-		turn_angle.y = bound_angle(turn_angle.y)
-		if !centered:
-			turn_angle.y = turn_angle.y/centering_time_left
-	else:
-		turn_angle.y = 0
-		
-	emit_signal("center_view", turn_angle.y)
-	
-	calculate_movement_velocity(delta)
-	
-	###Player Rotation
-	Rig.rotate_y(turn_angle.y)
-	
-	if direction:
-		is_moving = true
-	else:
-		is_moving = false
-		
-	###Decrement Timer
-	if centering_time_left > 0:
-		centering_time_left -= 1
-
-
 #Locks rig to target or focus angle (assumes locked camera control)
 func walk_locked_first_person(delta):
 	direction = get_input_direction()
@@ -220,8 +179,8 @@ func walk_locked_first_person(delta):
 	
 	#Calculate turn angle based on target angle
 	if focus_object != null:
-		var target_position = focus_object.get_global_transform().origin
-		var target_angle = calculate_global_y_rotation(Enemy.get_global_transform().origin.direction_to(target_position))
+		var target_position = focus_object.global_transform.origin
+		var target_angle = calculate_global_y_rotation(Enemy.global_transform.origin.direction_to(target_position))
 		
 		turn_angle.y = target_angle - facing_angle.y
 		turn_angle.y = bound_angle(turn_angle.y)
@@ -229,7 +188,7 @@ func walk_locked_first_person(delta):
 			turn_angle.y = turn_angle.y/centering_time_left
 	else:
 		camera_angle_global.y = calculate_global_y_rotation(camera_direction)
-		facing_angle.y = owner.get_node("Rig").get_global_transform().basis.get_euler().y
+		facing_angle.y = Rig.global_transform.basis.get_euler().y
 		
 		turn_angle.y = camera_angle_global.y - facing_angle.y
 		turn_angle.y = bound_angle(turn_angle.y)
@@ -241,7 +200,7 @@ func walk_locked_first_person(delta):
 	calculate_movement_velocity(delta)
 	
 	###Player Rotation
-	owner.get_node("Rig").rotate_y(turn_angle.y)
+	Rig.rotate_y(turn_angle.y)
 	
 	if direction:
 		is_moving = true

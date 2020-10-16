@@ -11,10 +11,10 @@ func enter():
 	speed = speed_aerial
 	connect_enemy_signals()
 	
-	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
-		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Fall")
-	else:
-		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Fall")
+#	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
+#		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Fall")
+#	else:
+#		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Fall")
 	.enter()
 
 

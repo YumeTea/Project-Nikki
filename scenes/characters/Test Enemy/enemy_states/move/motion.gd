@@ -3,6 +3,7 @@ extends "res://scenes/characters/Test Enemy/enemy_states/interaction/interaction
 
 """
 Input is currently full hold
+Fall damage not yet implemented
 """
 
 
@@ -104,7 +105,7 @@ func handle_ai_input():
 	
 	if is_ai_action_pressed("center_view", input):
 		centering_view = true
-		if is_ai_action_pressed("center_view", input):
+		if is_ai_action_just_pressed("center_view", input):
 			reset_recenter()
 	else: #checks all input to see if released, not just event
 		centered = false
@@ -115,13 +116,41 @@ func handle_ai_input():
 
 #Acts as the _process method would
 func update(delta):
-	###Gravity
-	velocity.y += weight * gravity * delta
-	velocity = owner.move_and_slide_with_snap(velocity, snap_vector, Vector3(0,1,0), true, 1, deg2rad(65), false) #Come back/check vars 3,4,5
-	position = owner.get_global_transform().origin
+	###Set held direction
+	direction = get_input_direction()
+	
+	#Gravity Velocity
+	if (owner.is_on_floor()) and floor_angle <= floor_angle_max and snap_vector != Vector3(0,0,0):
+		#Store current location
+		var start_point = Enemy.global_transform.origin
+		
+		#Apply gravity velocity
+		velocity_gravity = Enemy.move_and_slide_with_snap(velocity_gravity, snap_vector, Vector3.UP, true, 1, floor_angle_max, false)
+		
+		#Move body back and zero out gravity velocity
+		Enemy.global_transform.origin = start_point
+		velocity_gravity = Vector3(0,0,0)
+	else:
+		velocity_gravity = Enemy.move_and_slide_with_snap(velocity_gravity, snap_vector, Vector3.UP, true, 1, floor_angle_max, false)
+	
+	#Input Movement Velocity
+	velocity = Enemy.move_and_slide_with_snap(velocity, snap_vector, Vector3.UP, true, 1, floor_angle_max, false)
+	
+	###Motion Values Assignments
+	position = Enemy.global_transform.origin
+	acceleration_3d = velocity.length() - velocity_3d
+	acceleration_horizontal = Vector2(velocity.x, velocity.z).length() - velocity_horizontal
+	velocity_3d = velocity.length()
+	velocity_horizontal = Vector2(velocity.x, velocity.z).length()
 	height = position.y
+	
+	###Body Values Assignment
+	facing_direction = get_node_direction(Rig)
+	
+	#Signal Emission
 	emit_signal("position_changed", position)
 	emit_signal("velocity_changed", velocity)
+	
 	.update(delta)
 
 
@@ -131,7 +160,7 @@ func _on_animation_finished(_anim_name):
 
 #Returns direction relative to camera view angle
 func get_input_direction():
-	direction = Vector3() #Resets direction of player to default
+	direction = Vector3() #Resets direction of body to default
 	
 	###Camera Direction
 	var aim = head.get_global_transform().basis.get_euler()
@@ -471,7 +500,7 @@ func _on_Camera_Rig_view_locked(is_view_locked, _time_left):
 		strafe_locked = is_view_locked
 
 
-func _on_death(death):
+func _on_Enemy_death(death):
 	if death:
 		emit_signal("finished", "death")
 

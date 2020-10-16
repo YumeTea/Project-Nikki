@@ -15,8 +15,8 @@ var focus_object = null
 var view_mode
 
 #Player State Storage
-var state_move
-var state_action
+onready var state_move = owner.get_node("State_Machine_Move").START_STATE
+onready var state_action = owner.get_node("State_Machine_Action").START_STATE
 var ground_states = [
 	"Walk",
 ]

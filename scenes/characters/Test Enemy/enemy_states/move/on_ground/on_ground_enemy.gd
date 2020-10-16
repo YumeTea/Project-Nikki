@@ -24,7 +24,7 @@ func update(delta):
 		if Enemy.global_transform.origin.y < (surface_height - enemy_height):
 			emit_signal("finished", "swim")
 	
-	if owner.is_on_floor() == false and !snap_vector_is_colliding():
+	if !Enemy.is_on_floor() and !snap_vector_is_colliding() and !Raycast_Floor.is_colliding():
 		emit_signal("finished", "fall")
 	
 	.update(delta)

@@ -21,10 +21,10 @@ func enter():
 	has_jumped = false
 	connect_enemy_signals()
 	
-	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
-		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Jump")
-	else:
-		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Jump")
+#	if owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").is_playing() == false:
+#		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").start("Jump")
+#	else:
+#		owner.get_node("AnimationTree").get("parameters/StateMachineMove/playback").travel("Jump")
 	.enter()
 
 

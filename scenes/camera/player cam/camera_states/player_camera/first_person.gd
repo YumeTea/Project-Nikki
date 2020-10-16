@@ -63,7 +63,7 @@ func handle_input(event):
 			centered = false
 			reset_recenter()
 		emit_signal("view_locked", strafe_locked, centering_time_left)
-	if event.is_action_released("center_view") and event.get_device() == 0:
+	else:
 		strafe_locked = false
 		centering = false
 		emit_signal("view_locked", strafe_locked, centering_time_left)

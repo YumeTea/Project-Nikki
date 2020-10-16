@@ -13,19 +13,32 @@ var initialized_values = {
 	"input_previous": {},
 	
 	#AI Flags
-	"seeking": false,
+	"advancing": false,
+	"spotted_seek_target": false,
+	"targetting": false,
 	
 	#Pathfinding Variables
+	"route": [],
 	"path": [],
 	"path_point": 0,
 	
 	#Targetting Variables
 	"focus_object": null,
+	"targettable_objects":  [],
+	"visible_targets":  [],
+	"closest_target": null,
+	"head_position": Vector3(0,0,0),
+	"target_position": Vector3(0,0,0),
+	"target_direction": Vector3(0,0,0),
+	"seek_target_pos_last": Vector3(0,0,0),
 }
 
 
 func _ready():
-	states_map = {}
+	states_map = {
+		"idle": $Idle,
+		"engage": $Engage,
+	}
 	#Send out dictionary of initialized values to all states at start
 	emit_signal("initialized_values_dic_set", initialized_values)
 	
@@ -40,6 +53,8 @@ func _process(delta):
 func _change_state(state_name): #state_machine.gd does the generalized work
 	if not _active:
 		return
+	
+	print(state_name)
 	
 	##State variable initialization (all states are initialized)
 	if !(state_name in ["previous"]):

@@ -143,6 +143,7 @@ func _on_Enemy_focus_object_changed(target):
 
 func _on_move_state_changed(move_state):
 	state_move = move_state
+	print(state_move)
 
 
 func _on_State_Machine_Action_initialized_values_dic_set(init_values_dic):

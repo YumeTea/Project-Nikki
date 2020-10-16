@@ -71,7 +71,6 @@ height = 4.21684
 [sub_resource type="SphereShape" id=17]
 
 [node name="Character" type="KinematicBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
 collision_layer = 4
 collision_mask = 3
 script = ExtResource( 3 )
@@ -107,14 +106,14 @@ script = ExtResource( 2 )
 [node name="Projectile Elements" type="Node" parent="."]
 
 [node name="Camera_Rig" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.088, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -0.962379, -4.20669e-08, 0, 0.0310001, 0 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -0.962379, -4.20669e-08, 0, 3.119, 0 )
 shape = SubResource( 16 )
 
 [node name="Targetting_Area" type="Area" parent="."]
-transform = Transform( 176, 0, 0, 0, 176, 0, 0, 0, 176, 0, 2, 0 )
+transform = Transform( 176, 0, 0, 0, 176, 0, 0, 0, 176, 0, 5.088, 0 )
 input_ray_pickable = false
 collision_layer = 0
 collision_mask = 6
@@ -123,3 +122,4 @@ collision_mask = 6
 shape = SubResource( 17 )
 
 [node name="Target_Pos" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.088, 0 )

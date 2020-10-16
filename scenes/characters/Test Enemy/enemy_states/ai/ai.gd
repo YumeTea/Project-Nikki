@@ -2,7 +2,7 @@ extends "res://scenes/characters/Test Enemy/enemy_states/interaction/interaction
 
 
 """
-Targets the static body targets
+AI sometimes centers on target, but does not cast
 """
 
 
@@ -14,6 +14,9 @@ signal focus_object_changed(focus_object)
 onready var Navigator = owner.get_parent().get_parent().get_node("Navigation")
 onready var Routes = owner.get_parent().get_parent().get_node("Navigation/Routes")
 onready var Timer_Route = owner.get_node("State_Machine_AI/Timer_Route")
+
+#Initialized Values Storage
+var initialized_values = {}
 
 var input_current = {
 	"left_stick": Vector2(0,0),
@@ -42,12 +45,16 @@ var min_cam_dot_target = 0.65 #angle = 90 - (90 * max_cam_target_dotp)
 
 #Seeking Variables
 var seek_target_name = "Player"
+var seek_target_pos_last : Vector3
 
 #Pathfinding Variables
 var path : Array =  []
 var path_point : int = 0
 var route : Array = []
 var advancing = false
+
+#AI Flags
+var spotted_seek_target : bool = false
 
 
 #Initializes state, changes animation, etc
@@ -66,6 +73,7 @@ func exit():
 #Creates output based on player input
 func handle_input(event):
 	if event.is_action_pressed("debug_input") and event.get_device() == 0:
+		Timer_Route.stop()
 		route = route_advance(route)
 
 
@@ -76,15 +84,6 @@ func handle_ai_input():
 
 #Acts as the _process method would
 func update(_delta):
-	#Clear AI input at start
-	clear_ai_input()
-	
-	#Get AI inputs and emit them
-	get_move_direction()
-	get_look_direction()
-	get_action_input()
-	emit_signal("ai_input_changed", input)
-	
 	#Visible targets update
 	check_targets_visibility()
 
@@ -96,62 +95,45 @@ func _on_animation_finished(_anim_name):
 ###AI INPUT FUNCTIONS###
 
 
-func get_move_direction():
-	var direction = calc_target_path()
-	press_ai_input("left_stick", direction / 2.0)
-
-
-func get_look_direction():
-	var direction : Vector2
-	
-	if !targetting and !advancing:
-		direction = Vector2(sin(OS.get_time()["second"]/2), 0)
-	elif advancing:
-		direction = look_to_path()
-		
-	press_ai_input("right_stick", direction)
-
-
-
-func look_to_path():
+#Manupulates look input to look at target point, accounting for look_speed of head rig
+func look_to_point(target_point):
 	var direction
 	
 	###Calc look direction while going to player position
-	var target_direction = Enemy.global_transform.origin.direction_to(path[path_point])
+	var target_direction = Enemy.global_transform.origin.direction_to(target_point)
 	target_direction.y = 0.0
 	target_direction = target_direction.normalized()
 	
 	var angle_to_target = calculate_global_y_rotation(target_direction) - calculate_global_y_rotation(focus_direction)
 	angle_to_target = bound_angle(angle_to_target)
 	
+	
 	if angle_to_target > 0.0:
-		if angle_to_target > deg2rad(1.0):
+		if angle_to_target >= deg2rad(Camera_Rig.look_speed):
 			direction = Vector2(-1, 0)
 		else:
-			direction = Vector2(-angle_to_target, 0)
+			direction = Vector2((-rad2deg(angle_to_target)) / (Camera_Rig.look_speed), 0)
 	elif angle_to_target < 0.0:
-		if angle_to_target < deg2rad(-1.0):
+		if angle_to_target <= deg2rad(-Camera_Rig.look_speed):
 			direction = Vector2(1, 0)
 		else:
-			direction = Vector2(angle_to_target, 0)
+			direction = Vector2((-rad2deg(angle_to_target)) / (Camera_Rig.look_speed), 0)
 	else:
 		direction = Vector2(0, 0)
 	
 	return direction
 
 
-func get_action_input():
-	if !targetting:
-		seek_target(seek_target_name)
-	elif targetting:
-		press_ai_input("action_l2", "center_view")
-		press_ai_input("action_y", "cast")
-
-
+#Handles flag for whether seek target is found
 func seek_target(target_name):
-	for actor in visible_targets:
-		if actor.name == target_name and !targetting:
-			press_ai_input("action_l1", "lock_target")
+	if !targetting:
+		for actor in visible_targets:
+			if actor.name == target_name:
+#				seek_target_pos_last = actor.global_transform.origin
+#				spotted_seek_target = true
+				return
+	
+	spotted_seek_target = false
 
 
 #Moves current inputs to previous input dict and clears input_current
@@ -207,8 +189,7 @@ func is_ai_action_just_pressed(action, input_dic):
 ###TARGETTING FUNCTIONS###
 
 
-#Uses head position and head direction to determine if a target is visible and 
-#viable to target
+#Determines if objects are in view cone and puts those objects in visible_targets; updates centermost object
 func check_targets_visibility():
 	var closest_target_new = null
 	var closest_cam_dot_target = -1.0
@@ -235,20 +216,16 @@ func check_targets_visibility():
 			else:
 				visible_targets.erase(target)
 				if target == focus_object:
-					focus_object = null
-					targetting = false
-					emit_signal("focus_object_changed", focus_object)
+					lock_target()
 		else:
 			visible_targets.erase(target)
 			if target == focus_object:
-				focus_object = null
-				targetting = false
-				emit_signal("focus_object_changed", focus_object)
+				lock_target()
 	
 	#Update closest target
 	closest_target = closest_target_new
 	
-#	#
+	#
 	for object in targettable_objects:
 		if object in visible_targets:
 			pass
@@ -259,7 +236,7 @@ func check_targets_visibility():
 
 func raycast_query(from, to, exclude):
 	var space_state = Enemy.get_world().direct_space_state
-	var result = space_state.intersect_ray(from, to, [self, exclude])
+	var result = space_state.intersect_ray(from, to, [owner, exclude])
 	return result
 
 
@@ -270,6 +247,7 @@ func lock_target():
 	else:
 		focus_object = null
 		targetting = false
+		spotted_seek_target = false
 	emit_signal("focus_object_changed", focus_object)
 
 
@@ -353,20 +331,29 @@ func calculate_global_y_rotation(direction):
 	return y_rotation #Output is PI > y > -PI
 
 
+func set_initialized_values(init_values_dic):
+	for value in init_values_dic:
+		init_values_dic[value] = self[value]
+
+
 ###SIGNAL CONNECTIONS###
 
 
 func connect_enemy_signals():
+	owner.get_node("State_Machine_AI").connect("initialized_values_dic_set", self, "_on_State_Machine_AI_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").connect("head_moved", self, "_on_Camera_Rig_head_moved")
 	owner.get_node("Camera_Rig").connect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
+	owner.get_node("Camera_Rig").connect("break_target", self, "_on_Camera_Rig_break_target")
 	owner.get_node("Targetting_Area").connect("body_entered", self, "_on_Targetting_Area_body_entered")
 	owner.get_node("Targetting_Area").connect("body_exited", self, "_on_Targetting_Area_body_exited")
 	owner.get_node("State_Machine_AI/Timer_Route").connect("timeout", self, "_on_Timer_Route_timeout")
 
 
 func disconnect_enemy_signals():
+	owner.get_node("State_Machine_AI").disconnect("initialized_values_dic_set", self, "_on_State_Machine_AI_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").disconnect("head_moved", self, "_on_Camera_Rig_head_moved")
 	owner.get_node("Camera_Rig").disconnect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
+	owner.get_node("Camera_Rig").disconnect("break_target", self, "_on_Camera_Rig_break_target")
 	owner.get_node("Targetting_Area").disconnect("body_entered", self, "_on_Targetting_Area_body_entered")
 	owner.get_node("Targetting_Area").disconnect("body_exited", self, "_on_Targetting_Area_body_exited")
 	owner.get_node("State_Machine_AI/Timer_Route").disconnect("timeout", self, "_on_Timer_Route_timeout")
@@ -375,12 +362,21 @@ func disconnect_enemy_signals():
 ###SIGNAL FUNCTIONS###
 
 
+func _on_State_Machine_AI_initialized_values_dic_set(init_values_dic):
+	initialized_values = init_values_dic
+
+
 func _on_Camera_Rig_head_moved(head_transform):
 	head_position = head_transform.origin
 
 
 func _on_Camera_Rig_focus_direction_changed(direction):
 	focus_direction = direction
+
+
+func _on_Camera_Rig_break_target():
+	if targetting:
+		lock_target()
 
 
 func _on_Targetting_Area_body_entered(body):

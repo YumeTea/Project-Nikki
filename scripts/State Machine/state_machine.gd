@@ -11,7 +11,8 @@ var _active = false setget set_active
 
 func _ready():
 	for child in get_children():
-		child.connect("finished", self, "_change_state")
+		if child is Node:
+			child.connect("finished", self, "_change_state")
 	initialize(START_STATE)
 
 

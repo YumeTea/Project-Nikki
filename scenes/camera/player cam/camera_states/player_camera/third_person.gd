@@ -70,7 +70,7 @@ func handle_input(event):
 			reset_recenter()
 			reset_interpolate()
 		emit_signal("view_locked", strafe_locked, centering_time_left)
-	if event.is_action_released("center_view") and event.get_device() == 0:
+	else:
 		strafe_locked = false
 		centering = false
 		reset_recenter()

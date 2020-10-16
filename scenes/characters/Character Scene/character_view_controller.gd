@@ -31,7 +31,7 @@ var correction_distance = 1
 #Character Look Variables
 var right_joystick_axis = Vector2()
 var look_direction = Vector2() #Left, Right, Up, Down
-var look_sensitivity = 3
+var look_speed = 3
 
 #Centering Variables
 var centering_turn_radius = deg2rad(25)
@@ -78,11 +78,11 @@ func _ai_input(input):
 	if is_ai_action_pressed("center_view", input):
 		view_locked = true
 		centering = true
-		if is_ai_action_pressed("center_view", input):
+		if is_ai_action_just_pressed("center_view", input):
 			centered = false
 			reset_recenter()
 		emit_signal("view_locked", view_locked, centering_time_left)
-	if is_ai_action_released("center_view", input):
+	else:
 		view_locked = false
 		centering = false
 		emit_signal("view_locked", view_locked, centering_time_left)
@@ -150,7 +150,7 @@ func rotate_head(input_change):
 	if input_change.length() > 0:
 		var angle_change = Vector2()
 		
-		angle_change.y = deg2rad(-input_change.x)
+		angle_change.y = deg2rad(-input_change.x * look_speed)
 		if focus_angle.y + angle_change.y < focus_angle_lim.y and focus_angle.y + angle_change.y > -focus_angle_lim.y:
 			Head_Rig.rotate_y(angle_change.y)
 			focus_angle.y += angle_change.y
@@ -158,7 +158,7 @@ func rotate_head(input_change):
 			Head_Rig.rotate_y((focus_angle_lim.y * sign(focus_angle.y)) - focus_angle.y)
 			focus_angle.y += ((focus_angle_lim.y * sign(focus_angle.y)) - focus_angle.y)
 		
-		angle_change.x = deg2rad(input_change.y)
+		angle_change.x = deg2rad(input_change.y * look_speed)
 		if focus_angle.x + angle_change.x < focus_angle_lim.x and focus_angle.x + angle_change.x > -focus_angle_lim.x:
 			Head.rotate_x(angle_change.x)
 			focus_angle.x += angle_change.x
@@ -475,12 +475,15 @@ func is_ai_action_released(action, input_dic):
 	return false
 
 
+#Returns true if action is in input_current but not in input_previous
 func is_ai_action_just_pressed(action, input_dic):
 	for input_name in input_dic["input_current"]:
 		if typeof(input_dic["input_current"][input_name]) == typeof(action):
 			if input["input_current"][input_name] == action:
-				if input["input_current"][input_name] == input["input_previous"][input_name]:
+				if input["input_current"][input_name] != input["input_previous"][input_name]:
 					return true
+				else:
+					return false
 	
 	return false
 
