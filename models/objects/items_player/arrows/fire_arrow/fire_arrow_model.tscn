@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://models/objects/items_player/arrows/fire_arrow/fire_arrow_tip.material" type="Material" id=1]
 [ext_resource path="res://models/objects/items_player/arrows/arrow_shaft.tres" type="CapsuleMesh" id=2]
 [ext_resource path="res://models/objects/items_player/arrows/arrow_shaft.material" type="Material" id=3]
+[ext_resource path="res://OmniLight_Area.tscn" type="PackedScene" id=4]
 
 [sub_resource type="PrismMesh" id=1]
 
@@ -38,3 +39,5 @@ light_specular = 0.0
 omni_range = 20.0
 omni_attenuation = 2.73208
 omni_shadow_mode = 0
+
+[node name="OmniLight_Area" parent="Fire_Arrow_Tip/OmniLight" instance=ExtResource( 4 )]

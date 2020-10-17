@@ -1,6 +1,7 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://scripts/environment_objects/torch.gd" type="Script" id=1]
+[ext_resource path="res://light_area.gd" type="Script" id=2]
 
 [sub_resource type="SphereShape" id=1]
 
@@ -180,6 +181,8 @@ shader = SubResource( 21 )
 shader_param/time = null
 shader_param/time2 = null
 
+[sub_resource type="SphereShape" id=23]
+
 [node name="Torch" type="StaticBody" groups=[
 "actor",
 ]]
@@ -196,16 +199,22 @@ transform = Transform( 0.428571, 0, 0, 0, 0.6, 0, 0, 0, 0.428571, 0, 0, 0 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 22 )
 
-[node name="Light" type="OmniLight" parent="CollisionShape" groups=[
-"light",
-]]
+[node name="Light" type="OmniLight" parent="CollisionShape"]
 transform = Transform( 1.42857, 0, 0, 0, 2, 0, 0, 0, 1.42857, 0, 0, 0 )
 light_color = Color( 0.74, 0.74, 0.4736, 1 )
 light_energy = 0.5
 shadow_enabled = true
 shadow_bias = 0.5
 omni_range = 20.0
-omni_attenuation = 0.790443
+omni_attenuation = 0.14
 omni_shadow_mode = 0
 
+[node name="OmniLight_Area" type="Area" parent="CollisionShape/Light"]
+script = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="CollisionShape/Light/OmniLight_Area"]
+shape = SubResource( 23 )
+
 [node name="Timer" type="Timer" parent="."]
+[connection signal="body_entered" from="CollisionShape/Light/OmniLight_Area" to="CollisionShape/Light/OmniLight_Area" method="_on_Light_Area_body_entered"]
+[connection signal="body_exited" from="CollisionShape/Light/OmniLight_Area" to="CollisionShape/Light/OmniLight_Area" method="_on_Light_Area_body_exited"]

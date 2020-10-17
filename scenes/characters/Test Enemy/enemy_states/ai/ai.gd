@@ -11,6 +11,7 @@ signal focus_object_changed(focus_object)
 
 
 #Node Storage
+onready var Awareness = owner.get_node("Attributes/Awareness")
 onready var Navigator = owner.get_parent().get_parent().get_node("Navigation")
 onready var Routes = owner.get_parent().get_parent().get_node("Navigation/Routes")
 onready var Timer_Route = owner.get_node("State_Machine_AI/Timer_Route")
@@ -54,7 +55,7 @@ var route : Array = []
 var advancing = false
 
 #AI Flags
-var spotted_seek_target : bool = false
+var suspicious : bool = false
 
 
 #Initializes state, changes animation, etc
@@ -83,7 +84,8 @@ func handle_ai_input():
 
 
 #Acts as the _process method would
-func update(_delta):
+func update(delta):
+	print(Awareness.threat_level)
 	#Visible targets update
 	check_targets_visibility()
 
@@ -125,15 +127,25 @@ func look_to_point(target_point):
 
 
 #Handles flag for whether seek target is found
-func seek_target(target_name):
+func seek_target(target_name, delta):
+	var target = null
+	
+	#Save target position and become suspicious when suspicious object is visible
 	if !targetting:
 		for actor in visible_targets:
 			if actor.name == target_name:
-#				seek_target_pos_last = actor.global_transform.origin
-#				spotted_seek_target = true
-				return
+				target = actor
+				seek_target_pos_last = actor.global_transform.origin
+				suspicious = true
 	
-	spotted_seek_target = false
+	if suspicious:
+		if target:
+			Awareness.threat_increase(target, delta)
+		else:
+			Awareness.threat_decrease(delta)
+	
+	if Awareness.threat_level <= 0.0:
+		suspicious = false
 
 
 #Moves current inputs to previous input dict and clears input_current
@@ -216,11 +228,15 @@ func check_targets_visibility():
 			else:
 				visible_targets.erase(target)
 				if target == focus_object:
-					lock_target()
+					focus_object = null
+					targetting = false
+					emit_signal("focus_object_changed", focus_object)
 		else:
 			visible_targets.erase(target)
 			if target == focus_object:
-				lock_target()
+				focus_object = null
+				targetting = false
+				emit_signal("focus_object_changed", focus_object)
 	
 	#Update closest target
 	closest_target = closest_target_new
@@ -231,7 +247,9 @@ func check_targets_visibility():
 			pass
 		else:
 			if object == focus_object:
-				lock_target()
+				focus_object = null
+				targetting = false
+				emit_signal("focus_object_changed", focus_object)
 
 
 func raycast_query(from, to, exclude):
@@ -247,7 +265,6 @@ func lock_target():
 	else:
 		focus_object = null
 		targetting = false
-		spotted_seek_target = false
 	emit_signal("focus_object_changed", focus_object)
 
 

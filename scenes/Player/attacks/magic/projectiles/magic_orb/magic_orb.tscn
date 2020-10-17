@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scenes/Player/attacks/magic/projectiles/magic_orb/vshader_orb_pulse.tres" type="Shader" id=1]
 [ext_resource path="res://scenes/Player/attacks/magic/projectiles/magic_orb/magic_orb.gd" type="Script" id=2]
+[ext_resource path="res://OmniLight_Area.tscn" type="PackedScene" id=3]
 
 [sub_resource type="SphereShape" id=1]
 radius = 0.5
@@ -26,11 +27,11 @@ shape = SubResource( 1 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 3 )
 
-[node name="glow" type="OmniLight" parent="CollisionShape" groups=[
-"light",
-]]
+[node name="glow" type="OmniLight" parent="CollisionShape"]
 omni_attenuation = 0.000622343
 omni_shadow_mode = 0
+
+[node name="OmniLight_Area" parent="CollisionShape/glow" instance=ExtResource( 3 )]
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true

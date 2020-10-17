@@ -1,4 +1,4 @@
-[gd_scene load_steps=158 format=2]
+[gd_scene load_steps=159 format=2]
 
 [ext_resource path="res://models/characters/Nikki/model/anims/Throw_Item.anim" type="Animation" id=1]
 [ext_resource path="res://scenes/Player/player/player_controller.gd" type="Script" id=2]
@@ -2474,7 +2474,7 @@ nodes/StateMachineRightArm/position = Vector2( -740, 100 )
 nodes/TimeScaleAction/node = SubResource( 62 )
 nodes/TimeScaleAction/position = Vector2( -500, 260 )
 nodes/output/position = Vector2( -60, 120 )
-node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexRightArm", "MovexAction", 1, "TimeScaleAction", "TimeScaleAction", 0, "StateMachineAction", "MovexLeftArm", 0, "StateMachineMove", "MovexLeftArm", 1, "StateMachineLeftArm", "MovexRightArm", 0, "MovexLeftArm", "MovexRightArm", 1, "StateMachineRightArm" ]
+node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexRightArm", "MovexAction", 1, "TimeScaleAction", "TimeScaleAction", 0, "StateMachineAction", "MovexRightArm", 0, "MovexLeftArm", "MovexRightArm", 1, "StateMachineRightArm", "MovexLeftArm", 0, "StateMachineMove", "MovexLeftArm", 1, "StateMachineLeftArm" ]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=64]
 
@@ -2651,18 +2651,22 @@ radius = 0.5
 height = 5.35
 
 [sub_resource type="SphereShape" id=92]
+radius = 40.0
 
-[sub_resource type="CubeMesh" id=93]
+[sub_resource type="SphereShape" id=93]
+radius = 176.0
 
 [sub_resource type="CubeMesh" id=94]
+
+[sub_resource type="CubeMesh" id=95]
 size = Vector3( 2, 2, 5 )
 
-[sub_resource type="SpatialMaterial" id=95]
+[sub_resource type="SpatialMaterial" id=96]
 albedo_color = Color( 0.752941, 0.752941, 0.752941, 1 )
 
-[sub_resource type="SphereMesh" id=96]
+[sub_resource type="SphereMesh" id=97]
 
-[sub_resource type="SpatialMaterial" id=97]
+[sub_resource type="SpatialMaterial" id=98]
 emission_enabled = true
 emission = Color( 0, 1, 0.180392, 1 )
 emission_energy = 1.0
@@ -2671,6 +2675,7 @@ emission_on_uv2 = false
 
 [node name="Player" type="KinematicBody" groups=[
 "actor",
+"illuminatable",
 "save",
 "targettable",
 "vulnerable",
@@ -2971,16 +2976,24 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.26956, -0.042 )
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.175, -0.042 )
 shape = SubResource( 91 )
 
+[node name="Illumination_Area" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Illumination_Area"]
+shape = SubResource( 92 )
+
 [node name="Targetting_Area" type="Area" parent="."]
-transform = Transform( 176, 0, 0, 0, 176, 0, 0, 0, 176, 0, 4.89, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.89, 0 )
+visible = false
 input_ray_pickable = false
 collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape" parent="Targetting_Area"]
-shape = SubResource( 92 )
+shape = SubResource( 93 )
 
 [node name="Interact_System" parent="." instance=ExtResource( 53 )]
+visible = false
 input_ray_pickable = false
 collision_layer = 0
 
@@ -3001,28 +3014,28 @@ layer = 0
 [node name="Ledge" type="MeshInstance" parent="Temp"]
 transform = Transform( 2, 0, 0, 0, 0.1, 0, 0, 0, 2, 0, 7.19104, 0 )
 visible = false
-mesh = SubResource( 93 )
+mesh = SubResource( 94 )
 material/0 = null
 
 [node name="Wall" type="MeshInstance" parent="Temp"]
 transform = Transform( 5, 0, 8.9407e-08, 0, 5, 0, 4.29153e-06, 0, 1, 0, 2.257, 3 )
 visible = false
-mesh = SubResource( 94 )
-material/0 = SubResource( 95 )
+mesh = SubResource( 95 )
+material/0 = SubResource( 96 )
 
 [node name="Debug" type="Node" parent="."]
 
 [node name="Velocity_Start" type="MeshInstance" parent="Debug"]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
 visible = false
-mesh = SubResource( 96 )
-material/0 = SubResource( 97 )
+mesh = SubResource( 97 )
+material/0 = SubResource( 98 )
 
 [node name="Velocity_End" type="MeshInstance" parent="Debug"]
 transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0 )
 visible = false
-mesh = SubResource( 96 )
-material/0 = SubResource( 97 )
+mesh = SubResource( 97 )
+material/0 = SubResource( 98 )
 [connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
 [connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
 [connection signal="is_falling" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_is_falling"]
@@ -3034,8 +3047,8 @@ material/0 = SubResource( 97 )
 [connection signal="max_health_changed" from="Attributes/Health" to="UI_Layer/UI_In_Game" method="_on_Health_max_health_changed"]
 [connection signal="move_state_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_changed"]
 [connection signal="move_state_stack_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_stack_changed"]
-[connection signal="action_state_changed" from="State_Machine_Action" to="State_Machine_Move" method="_on_State_Machine_Action_action_state_changed"]
 [connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]
+[connection signal="action_state_changed" from="State_Machine_Action" to="State_Machine_Move" method="_on_State_Machine_Action_action_state_changed"]
 [connection signal="action_state_stack_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_stack_changed"]
 [connection signal="break_target" from="Camera_Rig" to="." method="_on_Camera_Rig_break_target"]
 [connection signal="camera_direction_changed" from="Camera_Rig" to="." method="_on_Camera_Rig_camera_direction_changed"]

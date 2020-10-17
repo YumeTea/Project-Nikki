@@ -92,12 +92,15 @@ data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1
 collision_layer = 2147745793
 collision_mask = 262150
 
-[node name="DirectionalLight" type="DirectionalLight" parent="."]
+[node name="DirectionalLight" type="DirectionalLight" parent="." groups=[
+"directional_light",
+]]
 transform = Transform( -0.70756, -0.0143804, -0.706507, -0.207745, 0.959845, 0.188518, 0.675426, 0.280161, -0.682136, 0, 17.6429, 0 )
 light_color = Color( 0.309804, 0.368627, 0.54902, 1 )
 light_energy = 0.2
 shadow_enabled = true
 shadow_bias = 0.0
+directional_shadow_mode = 1
 directional_shadow_blend_splits = true
 directional_shadow_normal_bias = 0.4
 directional_shadow_bias_split_scale = 0.8

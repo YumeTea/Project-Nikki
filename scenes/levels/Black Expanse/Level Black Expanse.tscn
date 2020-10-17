@@ -9,7 +9,7 @@
 [ext_resource path="res://shaders/shader_tests/ShaderTest.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/objects/event_triggers/Void Plane.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/objects/environment/Lamp.tscn" type="PackedScene" id=9]
-[ext_resource path="res://scenes/characters/Test Enemy/Test Enemy.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/characters/Test Enemy/test_enemy/Test Enemy.tscn" type="PackedScene" id=10]
 
 [node name="Level Black Expanse" type="Spatial" groups=[
 "world",
@@ -26,7 +26,7 @@ environment = ExtResource( 3 )
 ]]
 
 [node name="Black Pill Enemy" parent="Actors" instance=ExtResource( 10 )]
-transform = Transform( -2.8213e-07, 0, 1, 0, 1, 0, -1, 0, -2.8213e-07, 27.2719, 5.21922, 9.13262 )
+transform = Transform( -2.8213e-07, 0, 1, 0, 1, 0, -1, 0, -2.8213e-07, 27.2719, 2.21922, 9.13262 )
 
 [node name="Target" parent="Actors" instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 27.2849, 3.30256, -8.16223 )

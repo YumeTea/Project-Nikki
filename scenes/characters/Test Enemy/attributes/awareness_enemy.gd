@@ -2,23 +2,24 @@ extends Node
 
 
 signal spotted_target(target)
+###DEBUG SIGNALS###
+signal threat_level_changed(threat_level)
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var threat_level : float = 0.0
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+func _process(delta):
+	pass
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func threat_increase(target, delta):
+	threat_level += target.get_node("Attributes/Illumination").light_level * (delta * 2.0)
+	threat_level = clamp(threat_level, 0.0, 100.0)
+	emit_signal("threat_level_changed", threat_level)
 
 
-func awareness_increase(object):
-	return
+func threat_decrease(delta):
+	threat_level -= 5.0 * (delta * 2.0)
+	threat_level = clamp(threat_level, 0.0, 100.0)
 

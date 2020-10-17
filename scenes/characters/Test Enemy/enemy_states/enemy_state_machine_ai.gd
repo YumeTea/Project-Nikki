@@ -14,7 +14,7 @@ var initialized_values = {
 	
 	#AI Flags
 	"advancing": false,
-	"spotted_seek_target": false,
+	"suspicious": false,
 	"targetting": false,
 	
 	#Pathfinding Variables
@@ -53,8 +53,6 @@ func _process(delta):
 func _change_state(state_name): #state_machine.gd does the generalized work
 	if not _active:
 		return
-	
-	print(state_name)
 	
 	##State variable initialization (all states are initialized)
 	if !(state_name in ["previous"]):

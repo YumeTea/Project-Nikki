@@ -7,6 +7,7 @@ signal current_scene_changed(current_scene)
 #Node Storage
 var Player = null
 var Free_Cam = null
+var Scene_Light = null
 
 #Scene Variable Storage
 var current_scene = null
@@ -49,6 +50,10 @@ func _process(_delta):
 		for node in get_tree().get_nodes_in_group("actor"):
 			if node.name == "Free_Cam":
 				Free_Cam = node
+	
+	if not Scene_Light:
+		for node in get_tree().get_nodes_in_group("directional_light"):
+			Scene_Light = node
 
 
 func connect_signals():
@@ -66,12 +71,15 @@ func _on_SceneManager_scene_entered():
 			Player = node
 		if node.name == "Free_Cam":
 			Free_Cam = node
+	for node in get_tree().get_nodes_in_group("directional_light"):
+		Scene_Light = node
 
 
 func _on_SceneManager_scene_exited():
 	#Clear player and free cam until spawning is implemented
 	Player = null
 	Free_Cam = null
+	Scene_Light = null
 
 
 ###SETGETS
@@ -89,4 +97,12 @@ func set_Free_Cam(free_cam_node):
 
 func get_Free_Cam():
 	return Free_Cam
+
+
+func set_Scene_Light(scene_light_node):
+	Scene_Light = scene_light_node
+
+
+func get_Scene_Light():
+	return Scene_Light
 

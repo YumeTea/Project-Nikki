@@ -1,21 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/objects/Test Objects/3D Sprites/Target Reticle/target_reticle.gd" type="Script" id=1]
 [ext_resource path="res://scenes/objects/Test Objects/3D Sprites/Target Reticle/Reticle Reg.png" type="Texture" id=3]
 [ext_resource path="res://scenes/objects/Test Objects/3D Sprites/Target Reticle/Reticle Locked.png" type="Texture" id=4]
 
-[sub_resource type="SpatialMaterial" id=1]
-flags_transparent = true
-flags_unshaded = true
-flags_no_depth_test = true
-flags_disable_ambient_light = true
-params_diffuse_mode = 4
-params_specular_mode = 4
-params_depth_draw_mode = 2
-params_billboard_mode = 1
-params_billboard_keep_scale = true
-
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 4 ) ],
 "loop": false,
@@ -24,11 +13,9 @@ animations = [ {
 } ]
 
 [node name="Reticle" type="AnimatedSprite3D"]
-material_override = SubResource( 1 )
 cast_shadow = 0
 billboard = 1
-transparent = false
 double_sided = false
-frames = SubResource( 2 )
+frames = SubResource( 1 )
 animation = "target"
 script = ExtResource( 1 )

@@ -6,6 +6,8 @@
 [node name="Lamp" type="Spatial"]
 
 [node name="Lamp" parent="." instance=ExtResource( 1 )]
+collision_layer = 4
+collision_mask = 0
 
 [node name="Torch" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.14384, 0 )

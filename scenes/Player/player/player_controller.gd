@@ -102,9 +102,6 @@ func _input(event):
 	if event.is_action_pressed("interact") and event.get_device() == 0:
 		if closest_interactable:
 			closest_interactable.interact()
-			
-#	if event.is_action_pressed("debug_input") and event.get_device() == 0:
-#		print(closest_interactable)
 
 
 func _physics_process(_delta):

@@ -14,7 +14,7 @@ func enter():
 		move_to(route[0])
 	
 	targetting = false
-	spotted_seek_target = false
+	suspicious = false
 	
 	connect_enemy_signals()
 	
@@ -40,21 +40,21 @@ func handle_ai_input():
 
 
 #Acts as the _process method would
-func update(_delta):
+func update(delta):
 	#Clear AI input at start
 	clear_ai_input()
 	
 	#Get AI inputs and emit them
 	get_move_direction()
 	get_look_direction()
-	get_action_input()
+	get_action_input(delta)
 	emit_signal("ai_input_changed", input)
 	
 	#If targetting, engage target
 	if focus_object:
 		emit_signal("finished", "engage")
 	
-	.update(_delta)
+	.update(delta)
 
 
 func _on_animation_finished(_anim_name):
@@ -71,7 +71,9 @@ func _on_Timer_Route_timeout():
 func get_move_direction():
 	var direction : Vector2
 	
-	if !targetting and advancing:
+	if suspicious:
+		direction = Vector2(0,0)
+	elif !targetting and advancing:
 		direction = calc_target_path()
 		press_ai_input("left_stick", direction / 2.0)
 	else:
@@ -82,8 +84,8 @@ func get_move_direction():
 func get_look_direction():
 	var direction : Vector2
 	
-	if !targetting and spotted_seek_target:
-		direction = look_to_point(seek_target_pos_last)
+	if !targetting and suspicious:
+		direction = look_to_point(seek_target_pos_last) #look at suspitious object
 	elif !targetting and !advancing:
 		direction = Vector2(sin(OS.get_time()["second"]/2), 0)
 	elif advancing:
@@ -92,11 +94,11 @@ func get_look_direction():
 	press_ai_input("right_stick", direction)
 
 
-func get_action_input():
+func get_action_input(delta):
 	if !targetting:
-		seek_target(seek_target_name)
+		seek_target(seek_target_name, delta)
 		if closest_target:
-			if closest_target.name == seek_target_name:
+			if closest_target.name == seek_target_name and Awareness.threat_level >= 100.0:
 				press_ai_input("action_l1", "lock_target")
 
 

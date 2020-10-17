@@ -69,6 +69,7 @@ node_connections = [ "output", 0, "MovexAction", "TimeScale", 0, "StateMachineAc
 height = 4.21684
 
 [sub_resource type="SphereShape" id=17]
+radius = 176.0
 
 [node name="Character" type="KinematicBody"]
 collision_layer = 4

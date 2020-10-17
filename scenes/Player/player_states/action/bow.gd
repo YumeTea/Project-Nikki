@@ -137,7 +137,7 @@ func fire_arrow():
 	var direction_init = get_node_direction(Bow_IK.get_node("Projectile_Position"))
 	#Set projectile starting position, direction, and target. Add to scene tree
 	projectile.start(position_init, direction_init)
-	world.add_child(projectile) #Set projectile's parent as current level's node
+	world.add_child(projectile) #Set current level's node as projectile's parent
 	projectile.set_owner(world)
 	
 	#Set flags to false to end state
