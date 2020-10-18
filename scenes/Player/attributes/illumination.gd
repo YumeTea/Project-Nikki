@@ -11,6 +11,10 @@ var nearby_omnilights : Array = []
 var light_level : float = 0.0
 
 
+func _ready():
+	emit_signal("light_level_changed", light_level)
+
+
 func _process(delta):
 	update_illumination()
 
@@ -38,6 +42,8 @@ func update_illumination():
 	
 	if light_level > 100.0:
 		light_level = 100.0
+	
+	emit_signal("light_level_changed", light_level)
 
 
 ###UTILITY FUNCTIONS###

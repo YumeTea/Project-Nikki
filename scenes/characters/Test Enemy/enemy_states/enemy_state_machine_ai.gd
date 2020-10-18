@@ -37,6 +37,7 @@ var initialized_values = {
 func _ready():
 	states_map = {
 		"idle": $Idle,
+		"suspicious": $Suspicious,
 		"engage": $Engage,
 	}
 	#Send out dictionary of initialized values to all states at start

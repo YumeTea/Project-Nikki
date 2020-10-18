@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://scenes/characters/Test Enemy/enemy_states/enemy_state_machine_ai.gd" type="Script" id=1]
 [ext_resource path="res://scenes/characters/Test Enemy/enemy_states/action/void_action_enemy.gd" type="Script" id=2]
@@ -21,6 +21,9 @@
 [ext_resource path="res://models/characters/Test Enemy/black_pill_enemy.material" type="Material" id=19]
 [ext_resource path="res://scenes/characters/Test Enemy/enemy_states/ai/engage_enemy.gd" type="Script" id=20]
 [ext_resource path="res://scenes/characters/Test Enemy/attributes/awareness_enemy.gd" type="Script" id=21]
+[ext_resource path="res://scenes/characters/Test Enemy/animation/Suspicious.anim" type="Animation" id=22]
+[ext_resource path="res://resources/images/Suspicious.png" type="Texture" id=23]
+[ext_resource path="res://scenes/characters/Test Enemy/test_enemy/suspicious_enemy.gd" type="Script" id=24]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Damaged"
@@ -119,7 +122,7 @@ states/Walk/position = Vector2( 453, 219 )
 [sub_resource type="AnimationNodeTimeScale" id=16]
 
 [sub_resource type="AnimationNodeBlendTree" id=17]
-graph_offset = Vector2( -625, -4 )
+graph_offset = Vector2( -530, -81 )
 nodes/MovexAction/node = SubResource( 5 )
 nodes/MovexAction/position = Vector2( 80, 120 )
 nodes/StateMachineAction/node = SubResource( 7 )
@@ -135,6 +138,18 @@ node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "StateMachine
 [sub_resource type="AnimationNodeStateMachinePlayback" id=19]
 
 [sub_resource type="SphereMesh" id=20]
+
+[sub_resource type="QuadMesh" id=23]
+
+[sub_resource type="SpatialMaterial" id=24]
+flags_transparent = true
+flags_unshaded = true
+flags_do_not_receive_shadows = true
+flags_disable_ambient_light = true
+params_specular_mode = 4
+params_billboard_mode = 1
+params_billboard_keep_scale = true
+albedo_texture = ExtResource( 23 )
 
 [sub_resource type="SphereMesh" id=21]
 
@@ -158,6 +173,7 @@ anims/Casting_Magic_Orb = ExtResource( 18 )
 anims/Damaged = SubResource( 1 )
 anims/Idle = SubResource( 2 )
 anims/Perish = SubResource( 3 )
+anims/Suspicious = ExtResource( 22 )
 anims/Walk = SubResource( 4 )
 
 [node name="AnimationTree" parent="." index="1"]
@@ -177,12 +193,15 @@ START_STATE = NodePath("Idle")
 [node name="Idle" type="Node" parent="State_Machine_AI" index="0"]
 script = ExtResource( 3 )
 
-[node name="Engage" type="Node" parent="State_Machine_AI" index="1"]
+[node name="Suspicious" type="Node" parent="State_Machine_AI" index="1"]
+script = ExtResource( 24 )
+
+[node name="Engage" type="Node" parent="State_Machine_AI" index="2"]
 script = ExtResource( 20 )
 
 [node name="Timer_Engage" type="Timer" parent="State_Machine_AI/Engage" index="0"]
 
-[node name="Timer_Route" type="Timer" parent="State_Machine_AI" index="2"]
+[node name="Timer_Route" type="Timer" parent="State_Machine_AI" index="3"]
 wait_time = 7.0
 one_shot = true
 
@@ -239,6 +258,14 @@ material/0 = ExtResource( 12 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
 enabled = true
 cast_to = Vector3( 0, -3.4, 0 )
+
+[node name="Question_Mark" type="MeshInstance" parent="Rig" index="3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.35, 0 )
+mesh = SubResource( 23 )
+material/0 = SubResource( 24 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Rig" index="4"]
+anims/Suspicious = ExtResource( 22 )
 
 [node name="CollisionShape" parent="." index="10"]
 transform = Transform( 1, 0, 0, 0, -4.20504e-08, 1, 0, -0.962, -4.37114e-08, 0, 3.119, 0 )

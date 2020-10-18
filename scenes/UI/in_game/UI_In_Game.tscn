@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/UI/in_game/health bar/Health Bar.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/UI/in_game/UI_In_Game.gd" type="Script" id=2]
 [ext_resource path="res://scenes/UI/in_game/equipment/Equipment_Display.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/UI/in_game/light_level/Light_Level_Display.tscn" type="PackedScene" id=4]
 
 [node name="UI_In_Game" type="Control"]
 anchor_right = 1.0
@@ -25,6 +26,9 @@ __meta__ = {
 margin_bottom = 0.0
 
 [node name="Equipment_Display" parent="." instance=ExtResource( 3 )]
+
+[node name="Light_Level_Display" parent="." instance=ExtResource( 4 )]
 [connection signal="equipped_items_changed" from="." to="Equipment_Display" method="_on_UI_In_Game_equipped_items_changed"]
 [connection signal="health_changed" from="." to="Bars/Health_Bar" method="_on_UI_In_Game_health_changed"]
+[connection signal="light_level_changed" from="." to="Light_Level_Display" method="_on_UI_In_Game_light_level_changed"]
 [connection signal="max_health_changed" from="." to="Bars/Health_Bar" method="_on_UI_In_Game_max_health_changed"]

@@ -2,6 +2,7 @@ extends Control
 
 signal health_changed(health_change)
 signal max_health_changed(new_max_health)
+signal light_level_changed(current_light_level)
 signal equipped_items_changed(equipped_items_dict)
 signal is_falling(is_falling)
 
@@ -24,6 +25,10 @@ func _on_Health_health_changed(current_health):
 
 func _on_Health_max_health_changed(new_max_health):
 	emit_signal("max_health_changed", new_max_health)
+
+
+func _on_Illumination_light_level_changed(current_light_level):
+	emit_signal("light_level_changed", current_light_level)
 
 
 func _on_Player_equipped_items_changed(equipped_items_dict):

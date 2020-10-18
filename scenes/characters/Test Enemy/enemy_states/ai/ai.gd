@@ -79,13 +79,13 @@ func handle_input(event):
 
 
 func handle_ai_input():
-	if is_ai_action_just_pressed("lock_target", input) and !targetting:
+	if is_ai_action_just_pressed("lock_target", input):
 		lock_target()
 
 
 #Acts as the _process method would
 func update(delta):
-	print(Awareness.threat_level)
+#	print(Awareness.threat_level)
 	#Visible targets update
 	check_targets_visibility()
 
@@ -144,6 +144,7 @@ func seek_target(target_name, delta):
 		else:
 			Awareness.threat_decrease(delta)
 	
+	#Stop being suspicious if threat level is 0% (maybe make suspicious a state)
 	if Awareness.threat_level <= 0.0:
 		suspicious = false
 
@@ -189,11 +190,10 @@ func is_ai_action_released(action, input_dic):
 func is_ai_action_just_pressed(action, input_dic):
 	for input_name in input_dic["input_current"]:
 		if typeof(input_dic["input_current"][input_name]) == typeof(action):
-			if input["input_current"][input_name] == action:
-				if input["input_current"][input_name] != input["input_previous"][input_name]:
-					return true
-				else:
-					return false
+			if input["input_current"][input_name] == action and input["input_previous"][input_name] != action:
+				return true
+			else:
+				return false
 	
 	return false
 
@@ -250,12 +250,6 @@ func check_targets_visibility():
 				focus_object = null
 				targetting = false
 				emit_signal("focus_object_changed", focus_object)
-
-
-func raycast_query(from, to, exclude):
-	var space_state = Enemy.get_world().direct_space_state
-	var result = space_state.intersect_ray(from, to, [owner, exclude])
-	return result
 
 
 func lock_target():
@@ -339,6 +333,12 @@ func route_advance(route_array):
 
 
 ###UTILITY FUNCTIONS###
+
+
+func raycast_query(from, to, exclude):
+	var space_state = Enemy.get_world().direct_space_state
+	var result = space_state.intersect_ray(from, to, [owner, exclude])
+	return result
 
 
 func calculate_global_y_rotation(direction):

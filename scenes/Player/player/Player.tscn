@@ -2474,7 +2474,7 @@ nodes/StateMachineRightArm/position = Vector2( -740, 100 )
 nodes/TimeScaleAction/node = SubResource( 62 )
 nodes/TimeScaleAction/position = Vector2( -500, 260 )
 nodes/output/position = Vector2( -60, 120 )
-node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexRightArm", "MovexAction", 1, "TimeScaleAction", "TimeScaleAction", 0, "StateMachineAction", "MovexRightArm", 0, "MovexLeftArm", "MovexRightArm", 1, "StateMachineRightArm", "MovexLeftArm", 0, "StateMachineMove", "MovexLeftArm", 1, "StateMachineLeftArm" ]
+node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "MovexRightArm", "MovexAction", 1, "TimeScaleAction", "TimeScaleAction", 0, "StateMachineAction", "MovexLeftArm", 0, "StateMachineMove", "MovexLeftArm", 1, "StateMachineLeftArm", "MovexRightArm", 0, "MovexLeftArm", "MovexRightArm", 1, "StateMachineRightArm" ]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=64]
 
@@ -3036,8 +3036,8 @@ transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0 )
 visible = false
 mesh = SubResource( 97 )
 material/0 = SubResource( 98 )
-[connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
 [connection signal="focus_target" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_focus_target"]
+[connection signal="focus_target" from="." to="Camera_Rig" method="_on_Nikkiv2_focus_target"]
 [connection signal="is_falling" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_is_falling"]
 [connection signal="position_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_position_changed"]
 [connection signal="targets_changed" from="." to="UI_Layer/Debug Value Display" method="_on_Nikkiv2_targets_changed"]
@@ -3045,6 +3045,7 @@ material/0 = SubResource( 98 )
 [connection signal="animation_started" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_started"]
 [connection signal="health_changed" from="Attributes/Health" to="UI_Layer/UI_In_Game" method="_on_Health_health_changed"]
 [connection signal="max_health_changed" from="Attributes/Health" to="UI_Layer/UI_In_Game" method="_on_Health_max_health_changed"]
+[connection signal="light_level_changed" from="Attributes/Illumination" to="UI_Layer/UI_In_Game" method="_on_Illumination_light_level_changed"]
 [connection signal="move_state_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_changed"]
 [connection signal="move_state_stack_changed" from="State_Machine_Move" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Move_move_state_stack_changed"]
 [connection signal="action_state_changed" from="State_Machine_Action" to="UI_Layer/Debug Value Display" method="_on_State_Machine_Action_action_state_changed"]

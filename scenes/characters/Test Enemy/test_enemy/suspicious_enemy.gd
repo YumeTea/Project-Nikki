@@ -8,13 +8,8 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
-	if route == []:
-		route_assign(Enemy.assigned_route)
-	else:
-		move_to(route[0])
-	
-	targetting = false
-	suspicious = false
+	if !owner.get_node("Rig/AnimationPlayer").is_playing():
+		owner.get_node("Rig/AnimationPlayer").play("Suspicious")
 	
 	connect_enemy_signals()
 	
@@ -23,7 +18,7 @@ func enter():
 
 #Cleans up state, reinitializes values like timers
 func exit():
-	Timer_Route.stop()
+	owner.get_node("Rig/Question_Mark").visible = false
 	
 	disconnect_enemy_signals()
 	
@@ -50,9 +45,10 @@ func update(delta):
 	get_action_input(delta)
 	emit_signal("ai_input_changed", input)
 	
-	#If targetting, engage target
-	if suspicious:
-		emit_signal("finished", "suspicious")
+	if Awareness.threat_level <= 0.0:
+			emit_signal("finished", "idle")
+	if focus_object:
+		emit_signal("finished", "engage")
 	
 	.update(delta)
 
@@ -61,31 +57,19 @@ func _on_animation_finished(_anim_name):
 	return
 
 
-func _on_Timer_Route_timeout():
-	route = route_advance(route)
-
-
 ###AI INPUT FUNCTIONS###
 
 
 func get_move_direction():
-	var direction : Vector2
+	var direction = Vector2(0,0)
 	
-	if !targetting and advancing:
-		direction = calc_target_path()
-		press_ai_input("left_stick", direction / 2.0)
-	else:
-		direction = calc_target_path()
-		press_ai_input("left_stick", direction / 2.0)
+	press_ai_input("left_stick", direction)
 
 
 func get_look_direction():
-	var direction : Vector2
+	var direction
 	
-	if !targetting and !advancing:
-		direction = Vector2(sin(OS.get_time()["second"]/2), 0)
-	elif advancing:
-		direction = look_to_point(path[path_point])
+	direction = look_to_point(seek_target_pos_last)
 	
 	press_ai_input("right_stick", direction)
 
@@ -93,19 +77,12 @@ func get_look_direction():
 func get_action_input(delta):
 	if !targetting:
 		seek_target(seek_target_name, delta)
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+	#If threat level is 100% and the target to be locked is the seek_target, lock on
+	if closest_target:
+		if closest_target.name == seek_target_name and Awareness.threat_level >= 100.0:
+			if !(is_ai_action_just_pressed("lock_target", input)):
+				press_ai_input("action_l1", "lock_target")
 
 
 
