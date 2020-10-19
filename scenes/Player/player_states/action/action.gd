@@ -17,7 +17,6 @@ var focus_angle = Vector2()
 
 ###Projectile Variables
 var projectile
-var RIGID_PROJ = preload("res://scenes/Player/attacks/magic/projectiles/rigid_projectile_test/rigid_projectile.tscn")
 var MAGIC_ORB = preload("res://scenes/Player/attacks/magic/projectiles/magic_orb/magic_orb.tscn")
 var projectile_time = 0
 var projectile_count = 0

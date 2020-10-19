@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://resources/images/Health Bar Placeholder.png" type="Texture" id=1]
+[ext_resource path="res://scenes/characters/Test Enemy/test_enemy/indicators/awareness_meter.gd" type="Script" id=2]
+[ext_resource path="res://scenes/characters/Test Enemy/test_enemy/indicators/Awareness_Bar.tscn" type="PackedScene" id=4]
+
+[node name="Awareness_Meter" type="Sprite3D"]
+billboard = 1
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 384, 16 )
+transparent_bg = true
+usage = 0
+render_target_v_flip = true
+
+[node name="Awareness_Bar" parent="Viewport" instance=ExtResource( 4 )]
+[connection signal="threat_level_changed" from="." to="Viewport/Awareness_Bar" method="_on_Awareness_Meter_threat_level_changed"]

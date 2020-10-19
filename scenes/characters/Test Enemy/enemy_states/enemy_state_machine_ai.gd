@@ -1,7 +1,7 @@
 extends "res://scripts/State Machine/state_machine.gd"
 
 
-signal ai_state_changed(move_state)
+signal ai_state_changed(ai_state)
 signal ai_state_stack_changed(state_stack)
 signal initialized_values_dic_set(init_values_dic)
 
@@ -15,6 +15,7 @@ var initialized_values = {
 	#AI Flags
 	"advancing": false,
 	"suspicious": false,
+	"cautious": false,
 	"targetting": false,
 	
 	#Pathfinding Variables
@@ -38,6 +39,7 @@ func _ready():
 	states_map = {
 		"idle": $Idle,
 		"suspicious": $Suspicious,
+		"cautious": $Cautious,
 		"engage": $Engage,
 	}
 	#Send out dictionary of initialized values to all states at start

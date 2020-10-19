@@ -25,6 +25,7 @@ onready var animation_state_machine_move = owner.get_node("AnimationTree").get("
 var input = {}
 
 #Enemy State Storage
+onready var state_ai = owner.get_node("State_Machine_AI").START_STATE
 onready var state_move = owner.get_node("State_Machine_Move").START_STATE
 onready var state_action = owner.get_node("State_Machine_Action").START_STATE
 var ground_states = [

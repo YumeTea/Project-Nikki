@@ -1,8 +1,8 @@
 extends "res://scenes/characters/Test Enemy/enemy_states/ai/ai.gd"
 
 
-#Node Storage
-onready var Timer_Engage = owner.get_node("State_Machine_AI/Engage/Timer_Engage")
+#Engagement Variables
+var engage_time = 10.0 #in seconds
 
 
 func initialize(init_values_dic):
@@ -12,6 +12,7 @@ func initialize(init_values_dic):
 
 #Initializes state, changes animation, etc
 func enter():
+	cautious = true
 	connect_enemy_signals()
 	
 	.enter()
@@ -44,11 +45,12 @@ func update(delta):
 	get_action_input(delta)
 	emit_signal("ai_input_changed", input)
 	
-	#Check if still targetting, else go back to idle state
+	
 	if !focus_object:
-		Awareness.threat_decrease(delta)
-		if Awareness.threat_level <= 0.0:
-			emit_signal("finished", "idle")
+		if Timer_Engage.is_stopped():
+			Timer_Engage.start(10.0)
+	elif focus_object:
+		Timer_Engage.stop()
 	
 	.update(delta)
 
@@ -61,11 +63,12 @@ func _on_animation_finished(_anim_name):
 
 
 func get_move_direction():
-	var direction : Vector2
+	var direction : Vector2 = Vector2(0,0)
 	
 	if targetting:
 		direction = Vector2(0,0)
-		press_ai_input("left_stick", direction)
+	
+	press_ai_input("left_stick", direction)
 
 
 func get_look_direction():
@@ -83,24 +86,18 @@ func get_action_input(delta):
 	if !targetting:
 		seek_target(seek_target_name, delta)
 		if closest_target:
-			if closest_target.name == seek_target_name and Awareness.threat_level >= 100.0:
+			if closest_target.name == seek_target_name:
 				press_ai_input("action_l1", "lock_target")
 	elif targetting:
 		press_ai_input("action_l2", "center_view")
 		press_ai_input("action_y", "cast")
 
 
+###SIGNAL FUNCTIONS###
 
 
-
-
-
-
-
-
-
-
-
+func _on_Timer_Engage_timeout():
+	emit_signal("finished", "cautious")
 
 
 

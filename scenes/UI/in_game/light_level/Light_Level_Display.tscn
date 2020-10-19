@@ -4,7 +4,7 @@
 [ext_resource path="res://scenes/UI/in_game/light_level/light_gem_shader 2.shader" type="Shader" id=3]
 [ext_resource path="res://scenes/UI/in_game/light_level/Light Gem 2.png" type="Texture" id=4]
 
-[sub_resource type="Shader" id=2]
+[sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
 
 uniform vec4 background_color : hint_color = vec4(0.04, 0.01, 0.18, 1.0);
@@ -14,11 +14,11 @@ void fragment() {
 	COLOR = texture(TEXTURE, UV) * background_color;
 }"
 
-[sub_resource type="ShaderMaterial" id=3]
-shader = SubResource( 2 )
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
 shader_param/background_color = Color( 0.04, 0.01, 0.18, 1 )
 
-[sub_resource type="ShaderMaterial" id=1]
+[sub_resource type="ShaderMaterial" id=3]
 shader = ExtResource( 3 )
 shader_param/light_level = 0.0
 shader_param/color_dark = Color( 0.92549, 0.941176, 0.470588, 0.109804 )
@@ -45,7 +45,7 @@ margin_bottom = 108.0
 margin_bottom = 108.0
 
 [node name="Light_Gem_Background" type="TextureRect" parent="MarginContainer/NinePatchRect"]
-material = SubResource( 3 )
+material = SubResource( 2 )
 margin_right = 192.0
 margin_bottom = 108.0
 texture = ExtResource( 4 )
@@ -56,7 +56,7 @@ __meta__ = {
 }
 
 [node name="Light_Gem" type="TextureRect" parent="MarginContainer/NinePatchRect"]
-material = SubResource( 1 )
+material = SubResource( 3 )
 margin_right = 192.0
 margin_bottom = 108.0
 texture = ExtResource( 4 )

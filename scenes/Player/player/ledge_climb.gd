@@ -1,6 +1,7 @@
 extends "res://scenes/Player/player_states/move/motion.gd"
 
 """
+Fails to climb up seemingly valid ledges after turning corners
 Remember to reset camera rig transform when animating origin
 How to blend animations between end of climb up and next animation?
 Frame after animation finished could translate skeleton back to default

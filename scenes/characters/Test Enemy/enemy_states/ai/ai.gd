@@ -15,6 +15,8 @@ onready var Awareness = owner.get_node("Attributes/Awareness")
 onready var Navigator = owner.get_parent().get_parent().get_node("Navigation")
 onready var Routes = owner.get_parent().get_parent().get_node("Navigation/Routes")
 onready var Timer_Route = owner.get_node("State_Machine_AI/Timer_Route")
+onready var Timer_Suspicious = owner.get_node("State_Machine_AI/Suspicious/Timer_Suspicious")
+onready var Timer_Engage = owner.get_node("State_Machine_AI/Engage/Timer_Engage")
 
 #Initialized Values Storage
 var initialized_values = {}
@@ -56,6 +58,7 @@ var advancing = false
 
 #AI Flags
 var suspicious : bool = false
+var cautious: bool = false
 
 
 #Initializes state, changes animation, etc
@@ -75,7 +78,8 @@ func exit():
 func handle_input(event):
 	if event.is_action_pressed("debug_input") and event.get_device() == 0:
 		Timer_Route.stop()
-		route = route_advance(route)
+		if !route.empty():
+			route = route_advance(route)
 
 
 func handle_ai_input():
@@ -140,9 +144,15 @@ func seek_target(target_name, delta):
 	
 	if suspicious:
 		if target:
-			Awareness.threat_increase(target, delta)
+			if cautious:
+				Awareness.threat_increase(target, 0.1, delta)
+			else:
+				Awareness.threat_increase(target, 1.0, delta)
 		else:
-			Awareness.threat_decrease(delta)
+			if cautious:
+				Awareness.threat_decrease(0.1, delta)
+			else:
+				Awareness.threat_decrease(1.0, delta)
 	
 	#Stop being suspicious if threat level is 0% (maybe make suspicious a state)
 	if Awareness.threat_level <= 0.0:
@@ -265,9 +275,9 @@ func lock_target():
 ###PATHFINDING FUNCTIONS###
 
 
-#Tells navigation node to calculate path to input target node
-func move_to(target_node):
-	path = Navigator.get_simple_path(Enemy.global_transform.origin, target_node.global_transform.origin)
+#Tells navigation node to calculate path to input target point
+func move_to(target_point):
+	path = Navigator.get_simple_path(Enemy.global_transform.origin, target_point)
 	path_point = 0
 	advancing = true
 
@@ -283,9 +293,8 @@ func calc_target_path():
 		#Calc path to next point if within 1 unit of current point
 		if target_direction.length() < 1.0:
 			path_point += 1
-			if (path_point + 1 < path.size()):
-				target_direction = (path[path_point] - Enemy.global_transform.origin)
-				target_direction = Vector2(target_direction.x, target_direction.z)
+			if path_point + 1 < path.size():
+				target_direction = target_direction.normalized()
 			else:
 				direction = Vector2(0,0)
 				advancing = false
@@ -304,9 +313,12 @@ func calc_target_path():
 		direction = Vector2(0,0)
 		advancing = false
 		
-		if Timer_Route.is_stopped():
-			Timer_Route.start(7.0)
-	
+		if state_ai in ["Idle", "Cautious"]:
+			if Timer_Route.is_stopped():
+				Timer_Route.start(7.0)
+		elif state_ai in ["Suspicious"]:
+			if Timer_Suspicious.is_stopped():
+				Timer_Suspicious.start(10.0)
 	
 	return direction
 
@@ -320,14 +332,14 @@ func route_assign(route_name):
 			for waypoint in Routes.get_node(route_name).get_children():
 				route.append(waypoint)
 	
-	move_to(route[0])
+	move_to(route[0].global_transform.origin)
 
 
 #Advances route to next waypoint
 func route_advance(route_array):
 	route_array.append(route_array[0])
 	route_array.remove(0)
-	move_to(route_array[0])
+	move_to(route_array[0].global_transform.origin)
 	
 	return route_array
 
@@ -357,6 +369,7 @@ func set_initialized_values(init_values_dic):
 
 
 func connect_enemy_signals():
+	owner.get_node("State_Machine_AI").connect("ai_state_changed", self, "_on_State_Machine_AI_state_changed")
 	owner.get_node("State_Machine_AI").connect("initialized_values_dic_set", self, "_on_State_Machine_AI_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").connect("head_moved", self, "_on_Camera_Rig_head_moved")
 	owner.get_node("Camera_Rig").connect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
@@ -367,6 +380,7 @@ func connect_enemy_signals():
 
 
 func disconnect_enemy_signals():
+	owner.get_node("State_Machine_AI").disconnect("ai_state_changed", self, "_on_State_Machine_AI_state_changed")
 	owner.get_node("State_Machine_AI").disconnect("initialized_values_dic_set", self, "_on_State_Machine_AI_initialized_values_dic_set")
 	owner.get_node("Camera_Rig").disconnect("head_moved", self, "_on_Camera_Rig_head_moved")
 	owner.get_node("Camera_Rig").disconnect("focus_direction_changed", self, "_on_Camera_Rig_focus_direction_changed")
@@ -377,6 +391,10 @@ func disconnect_enemy_signals():
 
 
 ###SIGNAL FUNCTIONS###
+
+
+func _on_State_Machine_AI_state_changed(ai_state):
+	state_ai = ai_state
 
 
 func _on_State_Machine_AI_initialized_values_dic_set(init_values_dic):

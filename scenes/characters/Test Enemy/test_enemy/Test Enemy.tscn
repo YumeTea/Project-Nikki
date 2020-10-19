@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=2]
+[gd_scene load_steps=51 format=2]
 
 [ext_resource path="res://scenes/characters/Test Enemy/enemy_states/enemy_state_machine_ai.gd" type="Script" id=1]
 [ext_resource path="res://scenes/characters/Test Enemy/enemy_states/action/void_action_enemy.gd" type="Script" id=2]
@@ -23,7 +23,9 @@
 [ext_resource path="res://scenes/characters/Test Enemy/attributes/awareness_enemy.gd" type="Script" id=21]
 [ext_resource path="res://scenes/characters/Test Enemy/animation/Suspicious.anim" type="Animation" id=22]
 [ext_resource path="res://resources/images/Suspicious.png" type="Texture" id=23]
-[ext_resource path="res://scenes/characters/Test Enemy/test_enemy/suspicious_enemy.gd" type="Script" id=24]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/ai/suspicious_enemy.gd" type="Script" id=24]
+[ext_resource path="res://scenes/characters/Test Enemy/enemy_states/ai/cautious_enemy.gd" type="Script" id=25]
+[ext_resource path="res://scenes/characters/Test Enemy/test_enemy/indicators/Awareness_Meter.tscn" type="PackedScene" id=26]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Damaged"
@@ -139,9 +141,9 @@ node_connections = [ "output", 0, "MovexAction", "MovexAction", 0, "StateMachine
 
 [sub_resource type="SphereMesh" id=20]
 
-[sub_resource type="QuadMesh" id=23]
+[sub_resource type="QuadMesh" id=21]
 
-[sub_resource type="SpatialMaterial" id=24]
+[sub_resource type="SpatialMaterial" id=22]
 flags_transparent = true
 flags_unshaded = true
 flags_do_not_receive_shadows = true
@@ -151,9 +153,9 @@ params_billboard_mode = 1
 params_billboard_keep_scale = true
 albedo_texture = ExtResource( 23 )
 
-[sub_resource type="SphereMesh" id=21]
+[sub_resource type="SphereMesh" id=23]
 
-[sub_resource type="SpatialMaterial" id=22]
+[sub_resource type="SpatialMaterial" id=24]
 albedo_color = Color( 0.964706, 0.403922, 0.0352941, 1 )
 emission_enabled = true
 emission = Color( 1, 0, 0, 1 )
@@ -173,7 +175,6 @@ anims/Casting_Magic_Orb = ExtResource( 18 )
 anims/Damaged = SubResource( 1 )
 anims/Idle = SubResource( 2 )
 anims/Perish = SubResource( 3 )
-anims/Suspicious = ExtResource( 22 )
 anims/Walk = SubResource( 4 )
 
 [node name="AnimationTree" parent="." index="1"]
@@ -196,12 +197,21 @@ script = ExtResource( 3 )
 [node name="Suspicious" type="Node" parent="State_Machine_AI" index="1"]
 script = ExtResource( 24 )
 
-[node name="Engage" type="Node" parent="State_Machine_AI" index="2"]
+[node name="Timer_Suspicious" type="Timer" parent="State_Machine_AI/Suspicious" index="0"]
+wait_time = 10.0
+one_shot = true
+
+[node name="Cautious" type="Node" parent="State_Machine_AI" index="2"]
+script = ExtResource( 25 )
+
+[node name="Engage" type="Node" parent="State_Machine_AI" index="3"]
 script = ExtResource( 20 )
 
 [node name="Timer_Engage" type="Timer" parent="State_Machine_AI/Engage" index="0"]
+wait_time = 10.0
+one_shot = true
 
-[node name="Timer_Route" type="Timer" parent="State_Machine_AI" index="3"]
+[node name="Timer_Route" type="Timer" parent="State_Machine_AI" index="4"]
 wait_time = 7.0
 one_shot = true
 
@@ -250,7 +260,7 @@ material/0 = ExtResource( 19 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 2 )
 
 [node name="Cast_Glow" type="MeshInstance" parent="Rig/Projectile_Position" index="0"]
-transform = Transform( 0.001, 0, 0, 0, 0.001, 0, 0, 0, 0.001, 0, 0, 0 )
+transform = Transform( 0.0850278, 0, 0, 0, 0.0850278, 0, 0, 0, 0.0850278, 0, 0, 0 )
 mesh = SubResource( 20 )
 material/0 = ExtResource( 12 )
 
@@ -260,12 +270,15 @@ enabled = true
 cast_to = Vector3( 0, -3.4, 0 )
 
 [node name="Question_Mark" type="MeshInstance" parent="Rig" index="3"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.35, 0 )
-mesh = SubResource( 23 )
-material/0 = SubResource( 24 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.535, 0 )
+mesh = SubResource( 21 )
+material/0 = SubResource( 22 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rig" index="4"]
 anims/Suspicious = ExtResource( 22 )
+
+[node name="Awareness_Meter" parent="Rig" index="5" instance=ExtResource( 26 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.67286, 0 )
 
 [node name="CollisionShape" parent="." index="10"]
 transform = Transform( 1, 0, 0, 0, -4.20504e-08, 1, 0, -0.962, -4.37114e-08, 0, 3.119, 0 )
@@ -280,11 +293,16 @@ wait_time = 20.0
 
 [node name="Path_Point" type="MeshInstance" parent="Debug" index="0"]
 transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0 )
-mesh = SubResource( 21 )
-material/0 = SubResource( 22 )
+mesh = SubResource( 23 )
+material/0 = SubResource( 24 )
 [connection signal="ai_input_changed" from="." to="Camera_Rig" method="_on_Character_ai_input_changed"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="health_depleted" from="Attributes/Health" to="." method="_on_Health_health_depleted"]
+[connection signal="threat_level_changed" from="Attributes/Awareness" to="Rig/Awareness_Meter" method="_on_Awareness_threat_level_changed"]
+[connection signal="timeout" from="State_Machine_AI/Suspicious/Timer_Suspicious" to="State_Machine_AI/Suspicious" method="_on_Timer_Suspicious_timeout"]
+[connection signal="timeout" from="State_Machine_AI/Engage/Timer_Engage" to="State_Machine_AI/Engage" method="_on_Timer_Engage_timeout"]
+[connection signal="timeout" from="State_Machine_AI/Timer_Route" to="State_Machine_AI/Idle" method="_on_Timer_Route_timeout"]
+[connection signal="timeout" from="State_Machine_AI/Timer_Route" to="State_Machine_AI/Cautious" method="_on_Timer_Route_timeout"]
 
 [editable path="Camera_Rig"]
 
